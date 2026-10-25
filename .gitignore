@@ -1,0 +1,29 @@
+# Machine-local configuration and generated output
+local.toml
+.env
+.env.*
+!.env.example
+out/
+build/
+cache/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+
+# Private device captures and binary system inputs
+private/
+captures/
+dumps/
+*.ipsw
+*.img
+*.dmg
+*.cdr
+*.bin
+*.fd
+*.ko
+*.zip
+*.tar
+*.gz
+*.mp4
+*.mov
