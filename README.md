@@ -58,14 +58,14 @@ This is a documentation-first community repository. It does not yet mirror the c
 - [CONTRIBUTING.md](CONTRIBUTING.md) — how to report results and propose work safely.
 - [LICENSE](LICENSE) — license for original documentation in this repository only.
 
-When implementation is ready for review, the repository can grow to include source-backed board configuration, driver code, patches, build/package scripts and test records, with third-party licenses preserved. Empty or guessed configuration values will not be presented as working support.
+The goal is to publish a reviewable device repository, including a source-backed **device tree** and board configuration, driver code, patches, build/package scripts and per-subsystem test records. Device-tree entries will be tied to identifiable hardware sources and checked on the F5; Android device-tree data will be treated as a reference, not copied as if it were already a working iOS configuration. Components will be added when their provenance, license and reproduction steps are clear. Empty or guessed values will not be presented as working support.
 
 ## Roadmap
 
 1. Finish investigating the Goodix touch path from the controller through Qualcomm GENI SPI and XNU's input stack.
 2. Validate touch reports and interaction with the Hello interface on the physical F5.
-3. Publish reviewed source with pinned revisions, provenance, licenses and reproducible build instructions.
-4. Complete the current UniXNU device format and its porting records against matching OS and SoC support.
+3. Publish a reviewed device tree, board configuration, drivers and patches with pinned revisions, provenance and licenses.
+4. Complete the current UniXNU device format, reproducible build/package instructions and porting records against matching OS and SoC support.
 5. Expand hardware support and publish results by subsystem, based on repeatable device tests.
 
 There is no release date. The immediate technical blocker is iOS-side physical touch input.
@@ -75,35 +75,6 @@ There is no release date. The immediate technical blocker is iOS-side physical t
 Use [GitHub Issues](https://github.com/sing0626/UniXNU-marble/issues) for focused questions, hardware findings and implementation proposals. Include the device variant, source revision, exact test performed, expected result and observed result. Mark untested findings as untested.
 
 Please do not post personal identifiers, credentials, private device captures, IPSWs, Apple system images or proprietary firmware. Read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting code or logs.
-
-## 中文（香港）
-
-呢個係 **POCO F5／Redmi Note 12 Turbo（`marble`，Qualcomm SM7475-AB）移植 iOS 嘅社群研究項目**，目標係 **iPhone iOS 16.7.16（20H392）**。
-
-### 目前做到邊度
-
-- 實驗版 XNU 8796 曾經喺 POCO F5 開到 iOS Hello 設定畫面。
-- 最新一次回報嘅 Hello 背景已經乾淨，冇再見到之前嘅滾動 console 文字。
-- **iOS 入面嘅實體觸控仍然未能操作。** Android Recovery 入面 Goodix 觸控正常，唔代表 iOS 已有相應驅動。
-- 因為觸控未通，未能喺手機上完成設定；亦未驗證啟用、長時間穩定性或日常使用。
-- 公開 repo 暫時係文件為主，未有可重現嘅完整 source build、刷機步驟或可下載映像。
-- Hello 畫面係 bring-up 里程碑，唔代表已經有可日用嘅 iPhone。
-
-### 參考來源
-
-- [UniXNU 主 repo](https://github.com/UniXNU/UniXNU) 同 [裝置 repo 指引](https://unixnu.com/porting/device-repository)：參考建置框架同官方裝置 repo 格式；`marble` 仲未完成官方格式移植及登記。
-- [Apple XNU source](https://github.com/apple-oss-distributions/xnu)：XNU 8796 核心系列嘅公開參考；本 repo 暫時未提供可重現嘅固定版本建置流程。
-- [MiCode marble Android kernel source](https://github.com/MiCode/Xiaomi_Kernel_OpenSource/tree/marble-s-oss)：只用作了解 `marble` Android 側硬件／裝置樹資料，唔係 iOS 驅動。
-- [UniXNU QcomGeniSpi](https://github.com/UniXNU/QcomGeniSpi)：研究 Qualcomm GENI SPI／Goodix 傳輸嘅候選參考，未整合成可用觸控方案。
-- [UniXNU-clover 社群裝置 repo](https://github.com/qine233/UniXNU-clover)：參考成熟裝置 repo 點樣整理設定、驅動、筆記、patch 同 package；clover 專用程式碼唔代表支援 marble。
-
-Apple 系統映像、IPSW、專有韌體同裝置私隱資料唔會放入 repo。之後每份程式碼都要交代來源、版本、授權同實機驗證範圍。
-
-### 下一步
-
-目前首要工作係打通 Goodix 控制器、Qualcomm GENI SPI、XNU input stack 到 IOHID 嘅實體觸控路徑，並喺 F5 上驗證 Hello 畫面可以操作。之後先逐步公開有來源、有授權、可重現嘅設定同建置流程。
-
-歡迎用 [GitHub Issues](https://github.com/sing0626/UniXNU-marble/issues) 提交硬件資料、問題或實作建議。請標明測試過程同結果，未實測嘅內容要清楚註明。
 
 ## License
 
