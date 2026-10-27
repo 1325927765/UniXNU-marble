@@ -109,8 +109,8 @@
     },
     {
       "path": "device/classmates/Test-Install-MarbleTest.ps1",
-      "bytes": 9068,
-      "sha256": "a0f9cdfd5b17b521948de55e8c0604744c44b1457d353079fb8bf2d897c5521d"
+      "bytes": 9188,
+      "sha256": "b64781ae9c319223f5e1c2fd6e9888f7f5f29f4ee463d2106b478b303a322152"
     },
     {
       "path": "device/early/BootShim.S",

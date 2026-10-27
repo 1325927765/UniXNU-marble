@@ -35,7 +35,6 @@ function Run-Installer([string[]] $Arguments, [string] $Mode = 'ok', [string] $I
     $psi.RedirectStandardInput = $true
     # The confirmation fixture is ASCII. Avoid a UTF-8 BOM on UTF-8-codepage
     # runners becoming an extra character in the strict confirmation phrase.
-    $psi.StandardInputEncoding = [Text.Encoding]::ASCII
     $psi.EnvironmentVariables['MOCK_MODE'] = $Mode
     $psi.EnvironmentVariables['MOCK_LOG'] = $logPath
     $proc = New-Object System.Diagnostics.Process
@@ -43,8 +42,12 @@ function Run-Installer([string[]] $Arguments, [string] $Mode = 'ok', [string] $I
     [void]$proc.Start()
     $outTask = $proc.StandardOutput.ReadToEndAsync()
     $errTask = $proc.StandardError.ReadToEndAsync()
-    if ($InputText) { $proc.StandardInput.WriteLine($InputText) }
-    $proc.StandardInput.Close()
+    if ($InputText) {
+        $inputBytes = [Text.Encoding]::ASCII.GetBytes($InputText + "`r`n")
+        $proc.StandardInput.BaseStream.Write($inputBytes, 0, $inputBytes.Length)
+        $proc.StandardInput.BaseStream.Flush()
+    }
+    $proc.StandardInput.BaseStream.Close()
     $proc.WaitForExit()
     return [pscustomobject]@{ ExitCode = $proc.ExitCode; Output = $outTask.Result + $errTask.Result; Log = if (Test-Path -LiteralPath $logPath) { @(Get-Content -LiteralPath $logPath) } else { @() } }
 }
