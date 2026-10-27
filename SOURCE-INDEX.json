@@ -99,8 +99,8 @@
     },
     {
       "path": "device/classmates/Install-MarbleTest.ps1",
-      "bytes": 11265,
-      "sha256": "185ca27852fdd6e7cc2a0cbb31a67d2900f387971b626a140d15c1f7017ca0bf"
+      "bytes": 11309,
+      "sha256": "2a15a159f9cc46e183128eb468eeab86c387cb527655a455f51c4385255d10c4"
     },
     {
       "path": "device/classmates/README.md",
@@ -109,8 +109,8 @@
     },
     {
       "path": "device/classmates/Test-Install-MarbleTest.ps1",
-      "bytes": 8701,
-      "sha256": "6af0c7605c761b4ca79a32de11150d10155f00c425572b3891ee262dab9ca024"
+      "bytes": 8858,
+      "sha256": "4196b2577c40583334c7d06ee47514d20531c35fb84f1d265290b69d6d40facc"
     },
     {
       "path": "device/early/BootShim.S",

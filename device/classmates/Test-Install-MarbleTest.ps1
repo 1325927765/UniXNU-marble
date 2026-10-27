@@ -120,7 +120,12 @@ class MockFastboot {
     $badConfirm = Run-Installer -Arguments @('-Install', '-Serial', 'MOCK', '-FastbootPath', $mockExe) -InputText 'wrong'
     if ($badConfirm.ExitCode -eq 0 -or @($badConfirm.Log | Where-Object { $_ -match 'flash|erase|format|boot' }).Count -ne 0) { throw 'Bad confirmation did not fail closed.' }
     $install = Run-Installer -Arguments @('-Install', '-Serial', 'MOCK', '-FastbootPath', $mockExe) -InputText 'ERASE USERDATA MOCK'
-    if ($install.ExitCode -ne 0 -or @($install.Log | Where-Object { $_ -match '^\-s\|MOCK\|(-S\|256M\|)?flash\|userdata\|' }).Count -ne 1 -or @($install.Log | Where-Object { $_ -match '^\-s\|MOCK\|boot\|' }).Count -ne 1) { throw 'Confirmed install did not issue only the expected userdata flash and temporary boot.' }
+    if ($install.ExitCode -ne 0 -or @($install.Log | Where-Object { $_ -match '^\-s\|MOCK\|(-S\|256M\|)?flash\|userdata\|' }).Count -ne 1 -or @($install.Log | Where-Object { $_ -match '^\-s\|MOCK\|boot\|' }).Count -ne 1) {
+        Write-Host ('Mock installer exit: ' + $install.ExitCode)
+        Write-Host $install.Output
+        Write-Host ($install.Log -join "`n")
+        throw 'Confirmed install did not issue only the expected userdata flash and temporary boot.'
+    }
 
     $listOnly = Run-Installer -Arguments @('-FastbootPath', $mockExe)
     if ($listOnly.ExitCode -ne 0 -or @($listOnly.Log | Where-Object { $_ -match 'getvar|flash|erase|format|boot' }).Count -ne 0) { throw 'No-serial check mode did not stop after listing devices.' }
