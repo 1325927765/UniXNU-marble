@@ -33,6 +33,9 @@ function Run-Installer([string[]] $Arguments, [string] $Mode = 'ok', [string] $I
     $psi.RedirectStandardOutput = $true
     $psi.RedirectStandardError = $true
     $psi.RedirectStandardInput = $true
+    # The confirmation fixture is ASCII. Avoid a UTF-8 BOM on UTF-8-codepage
+    # runners becoming an extra character in the strict confirmation phrase.
+    $psi.StandardInputEncoding = [Text.Encoding]::ASCII
     $psi.EnvironmentVariables['MOCK_MODE'] = $Mode
     $psi.EnvironmentVariables['MOCK_LOG'] = $logPath
     $proc = New-Object System.Diagnostics.Process
