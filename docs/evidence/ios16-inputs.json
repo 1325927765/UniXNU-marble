@@ -1,0 +1,42 @@
+{
+  "product": "iPhone10,6",
+  "version": "16.7.16",
+  "build": "20H392",
+  "device_class": "d221ap",
+  "chip_id": 32789,
+  "board_id": 14,
+  "build_manifest_sha256": "2d1452103a2f5ad71cb78d94454977fc70632472201980a468c247fba14b10b7",
+  "source": "Caller-provided matching restore archive; metadata only",
+  "members": {
+    "KernelCache": {
+      "path": "kernelcache.release.iphone10b",
+      "bytes": 18204358,
+      "sha256": "2d6a13d040aaf87cec09bb6906d43e9bd8cea951e43d1aa1cd62707dfdc5aaec"
+    },
+    "DeviceTree": {
+      "path": "Firmware/all_flash/DeviceTree.d221ap.im4p",
+      "bytes": 33925,
+      "sha256": "889e838319619c10f5f7f6ef25f9ff2a3a652a3c078803038ba678efa1201b79"
+    },
+    "StaticTrustCache": {
+      "path": "Firmware/087-86698-044.dmg.trustcache",
+      "bytes": 66289,
+      "sha256": "63e01c03b31e1532a5581a24865490673f0b5c297b0199fe0095637c6100ef4b"
+    },
+    "Cryptex1,SystemTrustCache": {
+      "path": "Firmware/087-86593-047.dmg.trustcache",
+      "bytes": 1511,
+      "sha256": "9cc478fe3525e2683b5b9ea1eea0851eaebebdab21d206556233400e59d2e361"
+    },
+    "Cryptex1,AppTrustCache": {
+      "path": "Firmware/087-86715-047.dmg.trustcache",
+      "bytes": 767,
+      "sha256": "4e5fc21a171e7fc0e05698c83b9c080307e7cf57a3e88b09cfe0b4e135674067"
+    },
+    "OS": {
+      "path": "087-86698-044.dmg",
+      "bytes": 4730814044,
+      "sha256": "80f426d5b8fca8552f95be427434f1911dbb4c2c6d28aad94f2426ddd0c92483"
+    }
+  }
+}

@@ -1,0 +1,4 @@
+# Ordered legacy baseline, exact XNU base is pinned in legacy-xnu/README.md.
+# This monolithic legacy patch is an input inventory, NOT a proven format 2
+# patch stack. Split arch/SoC/OS/board portions before removing the build guard.
+0001-marble-legacy-v4.patch

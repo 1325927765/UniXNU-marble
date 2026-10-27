@@ -4,23 +4,33 @@
   "files": [
     {
       "path": ".gitattributes",
-      "bytes": 108,
-      "sha256": "b8ef4518fd69f5f198f87ec6907505730de6f5ad4a118818a20b5b67a662bd97"
+      "bytes": 134,
+      "sha256": "c4f33bc12cc6b3efb8d1d641e02477321ac3707cfafc054ebaf6bc93393bcf40"
+    },
+    {
+      "path": ".github/workflows/porting-record.yml",
+      "bytes": 221,
+      "sha256": "c35fa31111fbbb1cfc560614cd48cc27d1428696d05f84551218d59a57a14d5d"
     },
     {
       "path": ".github/workflows/source-checks.yml",
-      "bytes": 808,
-      "sha256": "a900fe8a8d2039720fea9c908acbb70306c57131bc1abc6e618c8df7d46fbeeb"
+      "bytes": 1041,
+      "sha256": "5be0c0fc96479e1b18e774167acde864a79648577690d077faf722ac3741bf8c"
     },
     {
       "path": ".gitignore",
-      "bytes": 375,
-      "sha256": "cf286cea498f0bae9ba81af68522747bb9c581adc52ab86cf286a779bdf95038"
+      "bytes": 402,
+      "sha256": "d1b9ad85f8a3802eaf6ae0fce17071c38c5830599c5ba061fd29c83bf043726c"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 1312,
+      "sha256": "a3f2479202c3b4c17892b934814c34379951134d16ecddd6ce578cbc8a02a22d"
     },
     {
       "path": "BUILDING.md",
-      "bytes": 4453,
-      "sha256": "1b35bfbaab7ce36cd300a1e68deda338bc85f9394c9759ac67bd445ec2fb0065"
+      "bytes": 5338,
+      "sha256": "b8341aed587dafdddca8eea4b7e66f88d12314f005cb33e8470e78fe40e57d8a"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -44,8 +54,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 5349,
-      "sha256": "27b47a1fe64234cf1f72cd0cf09ea9366d5a864bb6742487349dd1fc954f4a41"
+      "bytes": 5919,
+      "sha256": "afb9d26acd7ea705e781921cd97c07efb0e97ed6fe7c2ebace6b4e6f80bb87f7"
     },
     {
       "path": "STATUS.md",
@@ -83,6 +93,11 @@
       "sha256": "c8b77bd3407ea050458fe28839910e9e678afb3ffcef99f4b14b51572ff76111"
     },
     {
+      "path": "board.toml",
+      "bytes": 2763,
+      "sha256": "b151104ce3dfe98a37792ddfc092a28b01b5f60396e0e2b6583916a981b9ae24"
+    },
+    {
       "path": "check-readiness.py",
       "bytes": 30929,
       "sha256": "2d3ad6b3915fcd692b208c28899d2d860d9160eb067f6ce083f1bb8abba87c6c"
@@ -91,6 +106,11 @@
       "path": "collect-marble-adt.py",
       "bytes": 3395,
       "sha256": "95d33f4223a2617dbf15dd46e5f06ff737c6ea051e4ebb12947bb2b7d2a763ce"
+    },
+    {
+      "path": "configs/marble_defconfig",
+      "bytes": 376,
+      "sha256": "01b7ddff6f2737092f605417c4fe5b6225b357e2954b847dbb6f843807e6259c"
     },
     {
       "path": "create-entry-probe.py",
@@ -166,6 +186,51 @@
       "path": "device/early/root-wait-band.c",
       "bytes": 1238,
       "sha256": "b86980b1b1b5f68fd56865f61f85564ea8501e983d2aa82ccff8de5184272496"
+    },
+    {
+      "path": "docs/FORMAT2-MIGRATION.md",
+      "bytes": 3768,
+      "sha256": "87f525d459e63ce76f01cc32e526bab493a82d6c7f5bb99f792bf6a8039a20b1"
+    },
+    {
+      "path": "docs/HARDWARE.md",
+      "bytes": 2458,
+      "sha256": "0db1f098dc08841e0b72252c9356a2c48e73ea5d71054d6e90ea34f9553b31f3"
+    },
+    {
+      "path": "docs/evidence/format2-validation.json",
+      "bytes": 2242,
+      "sha256": "a1978f5fcca1ac59f8a2b5f02489826645639fc4215651c019c06ef023f6e126"
+    },
+    {
+      "path": "docs/evidence/ios16-inputs.json",
+      "bytes": 1455,
+      "sha256": "c6a1872682cbcb321f69c6e037e0a4321510c3887ea5bfdbcc977b1ea325b847"
+    },
+    {
+      "path": "docs/evidence/legacy-hello.json",
+      "bytes": 979,
+      "sha256": "604648f0732e0e02edcb7b1b75cb58c9b563bae33b9680b27abf616c18b1ab87"
+    },
+    {
+      "path": "docs/evidence/legacy-hello.md",
+      "bytes": 1556,
+      "sha256": "da244da9bf72332777d68580b08797766a11b2d3d28afecff7b72ac4a32142a9"
+    },
+    {
+      "path": "docs/evidence/upstream-format2-review.md",
+      "bytes": 934,
+      "sha256": "2ac2bf809207207faf5cdf3efbe4112c21866afc776956ef632789e21a9d9e89"
+    },
+    {
+      "path": "dts/marble.dts",
+      "bytes": 3459,
+      "sha256": "983603f26e58bb54002f1ddfce6c7bc6111ed6dee18644fd79c02cb7345c3c21"
+    },
+    {
+      "path": "feeds.toml",
+      "bytes": 828,
+      "sha256": "c128ca1bc70434eacde5d56adac0791ad92778539fada6a2ba6cd7495ee76114"
     },
     {
       "path": "integrate-menu.py",
@@ -1388,6 +1453,11 @@
       "sha256": "42099d780d732609cac327646a2e9f77ce8ab66251673aae0cc67d1b506c34a5"
     },
     {
+      "path": "local.toml.example",
+      "bytes": 378,
+      "sha256": "feb9b8e7df922f4d989693a912df5668d48920ad7e801ce3ab3ac393ae9774a1"
+    },
+    {
       "path": "mac-build/_patch-fbcon.py",
       "bytes": 4593,
       "sha256": "ed3b96f0717b260d2aace6812e6955f9ccd85e5d0701ba49ac7c80e95d46d66a"
@@ -2008,9 +2078,29 @@
       "sha256": "a6e2a42d2bda96927d91acf91a75df153e278db6f56e5886681b1534095d9aab"
     },
     {
+      "path": "package/marble/README.md",
+      "bytes": 649,
+      "sha256": "8d28d3f70fceb2df007977284fccba0dbdda3c609ad7f4717a1d5922e524ef40"
+    },
+    {
+      "path": "patches/xnu/0001-marble-legacy-v4.patch",
+      "bytes": 136157,
+      "sha256": "42099d780d732609cac327646a2e9f77ce8ab66251673aae0cc67d1b506c34a5"
+    },
+    {
+      "path": "patches/xnu/series",
+      "bytes": 262,
+      "sha256": "1dcd9c7cceaf4347123e2b05728b8dae901be839dfbcd54d422ee59e3c67bb76"
+    },
+    {
       "path": "place-prelink-info.py",
       "bytes": 2918,
       "sha256": "37e0d4cea6ba05ac77c647cb9b08a223cc429fee98311a9ddb023bc154561dd1"
+    },
+    {
+      "path": "porting.toml",
+      "bytes": 25419,
+      "sha256": "2f267ebaa6a63e74096cd3d0e971826db85bfd41439e289d727c7087297e8d5d"
     },
     {
       "path": "prepare-early-payload.py",
@@ -2021,6 +2111,11 @@
       "path": "prepare-iphone16-qemu-adt.py",
       "bytes": 5536,
       "sha256": "291b37fd931168cb7b0dc3ccbc6b897cf028d44151ab7cf549a4a7fbb0244d5d"
+    },
+    {
+      "path": "proprietary-files.txt",
+      "bytes": 597,
+      "sha256": "182c003e882d4bc0f7400d5c01abebffa1aa4ca0d23e8db3c851c60197b05669"
     },
     {
       "path": "qualify-iphone-ipsw.py",
@@ -2121,6 +2216,11 @@
       "path": "tools/lab/README.md",
       "bytes": 641,
       "sha256": "28baaca38ddef531b6ac3c4b3bacd776ad1897388848e69e03e6580accf8092c"
+    },
+    {
+      "path": "tools/resolve_reference_lock.py",
+      "bytes": 2081,
+      "sha256": "022ea823c3a1437484151e6b92f61e2e0aa1801ae72d2e6bf2776b3de5920ce9"
     },
     {
       "path": "tools/run_host_c_fixtures.py",
@@ -2291,6 +2391,11 @@
       "path": "touch/test_update_marble_touch_probe_stage2.py",
       "bytes": 3630,
       "sha256": "39a96ff5510f934b6e3cb98c1cb26dda0befba90866ed76fe6e6351d426bdbb7"
+    },
+    {
+      "path": "unixnu.lock",
+      "bytes": 402,
+      "sha256": "230a145085af7d433837cd8ab49b7d4fd463755e721aed70d87eecedb57fd429"
     },
     {
       "path": "validate-baseline.py",

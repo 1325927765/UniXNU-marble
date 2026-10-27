@@ -1,0 +1,3975 @@
+diff --git a/bsd/conf/Makefile.template b/bsd/conf/Makefile.template
+index 4b83160..83253d7 100644
+--- a/bsd/conf/Makefile.template
++++ b/bsd/conf/Makefile.template
+@@ -44,6 +44,24 @@ CFLAGS+= -include meta_features.h -DDRIVER_PRIVATE \
+         -Warray-bounds-pointer-arithmetic
+ SFLAGS+= -include meta_features.h
+ 
++# This provider is built into MARBLE; other boards use their normal kext.
++ifeq ($(CURRENT_MACHINE_CONFIG),MARBLE)
++MARBLE_PTHREAD_ROOT = $(SRCROOT)/bsd/pthread/marble_libpthread
++MARBLE_PTHREAD_INC = -I$(MARBLE_PTHREAD_ROOT) -I$(MARBLE_PTHREAD_ROOT)/private -I$(MARBLE_PTHREAD_ROOT)/include
++marble_pthread_init.o_INCFLAGS = $(MARBLE_PTHREAD_INC)
++marble_pthread_support.o_INCFLAGS = $(MARBLE_PTHREAD_INC)
++marble_pthread_synch.o_INCFLAGS = $(MARBLE_PTHREAD_INC)
++
++# Apple OSS HFS built in (bsd/marble_hfs): compiled like the kext, see marble_hfs_compat.h.
++# The compat header must come after the kernel's -D options, hence _CFLAGS_ADD.
++MARBLE_HFS_ROOT = $(SRCROOT)/bsd/marble_hfs
++MARBLE_HFS_OBJS = BTree.o BTreeAllocate.o BTreeMiscOps.o BTreeNodeOps.o BTreeNodeReserve.o BTreeScanner.o BTreeTreeOps.o BTreeWrapper.o CatalogUtilities.o FileExtentMapping.o FileIDsServices.o MacOSStubs.o UnicodeWrappers.o VolumeAllocation.o hfs_attrlist.o hfs_btreeio.o hfs_catalog.o hfs_chash.o hfs_cnode.o hfs_cprotect.o hfs_endian.o hfs_extents.o hfs_fsinfo.o hfs_hotfiles.o hfs_journal.o hfs_link.o hfs_lookup.o hfs_notification.o hfs_quota.o hfs_readwrite.o hfs_resize.o hfs_search.o hfs_vfsops.o hfs_vfsutils.o hfs_vnops.o hfs_xattr.o rangelist.o hfs_encodinghint.o hfs_encodings.o marble_hfs_iokit.o
++$(foreach o,$(MARBLE_HFS_OBJS),$(eval $(o)_CFLAGS_ADD += -include $(MARBLE_HFS_ROOT)/marble_hfs_compat.h -I$(MARBLE_HFS_ROOT) -I$(MARBLE_HFS_ROOT)/core))
++# HFSEncodings is a separate kext on Apple with its own allocation counter.
++hfs_encodings.o_CFLAGS_ADD += -Dhfs_allocated=hfs_encodings_allocated
++hfs_encodinghint.o_CFLAGS_ADD += -Dhfs_allocated=hfs_encodings_allocated
++endif
++
+ #
+ # Directories for mig generated files
+ #
+diff --git a/bsd/conf/files b/bsd/conf/files
+index 4427401..048972b 100644
+--- a/bsd/conf/files
++++ b/bsd/conf/files
+@@ -361,6 +361,9 @@ bsd/security/audit/audit_syscalls.c		standard
+ bsd/security/audit/audit_worker.c		optional config_audit
+ 
+ bsd/pthread/pthread_shims.c		standard
++bsd/pthread/marble_pthread_init.c	standard
++bsd/pthread/marble_pthread_support.c	standard
++bsd/pthread/marble_pthread_synch.c	standard
+ bsd/pthread/pthread_priority.c		standard
+ bsd/pthread/pthread_workqueue.c		standard
+ 
+@@ -378,6 +381,50 @@ bsd/kern/kern_core.c			optional config_coredump
+ bsd/kern/kern_credential.c		standard
+ bsd/kern/kern_crossarch.c		standard
+ bsd/kern/kern_cs.c			standard
++bsd/kern/marble_amfi.c			standard
++
++# Apple OSS hfs-627.100.6, staged by xnu/patches/0026-stage-hfs.sh
++bsd/marble_hfs/core/BTree.c		optional marble_hfs
++bsd/marble_hfs/core/BTreeAllocate.c		optional marble_hfs
++bsd/marble_hfs/core/BTreeMiscOps.c		optional marble_hfs
++bsd/marble_hfs/core/BTreeNodeOps.c		optional marble_hfs
++bsd/marble_hfs/core/BTreeNodeReserve.c		optional marble_hfs
++bsd/marble_hfs/core/BTreeScanner.c		optional marble_hfs
++bsd/marble_hfs/core/BTreeTreeOps.c		optional marble_hfs
++bsd/marble_hfs/core/BTreeWrapper.c		optional marble_hfs
++bsd/marble_hfs/core/CatalogUtilities.c		optional marble_hfs
++bsd/marble_hfs/core/FileExtentMapping.c		optional marble_hfs
++bsd/marble_hfs/core/FileIDsServices.c		optional marble_hfs
++bsd/marble_hfs/core/MacOSStubs.c		optional marble_hfs
++bsd/marble_hfs/core/UnicodeWrappers.c		optional marble_hfs
++bsd/marble_hfs/core/VolumeAllocation.c		optional marble_hfs
++bsd/marble_hfs/core/hfs_attrlist.c		optional marble_hfs
++bsd/marble_hfs/core/hfs_btreeio.c		optional marble_hfs
++bsd/marble_hfs/core/hfs_catalog.c		optional marble_hfs
++bsd/marble_hfs/core/hfs_chash.c		optional marble_hfs
++bsd/marble_hfs/core/hfs_cnode.c		optional marble_hfs
++bsd/marble_hfs/core/hfs_cprotect.c		optional marble_hfs
++bsd/marble_hfs/core/hfs_endian.c		optional marble_hfs
++bsd/marble_hfs/core/hfs_extents.c		optional marble_hfs
++bsd/marble_hfs/core/hfs_fsinfo.c		optional marble_hfs
++bsd/marble_hfs/core/hfs_hotfiles.c		optional marble_hfs
++bsd/marble_hfs/core/hfs_journal.c		optional marble_hfs
++bsd/marble_hfs/core/hfs_link.c		optional marble_hfs
++bsd/marble_hfs/core/hfs_lookup.c		optional marble_hfs
++bsd/marble_hfs/core/hfs_notification.c		optional marble_hfs
++bsd/marble_hfs/core/hfs_quota.c		optional marble_hfs
++bsd/marble_hfs/core/hfs_readwrite.c		optional marble_hfs
++bsd/marble_hfs/core/hfs_resize.c		optional marble_hfs
++bsd/marble_hfs/core/hfs_search.c		optional marble_hfs
++bsd/marble_hfs/core/hfs_vfsops.c		optional marble_hfs
++bsd/marble_hfs/core/hfs_vfsutils.c		optional marble_hfs
++bsd/marble_hfs/core/hfs_vnops.c		optional marble_hfs
++bsd/marble_hfs/core/hfs_xattr.c		optional marble_hfs
++bsd/marble_hfs/core/rangelist.c		optional marble_hfs
++bsd/marble_hfs/hfs_encodings/hfs_encodinghint.c		optional marble_hfs
++bsd/marble_hfs/hfs_encodings/hfs_encodings.c		optional marble_hfs
++bsd/marble_hfs/marble_hfs_iokit.c		optional marble_hfs
++
+ bsd/kern/kern_csr.c			optional config_csr
+ bsd/kern/kern_debug.c			standard
+ bsd/kern/kern_symfile.c			standard
+@@ -594,3 +641,5 @@ bsd/skywalk/packet/packet_kern.c		optional skywalk
+ bsd/skywalk/packet/pbufpool.c			optional skywalk
+ bsd/skywalk/packet/pbufpool_kern.c		optional skywalk
+ bsd/dev/cpu_copy_in_cksum_gen.c			optional skywalk
++
++bsd/dev/marble_ui_sample.c		standard
+diff --git a/bsd/dev/mem.c b/bsd/dev/mem.c
+index c64e636..cfeccf1 100644
+--- a/bsd/dev/mem.c
++++ b/bsd/dev/mem.c
+@@ -107,6 +107,70 @@ extern boolean_t kernacc(off_t, size_t );
+ 
+ static SECURITY_READ_ONLY_LATE(caddr_t) devzerobuf;
+ 
++/* Marble-only trace of selected graphics daemons' /dev/null writes. */
++static uint32_t marble_null_trace_bytes;
++static void
++marble_null_trace(struct uio *uio)
++{
++	uint32_t enabled = 0;
++	char name[32] = { 0 };
++	char bytes[512];
++	uio_t duplicate;
++	user_size_t count, reserved, cost, old;
++	uint32_t overhead, available;
++	int error;
++
++	/* No mutable parse cache: safe when writes arrive concurrently. */
++	if (!PE_parse_boot_argn("marble_null_trace", &enabled, sizeof(enabled)) || enabled != 1) {
++		return;
++	}
++	proc_selfname(name, (int)sizeof(name));
++	name[sizeof(name) - 1] = '\0';
++	if (strcmp(name, "backboardd") != 0 && strcmp(name, "SpringBoard") != 0) {
++		return;
++	}
++	count = MIN(uio_curriovlen(uio), sizeof(bytes));
++	if (count == 0) {
++		return;
++	}
++	/* Budget payload plus worst-case per-line prefix and newline bytes. */
++	overhead = (uint32_t)strlen(name) + 4;
++	reserved = count;
++	cost = reserved + overhead;
++	/* Atomically reserve at most 128 KiB even with concurrent writers. */
++	old = __atomic_fetch_add(&marble_null_trace_bytes, (uint32_t)cost, __ATOMIC_RELAXED);
++	if (old >= 128 * 1024) {
++		(void)__atomic_fetch_sub(&marble_null_trace_bytes, (uint32_t)cost, __ATOMIC_RELAXED);
++		return;
++	}
++	available = 128 * 1024 - old;
++	if (cost > available) {
++		if (available <= overhead) {
++			(void)__atomic_fetch_sub(&marble_null_trace_bytes, (uint32_t)cost, __ATOMIC_RELAXED);
++			return;
++		}
++		count = available - overhead;
++		(void)__atomic_fetch_sub(&marble_null_trace_bytes,
++		    (uint32_t)(cost - count - overhead), __ATOMIC_RELAXED);
++	}
++	duplicate = uio_duplicate(uio);
++	if (duplicate == NULL) {
++		(void)__atomic_fetch_sub(&marble_null_trace_bytes,
++		    (uint32_t)(count + overhead), __ATOMIC_RELAXED);
++		return;
++	}
++	error = uiomove(bytes, (int)count, duplicate);
++	uio_free(duplicate);
++	if (error == 0) {
++		printf("|%s| %.*s%s", name, (int)count, bytes,
++		    (count > 0 && bytes[count - 1] == '\n') ? "" : "\n");
++	} else {
++		(void)__atomic_fetch_sub(&marble_null_trace_bytes,
++		    (uint32_t)(count + overhead), __ATOMIC_RELAXED);
++	}
++}
++
++
+ int mmread(dev_t dev, struct uio *uio);
+ int mmwrite(dev_t dev, struct uio *uio);
+ int mmioctl(dev_t dev, u_long cmd, caddr_t data, int flag, struct proc *p);
+@@ -216,6 +280,7 @@ mmrw(dev_t dev, struct uio *uio, enum uio_rw rw)
+ 			if (rw == UIO_READ) {
+ 				return 0;
+ 			}
++			marble_null_trace(uio);
+ 			c = uio_curriovlen(uio);
+ 
+ 			error = 0; /* Always succeeds, always consumes all input */
+diff --git a/bsd/dev/memdev.c b/bsd/dev/memdev.c
+index 3e6bffa..833acb2 100644
+--- a/bsd/dev/memdev.c
++++ b/bsd/dev/memdev.c
+@@ -247,10 +247,10 @@ mdevrw(dev_t dev, struct uio *uio, __unused int ioflag)
+ 		}
+ 	}
+ 
+-	if (uio->uio_offset > (mdev[devid].mdSize << 12)) {
++	if (uio->uio_offset > (((uint64_t)mdev[devid].mdSize << 12))) {
+ 		count = 0;
+ 	} else {
+-		count = imin(uio_resid(uio), (mdev[devid].mdSize << 12) - uio->uio_offset);
++		count = imin(uio_resid(uio), (((uint64_t)mdev[devid].mdSize << 12)) - uio->uio_offset);
+ 	}
+ 
+ 	status = uiomove64(mdata, count, uio);     /* Move the data */
+@@ -285,16 +285,16 @@ mdevstrategy(struct buf *bp)
+  *	we just return with resid == count.
+  */
+ 
+-	if (blkoff >= (mdev[devid].mdSize << 12)) {                     /* Are they trying to read/write at/after end? */
+-		if (blkoff != (mdev[devid].mdSize << 12)) {              /* Are we trying to read after EOF? */
++	if (blkoff >= (((uint64_t)mdev[devid].mdSize << 12))) {                     /* Are they trying to read/write at/after end? */
++		if (blkoff != (((uint64_t)mdev[devid].mdSize << 12))) {              /* Are we trying to read after EOF? */
+ 			buf_seterror(bp, EINVAL);                                               /* Yeah, this is an error */
+ 		}
+ 		buf_biodone(bp);                                                                /* Return */
+ 		return;
+ 	}
+ 
+-	if ((blkoff + buf_count(bp)) > (mdev[devid].mdSize << 12)) {            /* Will this read go past end? */
+-		buf_setcount(bp, (uint32_t)((mdev[devid].mdSize << 12) - blkoff));  /* Yes, trim to max */
++	if ((blkoff + buf_count(bp)) > (((uint64_t)mdev[devid].mdSize << 12))) {            /* Will this read go past end? */
++		buf_setcount(bp, (uint32_t)((((uint64_t)mdev[devid].mdSize << 12)) - blkoff));  /* Yes, trim to max */
+ 	}
+ 	/*
+ 	 * make sure the buffer's data area is
+@@ -439,7 +439,7 @@ mdevioctl(dev_t dev, u_long cmd, caddr_t data, __unused int flag,
+ 		if (!(mdev[devid].mdFlags & mdInited)) {
+ 			return ENXIO;
+ 		}
+-		*o = ((mdev[devid].mdSize << 12) + mdev[devid].mdSecsize - 1) / mdev[devid].mdSecsize;
++		*o = ((((uint64_t)mdev[devid].mdSize << 12)) + mdev[devid].mdSecsize - 1) / mdev[devid].mdSecsize;
+ 		break;
+ 
+ 	/*
+@@ -765,7 +765,7 @@ mdevgetrange(int devid, uint64_t *base, uint64_t *size)
+ 	}
+ 
+ 	*base = mdev[devid].mdBase << 12;
+-	*size = mdev[devid].mdSize << 12;
++	*size = ((uint64_t)mdev[devid].mdSize << 12);
+ 
+ 	/* make sure (base, size) is a valid range and will not overflow */
+ 	assert(*size < (UINT64_MAX - *base));
+diff --git a/bsd/kern/bsd_init.c b/bsd/kern/bsd_init.c
+index 4df41ba..746a7de 100644
+--- a/bsd/kern/bsd_init.c
++++ b/bsd/kern/bsd_init.c
+@@ -476,6 +476,10 @@ bsd_rooted_ramdisk(void)
+ void
+ bsd_init(void)
+ {
++#if defined(MARBLE)
++    printf("MARBLE BOOT: bsd_init reached\n");
++#endif
++
+ 	struct uthread *ut;
+ 	vnode_t init_rootvnode = NULLVP;
+ 	struct proc_ro_data kernproc_ro_data = {
+@@ -691,6 +695,18 @@ bsd_init(void)
+ 	bsd_init_kprintf("calling vfsinit\n");
+ 	vfsinit();
+ 
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++	/* AMFI's MAC policy is built in on MARBLE (bsd/kern/marble_amfi.c). */
++	extern void marble_amfi_policy_register(void);
++	marble_amfi_policy_register();
++#endif
++
++#if MARBLE_HFS
++	/* HFS is built in on MARBLE: register it like its kext would, before mounting root. */
++	extern void marble_hfs_register(void);
++	marble_hfs_register();
++#endif
++
+ #if CONFIG_PROC_UUID_POLICY
+ 	/* Initial proc_uuid_policy subsystem */
+ 	bsd_init_kprintf("calling proc_uuid_policy_init()\n");
+@@ -868,9 +884,42 @@ bsd_init(void)
+ 
+ 		bsd_init_kprintf("vfs_mountroot\n");
+ 		if (0 == (err = vfs_mountroot())) {
++
++#if defined(MARBLE)
++            unsigned int marble_source_mode=0;
++            if (PE_parse_boot_argn("marble_ufs_probe", &marble_source_mode,
++                sizeof(marble_source_mode)) && marble_source_mode==9 &&
++                strcmp(rootdevice,"marbleufs0")==0) {
++                struct mount *marble_root_mount=mountlist.tqh_first;
++                if (!marble_root_mount || strcmp(marble_root_mount->mnt_vtable->vfc_name,"hfs"))
++                    panic("MARBLE UFS ROOT SOURCE: expected HFS");
++                strlcpy(vfs_statfs(marble_root_mount)->f_mntfromname,
++                    "/dev/marbleufs0",sizeof(vfs_statfs(marble_root_mount)->f_mntfromname));
++                printf("MARBLE UFS ROOT SOURCE: /dev/marbleufs0\n");
++            }
++#endif
++
++            unsigned int marble_hfs_stop = 0;
++            if (PE_parse_boot_argn("marble_hfs_stop", &marble_hfs_stop,
++                sizeof(marble_hfs_stop)) && marble_hfs_stop == 1) {
++                struct mount *mp = mountlist.tqh_first;
++                if (!mp || strcmp(mp->mnt_vtable->vfc_name, "hfs"))
++                    panic("MARBLE HFS ROOT: unexpected mounted filesystem");
++                panic("MARBLE HFS ROOT MOUNT OK DEV=%llx FLAGS=%llx",
++                    (unsigned long long)(unsigned int)rootdev,
++                    (unsigned long long)mp->mnt_flag);
++            }
+ 			break;
+ 		}
+ 		rootdevice[0] = '\0';
++
++        unsigned int marble_ufs_mode = 0;
++        if (PE_parse_boot_argn("marble_ufs_probe", &marble_ufs_mode,
++            sizeof(marble_ufs_mode)) && marble_ufs_mode == 9) {
++            extern uint64_t marble_ufs_root_read_count(void);
++            panic("MARBLE UFS ROOT MOUNT FAIL ERR=%llx READS=%llx",
++                (unsigned long long)(unsigned int)err, marble_ufs_root_read_count());
++        }
+ #if CONFIG_NETBOOT
+ 		if (netboot) {
+ 			PE_display_icon( 0, "noroot");  /* XXX a netboot-specific icon would be nicer */
+@@ -918,6 +967,22 @@ bsd_init(void)
+ 		require_rootauth = TRUE;
+ #endif // XNU_TARGET_OS_OSX && defined(__arm64__)
+ 
++#if defined(MARBLE) && (DEVELOPMENT || DEBUG)
++        /* Converted HFS has no Apple sealed-root authentication. This explicit
++         * development policy does not claim authentication or alter AMFI. */
++        unsigned int marble_unsealed_hfs = 0;
++        if (require_rootauth && PE_parse_boot_argn("marble_allow_unsealed_hfs_root",
++            &marble_unsealed_hfs, sizeof(marble_unsealed_hfs)) && marble_unsealed_hfs == 1) {
++            struct mount *mp = vnode_mount(rootvnode);
++            if (mp == NULL || strcmp(mp->mnt_vtable->vfc_name, "hfs") ||
++                !(mp->mnt_flag & MNT_RDONLY)) {
++                panic("MARBLE ROOT POLICY: expected readonly HFS root");
++            }
++            printf("MARBLE ROOT POLICY: DEVELOPMENT unsealed readonly HFS opt-in; AMFI unchanged\n");
++            require_rootauth = FALSE;
++        }
++#endif
++
+ 		if (require_rootauth) {
+ 			/* enforce sealedness */
+ 			int autherr = VNOP_IOCTL(rootvnode, FSIOC_KERNEL_ROOTAUTH, NULL, 0, vfs_context_kernel());
+@@ -1049,6 +1114,106 @@ bsd_init(void)
+ 	bsd_init_kprintf("done\n");
+ }
+ 
++
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++#include <sys/fcntl.h>
++/* Opt-in early-boot asset audit. Static scratch keeps the kernel stack bounded. */
++#define MARBLE_ASSET_AUDIT_MAX (256U * 1024U)
++#define MARBLE_ASSET_AUDIT_CHUNK 4096U
++static char marble_asset_audit_scratch[MARBLE_ASSET_AUDIT_CHUNK];
++
++static uint32_t
++marble_asset_audit_crc32(const uint8_t *bytes, size_t length, uint32_t crc)
++{
++	for (size_t i = 0; i < length; i++) {
++		crc ^= bytes[i];
++		for (unsigned int bit = 0; bit < 8; bit++) {
++			crc = (crc >> 1) ^ ((crc & 1) ? 0xedb88320U : 0U);
++		}
++	}
++	return crc;
++}
++
++static void
++marble_asset_audit_file(const char *path, proc_t p, vfs_context_t ctx, bool crc_prefix)
++{
++	vnode_t vp = NULL;
++	struct vnode_attr va;
++	int error;
++	uint64_t size = 0;
++	size_t limit = 0, done = 0;
++	uint32_t crc = 0xffffffffU;
++	bool have_size = false;
++
++	error = vnode_open(path, FREAD, 0, 0, &vp, ctx);
++	if (error != 0) {
++		printf("MARBLE ASSET: path=%s open_errno=%d\n", path, error);
++		return;
++	}
++
++	VATTR_INIT(&va);
++	VATTR_WANTED(&va, va_data_size);
++	error = vnode_getattr(vp, &va, ctx);
++	if (error == 0 && VATTR_IS_SUPPORTED(&va, va_data_size)) {
++		size = va.va_data_size;
++		have_size = true;
++	}
++	if (!crc_prefix || !have_size || size == 0) {
++		printf("MARBLE ASSET: path=%s getattr_errno=%d size=%s%llu\n",
++		    path, error, have_size ? "" : "unknown/", (unsigned long long)size);
++		(void)vnode_close(vp, FREAD, ctx);
++		return;
++	}
++
++	limit = (size > MARBLE_ASSET_AUDIT_MAX) ? MARBLE_ASSET_AUDIT_MAX : (size_t)size;
++	while (done < limit) {
++		size_t want = limit - done;
++		int resid = 0;
++		if (want > sizeof(marble_asset_audit_scratch)) {
++			want = sizeof(marble_asset_audit_scratch);
++		}
++		error = vn_rdwr(UIO_READ, vp, marble_asset_audit_scratch, (int)want,
++		    (off_t)done, UIO_SYSSPACE, 0, vfs_context_ucred(ctx), &resid, p);
++		if (resid < 0 || (size_t)resid > want) {
++			error = EIO;
++			break;
++		}
++		size_t got = want - (size_t)resid;
++		if (got != 0) {
++			crc = marble_asset_audit_crc32((const uint8_t *)marble_asset_audit_scratch, got, crc);
++			done += got;
++		}
++		if (error != 0 || got != want) {
++			if (error == 0) {
++				error = EIO;
++			}
++			break;
++		}
++	}
++	crc ^= 0xffffffffU;
++	printf("MARBLE ASSET: path=%s size=%llu prefix_bytes=%llu prefix_crc32=%08x read_errno=%d%s\n",
++	    path, (unsigned long long)size, (unsigned long long)done, crc, error,
++	    size > MARBLE_ASSET_AUDIT_MAX ? " capped=262144" : "");
++	(void)vnode_close(vp, FREAD, ctx);
++}
++
++static void
++marble_asset_audit(proc_t p)
++{
++	unsigned int enabled = 0;
++	if (!PE_parse_boot_argn("marble_asset_audit", &enabled, sizeof(enabled)) || enabled != 1) {
++		return;
++	}
++	vfs_context_t ctx = vfs_context_current();
++	printf("MARBLE ASSET: audit start\n");
++	marble_asset_audit_file("/System/Library/PrivateFrameworks/UIKitCore.framework/BoundingPathData.bundle/Assets.car", p, ctx, true);
++	marble_asset_audit_file("/System/Library/PrivateFrameworks/UIKitCore.framework/BoundingPathData.bundle/Info.plist", p, ctx, true);
++	marble_asset_audit_file("/System/Library/PrivateFrameworks/UIKitCore.framework/BoundingPathData.bundle/BoundingPathData", p, ctx, true);
++	marble_asset_audit_file("/private/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/com.apple.MobileGestalt.plist", p, ctx, false);
++	printf("MARBLE ASSET: audit end\n");
++}
++#endif /* MARBLE */
++
+ void
+ bsdinit_task(void)
+ {
+@@ -1075,6 +1240,13 @@ bsdinit_task(void)
+ 
+ 	bsd_init_kprintf("bsd_do_post - done");
+ 
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++    extern void marble_ui_sample_start(void);
++    marble_ui_sample_start();
++#endif
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++	marble_asset_audit(p);
++#endif
+ 	load_init_program(p);
+ 	lock_trace = 1;
+ }
+diff --git a/bsd/kern/decmpfs.c b/bsd/kern/decmpfs.c
+index 95192dd..ff8c5e3 100644
+--- a/bsd/kern/decmpfs.c
++++ b/bsd/kern/decmpfs.c
+@@ -515,7 +515,7 @@ decmpfs_fetch_compressed_header(vnode_t vp, decmpfs_cnode *cp, decmpfs_header **
+ 	const bool no_additional_data = ((cp != NULL)
+ 	    && (cp->cmp_type != 0)
+ 	    && (cp->cmp_minimal_xattr != 0));
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 	decmpfs_header *hdr = NULL;
+ 
+ 	/*
+diff --git a/bsd/kern/kern_core.c b/bsd/kern/kern_core.c
+index a7cc1e6..bfc1df8 100644
+--- a/bsd/kern/kern_core.c
++++ b/bsd/kern/kern_core.c
+@@ -116,7 +116,7 @@ kern_return_t thread_getstatus(thread_t act, int flavor,
+     thread_state_t tstate, mach_msg_type_number_t *count);
+ void task_act_iterate_wth_args(task_t, void (*)(thread_t, void *), void *);
+ 
+-#ifdef SECURE_KERNEL
++#if defined(SECURE_KERNEL) || defined(MARBLE)
+ __XNU_PRIVATE_EXTERN int do_coredump = 0;       /* default: don't dump cores */
+ #else
+ __XNU_PRIVATE_EXTERN int do_coredump = 1;       /* default: dump cores */
+diff --git a/bsd/kern/kern_exit.c b/bsd/kern/kern_exit.c
+index 1161432..52d3af5 100644
+--- a/bsd/kern/kern_exit.c
++++ b/bsd/kern/kern_exit.c
+@@ -1884,6 +1884,20 @@ proc_prepareexit(proc_t p, int rv, boolean_t perf_notify)
+ 		subcode = ut->uu_subcode;
+ 		etype = ut->uu_exception;
+ 
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++		if (p == current_proc()) {
++			extern void marble_crash_log(const char *, int, int, uint64_t, uint64_t);
++			marble_crash_log(p->p_comm, proc_getpid(p), WTERMSIG(rv),
++			    ((uint64_t)ut->uu_exception << 32) | (uint32_t)ut->uu_code, ut->uu_subcode);
++			/* abort_with_payload messages (_objc_fatal, os_crash_fmt, ...) */
++			if (PROC_HAS_EXITREASON(p)) {
++				char *desc = exit_reason_get_string_desc(p->p_exit_reason);
++				printf("CRASH %s reason ns %u code 0x%llx: %s\n", p->p_comm,
++				    p->p_exit_reason->osr_namespace, p->p_exit_reason->osr_code,
++				    desc != NULL ? desc : "(none)");
++			}
++		}
++#endif
+ 		/* Defualt to EXC_CRASH if the exception is not an EXC_RESOURCE or EXC_GUARD */
+ 		if (etype != EXC_RESOURCE || etype != EXC_GUARD) {
+ 			etype = EXC_CRASH;
+diff --git a/bsd/kern/kern_mib.c b/bsd/kern/kern_mib.c
+index ec635f2..bb8b994 100644
+--- a/bsd/kern/kern_mib.c
++++ b/bsd/kern/kern_mib.c
+@@ -518,7 +518,8 @@ sysctl_hw_generic(__unused struct sysctl_oid *oidp, void *arg1,
+ 		 * Deprecated variables.  We still support these for
+ 		 * backwards compatibility purposes only.
+ 		 */
+-#if XNU_TARGET_OS_OSX && defined(__arm64__)
++#if XNU_TARGET_OS_OSX && defined(__arm64__) && !defined(ARM64_BOARD_CONFIG_MARBLE)
++/* Marble UI identity comes from the custom device tree, not iOS-on-Mac. */
+ 	/* The following two are kludged for backward
+ 	 * compatibility. Use hw.product/hw.target for something
+ 	 * consistent instead. */
+diff --git a/bsd/kern/kern_trustcache.c b/bsd/kern/kern_trustcache.c
+index 4c22764..de58e28 100644
+--- a/bsd/kern/kern_trustcache.c
++++ b/bsd/kern/kern_trustcache.c
+@@ -248,6 +248,21 @@ trust_cache_runtime_init(void)
+ 	allow_legacy_caches = true;
+ #endif
+ 
++#if defined(MARBLE)
++	/*
++	 * Standalone MARBLE bring-up has no AppleImage4/AMFI kexts. Represent
++	 * the missing service explicitly: no caches can be loaded or matched.
++	 * Keep a NULL runtime through lockdown rather than a partially
++	 * initialized runtime that would later dereference absent callbacks.
++	 */
++	if (img4if == NULL || amfi == NULL) {
++		trust_cache_rt = NULL;
++		trust_cache_mut_rt = NULL;
++		printf("MARBLE: trust caches unavailable (Image4/AMFI not installed)\n");
++		return;
++	}
++#endif
++
+ 	/* Image4 interface needs to be available */
+ 	if (img4if == NULL) {
+ 		panic("image4 interface not available");
+@@ -478,6 +493,12 @@ check_trust_cache_runtime_for_uuid(
+ 		return KERN_INVALID_ARGUMENT;
+ 	}
+ 
++#if defined(MARBLE)
++	if (trust_cache_rt == NULL) {
++		return KERN_NOT_FOUND;
++	}
++#endif
++
+ #if   PMAP_CS_PPL_MONITOR
+ 	ret = ppl_check_trust_cache_runtime_for_uuid(check_uuid);
+ #else
+@@ -562,6 +583,12 @@ load_trust_cache_with_type(
+ 		}
+ 	}
+ 
++#if defined(MARBLE)
++	if (trust_cache_rt == NULL) {
++		return KERN_NOT_SUPPORTED;
++	}
++#endif
++
+ 	/*
+ 	 * If we don't have an external manifest provided, we expect the img4_object to have
+ 	 * the manifest embedded. In this case, we need to extract the different artifacts
+@@ -668,6 +695,12 @@ load_legacy_trust_cache(
+ 		panic("overflow on the module: %p | %lu", module_data, module_size);
+ 	}
+ 
++#if defined(MARBLE)
++	if (trust_cache_rt == NULL) {
++		return KERN_NOT_SUPPORTED;
++	}
++#endif
++
+ #if   PMAP_CS_PPL_MONITOR
+ 	ret = ppl_load_legacy_trust_cache(module_data, module_size);
+ #else
+@@ -696,6 +729,15 @@ query_trust_cache(
+ 		return KERN_INVALID_ARGUMENT;
+ 	}
+ 
++#if defined(MARBLE)
++	if (trust_cache_rt == NULL) {
++		if (query_type >= kTCQueryTypeTotal) {
++			return KERN_INVALID_ARGUMENT;
++		}
++		return KERN_NOT_FOUND;
++	}
++#endif
++
+ #if   PMAP_CS_PPL_MONITOR
+ 	ret = ppl_query_trust_cache(query_type, cdhash, query_token);
+ #else
+@@ -904,6 +946,12 @@ static_trust_cache_capabilities(
+ 	*capabilities0_ret = kTCCapabilityNone;
+ 	*capabilities1_ret = kTCCapabilityNone;
+ 
++#if defined(MARBLE)
++	if (trust_cache_rt == NULL) {
++		return KERN_NOT_SUPPORTED;
++	}
++#endif
++
+ 	/* Ensure static trust caches have been initialized */
+ 	if (trust_cache_static_init == false) {
+ 		panic("attempted to query static trust cache capabilities without init");
+diff --git a/bsd/kern/kpi_socket.c b/bsd/kern/kpi_socket.c
+index 003cfb0..735eaf3 100644
+--- a/bsd/kern/kpi_socket.c
++++ b/bsd/kern/kpi_socket.c
+@@ -727,7 +727,7 @@ sock_receive_internal(socket_t sock, struct msghdr *msg, mbuf_t *data,
+ 	int error = 0;
+ 	user_ssize_t length = 0;
+ 	struct sockaddr *fromsa = NULL;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF((msg != NULL) ? msg->msg_iovlen : 0)];
++	UIO_STACKBUF(uio_buf, (msg != NULL) ? msg->msg_iovlen : 0);
+ 
+ 	if (sock == NULL) {
+ 		return EINVAL;
+diff --git a/bsd/kern/sys_generic.c b/bsd/kern/sys_generic.c
+index 9de68e1..66a3528 100644
+--- a/bsd/kern/sys_generic.c
++++ b/bsd/kern/sys_generic.c
+@@ -303,7 +303,7 @@ dofileread(vfs_context_t ctx, struct fileproc *fp,
+     user_addr_t bufp, user_size_t nbyte, off_t offset, int flags,
+     user_ssize_t *retval)
+ {
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 	uio_t uio;
+ 	int spacetype;
+ 
+@@ -350,7 +350,7 @@ static int
+ read_internal(struct proc *p, int fd, user_addr_t buf, user_size_t nbyte,
+     off_t offset, int flags, user_ssize_t *retval)
+ {
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 	uio_t uio;
+ 	int spacetype = IS_64BIT_PROCESS(p) ? UIO_USERSPACE64 : UIO_USERSPACE32;
+ 
+@@ -631,7 +631,7 @@ dofilewrite(vfs_context_t ctx, struct fileproc *fp,
+     user_addr_t bufp, user_size_t nbyte, off_t offset, int flags,
+     user_ssize_t *retval)
+ {
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 	uio_t uio;
+ 	int spacetype;
+ 
+@@ -678,7 +678,7 @@ int
+ write_internal(struct proc *p, int fd, user_addr_t buf, user_size_t nbyte,
+     off_t offset, int flags, guardid_t *puguard, user_ssize_t *retval)
+ {
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 	uio_t uio;
+ 	int spacetype = IS_64BIT_PROCESS(p) ? UIO_USERSPACE64 : UIO_USERSPACE32;
+ 
+diff --git a/bsd/kern/uipc_syscalls.c b/bsd/kern/uipc_syscalls.c
+index f2bd38e..50625c0 100644
+--- a/bsd/kern/uipc_syscalls.c
++++ b/bsd/kern/uipc_syscalls.c
+@@ -3561,7 +3561,7 @@ sendfile(proc_ref_t p, struct sendfile_args *uap, __unused int *retval)
+ 		mbuf_t  m;
+ 		unsigned int    nbufs = SFUIOBUFS, i;
+ 		uio_t   auio;
+-		uio_stackbuf_t    uio_buf[UIO_SIZEOF(SFUIOBUFS)]; /* 1 KB !!! */
++		UIO_STACKBUF(uio_buf, SFUIOBUFS); /* 1 KB !!! */
+ 		size_t  uiolen;
+ 		user_ssize_t    rlen;
+ 		off_t   pgoff;
+diff --git a/bsd/miscfs/mockfs/mockfs_fsnode.c b/bsd/miscfs/mockfs/mockfs_fsnode.c
+index e000126..55c851c 100644
+--- a/bsd/miscfs/mockfs/mockfs_fsnode.c
++++ b/bsd/miscfs/mockfs/mockfs_fsnode.c
+@@ -85,7 +85,7 @@ mockfs_fsnode_create(mount_t mp, uint8_t type, mockfs_fsnode_t * fsnpp)
+ 		goto done;
+ 	}
+ 
+-	*fsnpp = kalloc_type(mockfs_fsnode_t, Z_WAITOK | Z_ZERO | Z_NOFAIL);
++	*fsnpp = kalloc_type(struct mockfs_fsnode, Z_WAITOK | Z_ZERO | Z_NOFAIL);
+ 	(*fsnpp)->size = new_size;
+ 	(*fsnpp)->type = type;
+ 	(*fsnpp)->mnt = mp;
+@@ -154,7 +154,7 @@ mockfs_fsnode_destroy(mockfs_fsnode_t fsnp)
+ 		}
+ 	}
+ 
+-	kfree_type(mockfs_fsnode_t, fsnp);
++	kfree_type(struct mockfs_fsnode, fsnp);
+ done:
+ 	return rvalue;
+ }
+@@ -345,7 +345,8 @@ mockfs_fsnode_vnode(mockfs_fsnode_t fsnp, vnode_t * vpp)
+ 				panic("mockfs_fsvnode failed to get ubc_mem_object for a new vnode");
+ 			}
+ 
+-			rvalue = pager_map_to_phys_contiguous(ubc_mem_object, 0, (mockfs_mnt->mockfs_memdev_base << PAGE_SHIFT), fsnp->size);
++			/* memdev counts in 4K pages, independent of the kernel's PAGE_SHIFT. */
++			rvalue = pager_map_to_phys_contiguous(ubc_mem_object, 0, ((uint64_t)mockfs_mnt->mockfs_memdev_base << 12), fsnp->size);
+ 
+ 			if (rvalue) {
+ 				panic("mockfs_fsnode_vnode failed to create fictitious pages for a memory-backed device; rvalue = %d", rvalue);
+diff --git a/bsd/miscfs/mockfs/mockfs_vfsops.c b/bsd/miscfs/mockfs/mockfs_vfsops.c
+index 325bb06..42d06af 100644
+--- a/bsd/miscfs/mockfs/mockfs_vfsops.c
++++ b/bsd/miscfs/mockfs/mockfs_vfsops.c
+@@ -38,6 +38,9 @@
+ #include <sys/malloc.h>
+ #include <sys/mount_internal.h>
+ #include <sys/vnode_internal.h>
++#include <sys/buf.h>
++#include <mach-o/loader.h>
++#include <mach-o/fat.h>
+ 
+ static LCK_GRP_DECLARE(mockfs_mtx_grp, "mockfs-mutex");
+ 
+@@ -61,6 +64,43 @@ int mockfs_init(__unused struct vfsconf * vfsc);
+  *
+  * Returns 0 on success, or an error.
+  */
++/*
++ * mockfs_check_macho:
++ *   mockfs serves the whole root device as one executable, so it would claim
++ *   any device. Accept only a Mach-O (thin or fat) image, so that a device
++ *   holding a real filesystem is left to the next filesystem in mountroot.
++ */
++static int
++mockfs_check_macho(vnode_t rvp)
++{
++	buf_t bp = NULL;
++	uint32_t magic = 0;
++	int error;
++
++	error = (int)buf_meta_bread(rvp, 0, DEV_BSIZE, NOCRED, &bp);
++	if (!error) {
++		memcpy(&magic, (const void *)buf_dataptr(bp), sizeof(magic));
++		switch (magic) {
++		case MH_MAGIC:
++		case MH_CIGAM:
++		case MH_MAGIC_64:
++		case MH_CIGAM_64:
++		case FAT_MAGIC:
++		case FAT_CIGAM:
++			break;
++		default:
++			error = EINVAL;
++			break;
++		}
++	}
++	if (bp) {
++		/* Do not leave a DEV_BSIZE block cached for the next filesystem's reads. */
++		buf_markinvalid(bp);
++		buf_brelse(bp);
++	}
++	return error;
++}
++
+ int
+ mockfs_mountroot(mount_t mp, vnode_t rvp, __unused vfs_context_t ctx)
+ {
+@@ -72,9 +112,12 @@ mockfs_mountroot(mount_t mp, vnode_t rvp, __unused vfs_context_t ctx)
+ 	dk_memdev_info_t memdev_info;
+ 
+ 	/*
+-	 * TODO: Validate that the device at least LOOKS like a mach-o (has a sane header); this would prevent us
+-	 *   from causing EBADMACHO panics further along the boot path.
++	 * Validate that the device at least LOOKS like a mach-o (has a sane header); this prevents us from
++	 *   claiming devices that hold real filesystems, and from causing EBADMACHO panics further along the boot path.
+ 	 */
++	if ((rvalue = mockfs_check_macho(rvp))) {
++		return rvalue;
++	}
+ 
+ 	/*
+ 	 * There are no M_MOCKFS* definitions at the moment, just use M_TEMP.
+@@ -102,7 +145,12 @@ mockfs_mountroot(mount_t mp, vnode_t rvp, __unused vfs_context_t ctx)
+ 		 * For the moment, we won't try to optimize when mi_phys is true.
+ 		 */
+ 		if (!mockfs_mount_data->mockfs_physical_memory) {
+-			mockfs_mount_data->mockfs_memory_backed = memdev_info.mi_mdev;
++			/*
++			 * Only a physical memory device has an address the pager can map
++			 * directly; a virtual one (IOKit's RAMDisk) goes through normal
++			 * device I/O. mi_base is a physical page number only when mi_phys.
++			 */
++			mockfs_mount_data->mockfs_memory_backed = memdev_info.mi_mdev && memdev_info.mi_phys;
+ 			mockfs_mount_data->mockfs_physical_memory = memdev_info.mi_phys;
+ 			mockfs_mount_data->mockfs_memdev_base = memdev_info.mi_base;
+ 			mockfs_mount_data->mockfs_memdev_size = memdev_info.mi_size;
+diff --git a/bsd/nfs/nfs_serv.c b/bsd/nfs/nfs_serv.c
+index 6ae9b6b..8bda864 100644
+--- a/bsd/nfs/nfs_serv.c
++++ b/bsd/nfs/nfs_serv.c
+@@ -769,7 +769,7 @@ nfsrv_readlink(
+ 	struct nfsm_chain *nmreq, nmrep;
+ 	mbuf_t mpath, mp;
+ 	uio_t auio = NULL;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(4)];
++	UIO_STACKBUF(uio_buf, 4);
+ 	char *uio_bufp = &uio_buf[0];
+ 	int uio_buflen = UIO_SIZEOF(4);
+ 
+@@ -917,7 +917,7 @@ nfsrv_read(
+ 	struct vnode_attr vattr, *vap = &vattr;
+ 	off_t off;
+ 	uid_t saved_uid;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(0)];
++	UIO_STACKBUF(uio_buf, 0);
+ 	struct nfsm_chain *nmreq, nmrep;
+ 
+ 	error = 0;
+@@ -3559,7 +3559,7 @@ nfsrv_symlink(
+ 	struct nfs_export *nx = NULL;
+ 	struct nfs_export_options *nxo = NULL;
+ 	uio_t auio = NULL;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 	struct nfsm_chain *nmreq, nmrep;
+ 	__unused const int nfs_vers = nd->nd_vers;
+ 	assert(nd->nd_vers == NFS_VER2 || nd->nd_vers == NFS_VER3);
+@@ -4215,7 +4215,7 @@ nfsrv_readdir(
+ 	struct nfs_export *nx;
+ 	struct nfs_export_options *nxo;
+ 	uio_t auio = NULL;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 	int len, nlen, rem, xfer, error, attrerr;
+ 	int siz, count, fullsiz, eofflag, nentries;
+ 	u_quad_t off, toff, verf = 0;
+@@ -4462,7 +4462,7 @@ nfsrv_readdirplus(
+ 	struct nfs_export *nx;
+ 	struct nfs_export_options *nxo;
+ 	uio_t auio = NULL;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 	struct vnode_attr attr, va, *vap = &va;
+ 	int len, nlen, rem, xfer, error, attrerr, gotfh, gotattr;
+ 	int siz, dircount, maxcount, fullsiz, eofflag, dirlen, nentries, isdotdot;
+diff --git a/bsd/sys/make_symbol_aliasing.sh b/bsd/sys/make_symbol_aliasing.sh
+index 24fb244..4c9f478 100755
+--- a/bsd/sys/make_symbol_aliasing.sh
++++ b/bsd/sys/make_symbol_aliasing.sh
+@@ -34,7 +34,7 @@ fi
+ SDKROOT="$1"
+ OUTPUT="$2"
+ 
+-AVAILABILITY_PL="${SDKROOT}/${DRIVERKITROOT}/usr/local/libexec/availability.pl"
++AVAILABILITY_PL="${FAKEROOT_DIR}/usr/local/libexec/availability.pl"
+ 
+ if [ ! -x "${AVAILABILITY_PL}" ] ; then
+     echo "Unable to locate ${AVAILABILITY_PL} (or not executable)" >&2
+diff --git a/bsd/sys/pthread_internal.h b/bsd/sys/pthread_internal.h
+index 42e23d8..5f70305 100644
+--- a/bsd/sys/pthread_internal.h
++++ b/bsd/sys/pthread_internal.h
+@@ -34,7 +34,12 @@
+ 
+ struct ksyn_waitq_element {
+ #if __LP64__
++	#if defined(ARM64_BOARD_CONFIG_MARBLE)
++	/* libpthread-514.100.2 includes the trailing kwe_uth pointer. */
++	char opaque[56];
++#else
+ 	char opaque[48];
++#endif
+ #else
+ 	char opaque[32];
+ #endif
+diff --git a/bsd/sys/uio_internal.h b/bsd/sys/uio_internal.h
+index 74a2036..63e9f27 100644
+--- a/bsd/sys/uio_internal.h
++++ b/bsd/sys/uio_internal.h
+@@ -172,6 +172,14 @@ __END_DECLS
+ 
+ typedef char __attribute__((aligned(_Alignof(union iovecs)))) uio_stackbuf_t;
+ 
++/*
++ * UIO_STACKBUF - declare a correctly sized and aligned stack buffer for
++ *	uio_createwithbuffer(). Backported from later xnu: newer clang rejects
++ *	arrays of the over-aligned uio_stackbuf_t.
++ */
++#define UIO_STACKBUF(name, niov) \
++	uint64_t name[(UIO_SIZEOF(niov) + sizeof(uint64_t) - 1) / sizeof(uint64_t)]
++
+ #define UIO_IS_USER_SPACE32( a_uio_t )  \
+ 	( (a_uio_t)->uio_segflg == UIO_USERSPACE32 || (a_uio_t)->uio_segflg == UIO_PHYS_USERSPACE32 || \
+ 	  (a_uio_t)->uio_segflg == UIO_USERISPACE32 )
+diff --git a/bsd/vfs/kpi_vfs.c b/bsd/vfs/kpi_vfs.c
+index 6bf58c3..b9c2ea0 100644
+--- a/bsd/vfs/kpi_vfs.c
++++ b/bsd/vfs/kpi_vfs.c
+@@ -78,6 +78,7 @@
+ 
+ 
+ #include <sys/param.h>
++#include <pexpert/pexpert.h>
+ #include <sys/systm.h>
+ #include <sys/proc_internal.h>
+ #include <sys/kauth.h>
+@@ -4464,7 +4465,28 @@ vn_rename(struct vnode *fdvp, struct vnode **fvpp, struct componentname *fcnp, s
+ 		}
+ 	}
+ 
+-	/*
++	#if defined(ARM64_BOARD_CONFIG_MARBLE)
++		/* Match HFS exchangedata for atomic same-volume file swaps, only in QEMU test mode. */
++		if (_err == ENOTSUP && flags == VFS_RENAME_SWAP && *tvpp != NULLVP &&
++		    vnode_isreg(*fvpp) && vnode_isreg(*tvpp) &&
++		    vnode_mount(*fvpp) == vnode_mount(*tvpp)) {
++			uint32_t marble_qemu_writable_root = 0;
++            extern int marble_ufs_root_write_enabled(void);
++            mount_t marble_swap_mount=vnode_mount(*fvpp);
++            int marble_physical_swap =
++                (vfs_flags(marble_swap_mount) & MNT_ROOTFS) &&
++                strcmp(vfs_statfs(marble_swap_mount)->f_fstypename,"hfs")==0 &&
++                strcmp(vfs_statfs(marble_swap_mount)->f_mntfromname,"/dev/marbleufs0")==0 &&
++                marble_ufs_root_write_enabled();
++
++			if ((PE_parse_boot_argn("marble_qemu_writable_root",
++			    &marble_qemu_writable_root, sizeof(marble_qemu_writable_root)) &&
++			    marble_qemu_writable_root == 1) || marble_physical_swap)
++				_err = VNOP_EXCHANGE(*fvpp, *tvpp, 0, ctx);
++		}
++#endif
++
++/*
+ 	 * If moved to a new directory that is restricted,
+ 	 * set the restricted flag on the item moved.
+ 	 */
+diff --git a/bsd/vfs/vfs_attrlist.c b/bsd/vfs/vfs_attrlist.c
+index cbaa0b2..963acec 100644
+--- a/bsd/vfs/vfs_attrlist.c
++++ b/bsd/vfs/vfs_attrlist.c
+@@ -878,7 +878,7 @@ static int
+ setattrlist_setfinderinfo(vnode_t vp, char *fndrinfo, struct vfs_context *ctx)
+ {
+ 	uio_t   auio;
+-	uio_stackbuf_t    uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 	int     error;
+ 
+ 	if ((auio = uio_createwithbuffer(1, 0, UIO_SYSSPACE, UIO_WRITE, uio_buf, sizeof(uio_buf))) == NULL) {
+@@ -1847,7 +1847,7 @@ attr_pack_common(vfs_context_t ctx, mount_t mp, vnode_t vp, struct attrlist *alp
+ 		error = 0;
+ 		if (vp && !is_bulk) {
+ 			uio_t   auio;
+-			uio_stackbuf_t    uio_buf[UIO_SIZEOF(1)];
++			UIO_STACKBUF(uio_buf, 1);
+ 
+ 			if ((auio = uio_createwithbuffer(1, 0, UIO_SYSSPACE,
+ 			    UIO_READ, uio_buf, sizeof(uio_buf))) == NULL) {
+@@ -3120,7 +3120,7 @@ getattrlist_internal(vfs_context_t ctx, vnode_t vp, struct attrlist  *alp,
+ 	int             pack_invalid;
+ 	int             vtype = 0;
+ 	uio_t           auio;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 	// must be true for fork attributes to be used as new common attributes
+ 	const int use_fork = (options & FSOPT_ATTR_CMN_EXTENDED) != 0;
+ 
+@@ -3474,7 +3474,7 @@ refill_fd_direntries(vfs_context_t ctx, vnode_t dvp, struct fd_vn_data *fvd,
+     int *eofflagp)
+ {
+ 	uio_t rdir_uio;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 	size_t rdirbufsiz;
+ 	size_t rdirbufused;
+ 	int eofflag;
+@@ -4048,7 +4048,7 @@ getattrlistbulk(proc_t p, struct getattrlistbulk_args *uap, int32_t *retval)
+ 	enum uio_seg segflg;
+ 	int count;
+ 	uio_t auio = NULL;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 	kauth_action_t action;
+ 	int eofflag;
+ 	uint64_t options;
+diff --git a/bsd/vfs/vfs_lookup.c b/bsd/vfs/vfs_lookup.c
+index a05c8e7..94b4383 100644
+--- a/bsd/vfs/vfs_lookup.c
++++ b/bsd/vfs/vfs_lookup.c
+@@ -1670,7 +1670,7 @@ lookup_handle_symlink(struct nameidata *ndp, vnode_t *new_dp, bool *new_dp_has_i
+ 	int error;
+ 	char *cp;               /* pointer into pathname argument */
+ 	uio_t auio;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 	int need_newpathbuf;
+ 	u_int linklen = 0;
+ 	struct componentname *cnp = &ndp->ni_cnd;
+diff --git a/bsd/vfs/vfs_quota.c b/bsd/vfs/vfs_quota.c
+index d047621..f3e1dac 100644
+--- a/bsd/vfs/vfs_quota.c
++++ b/bsd/vfs/vfs_quota.c
+@@ -382,7 +382,7 @@ dqfileopen(struct quotafile *qfp, int type)
+ 	off_t file_size;
+ 	uio_t auio;
+ 	int error = 0;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 
+ 	context.vc_thread = current_thread();
+ 	context.vc_ucred = qfp->qf_cred;
+@@ -440,7 +440,7 @@ dqfileclose(struct quotafile *qfp, __unused int type)
+ 	struct dqfilehdr header;
+ 	struct vfs_context context;
+ 	uio_t auio;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 
+ 	auio = uio_createwithbuffer(1, 0, UIO_SYSSPACE, UIO_READ,
+ 	    &uio_buf[0], sizeof(uio_buf));
+@@ -767,7 +767,7 @@ dqlookup(struct quotafile *qfp, u_int32_t id, struct dqblk *dqb, uint32_t *index
+ 	int i, skip, last;
+ 	u_int32_t mask;
+ 	int error = 0;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 
+ 
+ 	qf_lock(qfp);
+@@ -986,7 +986,7 @@ dqsync_locked(struct dquot *dq)
+ 	struct dqblk dqb, *dqblkp;
+ 	uio_t auio;
+ 	int error;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 
+ 	if (dq->dq_id == 0) {
+ 		dq->dq_flags &= ~DQ_MOD;
+diff --git a/bsd/vfs/vfs_subr.c b/bsd/vfs/vfs_subr.c
+index 66b3cb7..2acc61f 100644
+--- a/bsd/vfs/vfs_subr.c
++++ b/bsd/vfs/vfs_subr.c
+@@ -78,6 +78,7 @@
+  */
+ 
+ #include <sys/param.h>
++#include <pexpert/pexpert.h>
+ #include <sys/systm.h>
+ #include <sys/proc_internal.h>
+ #include <sys/kauth.h>
+@@ -1152,6 +1153,19 @@ vfs_rootmountalloc_internal(struct vfstable *vfsp, const char *devname)
+ 	mp->mnt_vtable = vfsp;
+ 	mp->mnt_op = vfsp->vfc_vfsops;
+ 	mp->mnt_flag = MNT_RDONLY | MNT_ROOTFS;
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++		/* QEMU disposable-image experiment only; default stays sealed. */
++		{
++			uint32_t marble_qemu_writable_root = 0;
++			if (PE_parse_boot_argn("marble_qemu_writable_root",
++			    &marble_qemu_writable_root, sizeof(marble_qemu_writable_root)) &&
++			    marble_qemu_writable_root == 1) {
++				mp->mnt_flag &= ~MNT_RDONLY;
++				printf("MARBLE QEMU ROOT: writable test requested\n");
++			}
++		}
++#endif
++
+ 	mp->mnt_vnodecovered = NULLVP;
+ 	//mp->mnt_stat.f_type = vfsp->vfc_typenum;
+ 	mp->mnt_flag |= vfsp->vfc_flags & MNT_VISFLAGMASK;
+@@ -11021,7 +11035,7 @@ rmdir_remove_orphaned_appleDouble(vnode_t vp, vfs_context_t ctx, int * restart_f
+ 	uio_t auio = NULL;
+ 	int eofflag, siz = UIO_BUFF_SIZE, alloc_size = 0, nentries = 0;
+ 	int open_flag = 0, full_erase_flag = 0;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 	char *rbuf = NULL;
+ 	void *dir_pos;
+ 	void *dir_end;
+diff --git a/bsd/vfs/vfs_syscalls.c b/bsd/vfs/vfs_syscalls.c
+index 23ee4d5..83e74a4 100644
+--- a/bsd/vfs/vfs_syscalls.c
++++ b/bsd/vfs/vfs_syscalls.c
+@@ -824,6 +824,10 @@ vfs_notify_mount(vnode_t pdvp)
+  * Returns:        0                       Success
+  *                !0                       Not success
+  */
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++void marble_mg_cache_test(void);
++#endif
++
+ boolean_t root_fs_upgrade_try = FALSE;
+ 
+ int
+@@ -984,6 +988,13 @@ out:
+ 		nameidone(&nd);
+ 	}
+ 
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++	/* Run only after mount_common and namei cleanup have completed. */
++	if (error == 0 && (flags & MNT_UPDATE) && !(flags & MNT_RDONLY) &&
++	    strcmp(fstypename, "hfs") == 0) {
++		marble_mg_cache_test();
++	}
++#endif
+ 	return error;
+ }
+ 
+@@ -7264,7 +7275,7 @@ readlinkat_internal(vfs_context_t ctx, int fd, vnode_t lnk_vp, user_addr_t path,
+ 	uio_t auio;
+ 	int error;
+ 	struct nameidata nd;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 	bool put_vnode;
+ 
+ 	if (bufsize > INT32_MAX) {
+@@ -9676,6 +9687,75 @@ out1:
+ 	return error;
+ }
+ 
++
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++/* One-shot cache hypothesis test; never overwrite an existing backup. */
++void
++marble_mg_cache_test(void)
++{
++	static const char source[] = "/private/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/com.apple.MobileGestalt.plist";
++	static const char backup[] = "/private/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/com.apple.MobileGestalt.plist.marble-before-iphone-x";
++	unsigned int enabled = 0, writable = 0;
++	vnode_t vp = NULL;
++	struct vnode_attr va;
++	vfs_context_t ctx = vfs_context_current();
++	int error;
++
++	if (!PE_parse_boot_argn("marble_mg_cache_reset", &enabled, sizeof(enabled)) || enabled != 1) {
++		return;
++	}
++	if (!PE_parse_boot_argn("marble_ufs_write", &writable, sizeof(writable)) || writable != 1) {
++		printf("MARBLE MG CACHE: skipped; marble_ufs_write=1 required\n");
++		return;
++	}
++	error = vnode_lookup(source, VNODE_LOOKUP_NOFOLLOW, &vp, ctx);
++	if (error != 0) {
++		printf("MARBLE MG CACHE: skipped; source lookup errno=%d\n", error);
++		return;
++	}
++	uint64_t mount_flags = vfs_flags(vnode_mount(vp));
++	if (!(mount_flags & MNT_ROOTFS) || (mount_flags & MNT_RDONLY)) {
++		printf("MARBLE MG CACHE: skipped; source is not on writable root flags=%llx\n",
++		    (unsigned long long)mount_flags);
++		vnode_put(vp);
++		return;
++	}
++	if (!vnode_isreg(vp)) {
++		printf("MARBLE MG CACHE: skipped; source is not a regular file\n");
++		vnode_put(vp);
++		return;
++	}
++	VATTR_INIT(&va);
++	VATTR_WANTED(&va, va_data_size);
++	error = vnode_getattr(vp, &va, ctx);
++	if (error != 0 || !VATTR_IS_SUPPORTED(&va, va_data_size)) {
++		printf("MARBLE MG CACHE: skipped; getattr errno=%d\n", error ? error : EIO);
++		vnode_put(vp);
++		return;
++	}
++	uint64_t size = va.va_data_size;
++	vnode_put(vp);
++	if (size == 0 || size > (1024U * 1024U)) {
++		printf("MARBLE MG CACHE: skipped; size=%llu outside 1..1048576\n",
++		    (unsigned long long)size);
++		return;
++	}
++
++	error = renameat_internal(ctx, AT_FDCWD, (user_addr_t)source,
++	    AT_FDCWD, (user_addr_t)backup, UIO_SYSSPACE,
++	    RENAME_EXCL | RENAME_NOFOLLOW_ANY);
++	if (error == EEXIST) {
++		printf("MARBLE MG CACHE: skipped; backup already exists errno=%d\n", error);
++	} else if (error != 0) {
++		printf("MARBLE MG CACHE: rename failed errno=%d source_size=%llu\n",
++		    error, (unsigned long long)size);
++	} else {
++		printf("MARBLE MG CACHE: renamed original to fixed backup; bytes=%llu\n",
++		    (unsigned long long)size);
++	}
++}
++#endif /* ARM64_BOARD_CONFIG_MARBLE */
++
+ int
+ rename(__unused proc_t p, struct rename_args *uap, __unused int32_t *retval)
+ {
+@@ -10317,7 +10397,7 @@ getdirentries_common(int fd, user_addr_t bufp, user_size_t bufsize, ssize_t *byt
+ 	int spacetype = proc_is64bit(vfs_context_proc(&context)) ? UIO_USERSPACE64 : UIO_USERSPACE32;
+ 	off_t loff;
+ 	int error, numdirent;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 
+ get_from_fd:
+ 	error = fp_getfvp(vfs_context_proc(&context), fd, &fp, &vp);
+@@ -10616,7 +10696,7 @@ getdirentriesattr(proc_t p, struct getdirentriesattr_args *uap, int32_t *retval)
+ 	struct attrlist attributelist;
+ 	vfs_context_t ctx = vfs_context_current();
+ 	int fd = uap->fd;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 	kauth_action_t action;
+ 
+ 	AUDIT_ARG(fd, fd);
+@@ -10957,7 +11037,7 @@ searchfs(proc_t p, struct searchfs_args *uap, __unused int32_t *retval)
+ 	size_t mallocsize;
+ 	uint32_t nameiflags;
+ 	vfs_context_t ctx = vfs_context_current();
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 
+ 	/* Start by copying in fsearchblock parameter list */
+ 	if (IS_64BIT_PROCESS(p)) {
+@@ -12909,7 +12989,7 @@ getxattr(proc_t p, struct getxattr_args *uap, user_ssize_t *retval)
+ 	size_t namelen;
+ 	u_int32_t nameiflags;
+ 	int error;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 
+ 	if (uap->options & (XATTR_NOSECURITY | XATTR_NODEFAULT)) {
+ 		return EINVAL;
+@@ -12993,7 +13073,7 @@ fgetxattr(proc_t p, struct fgetxattr_args *uap, user_ssize_t *retval)
+ 	size_t attrsize = 0;
+ 	size_t namelen;
+ 	int error;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 
+ 	if (uap->options & (XATTR_NOFOLLOW | XATTR_NOSECURITY | XATTR_NODEFAULT)) {
+ 		return EINVAL;
+@@ -13041,7 +13121,7 @@ out:
+ struct setxattr_ctx {
+ 	struct nameidata nd;
+ 	char attrname[XATTR_MAXNAMELEN + 1];
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ };
+ 
+ /*
+@@ -13137,7 +13217,7 @@ fsetxattr(proc_t p, struct fsetxattr_args *uap, int *retval)
+ 	int spacetype = IS_64BIT_PROCESS(p) ? UIO_USERSPACE64 : UIO_USERSPACE32;
+ 	size_t namelen;
+ 	int error;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 
+ 	if (uap->options & (XATTR_NOFOLLOW | XATTR_NOSECURITY | XATTR_NODEFAULT)) {
+ 		return EINVAL;
+@@ -13314,7 +13394,7 @@ listxattr(proc_t p, struct listxattr_args *uap, user_ssize_t *retval)
+ 	size_t attrsize = 0;
+ 	u_int32_t nameiflags;
+ 	int error;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 
+ 	if (uap->options & (XATTR_NOSECURITY | XATTR_NODEFAULT)) {
+ 		return EINVAL;
+@@ -13356,7 +13436,7 @@ flistxattr(proc_t p, struct flistxattr_args *uap, user_ssize_t *retval)
+ 	int spacetype = proc_is64bit(p) ? UIO_USERSPACE64 : UIO_USERSPACE32;
+ 	size_t attrsize = 0;
+ 	int error;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 
+ 	if (uap->options & (XATTR_NOFOLLOW | XATTR_NOSECURITY | XATTR_NODEFAULT)) {
+ 		return EINVAL;
+diff --git a/bsd/vfs/vfs_vnops.c b/bsd/vfs/vfs_vnops.c
+index 5b51e9c..3a94ed4 100644
+--- a/bsd/vfs/vfs_vnops.c
++++ b/bsd/vfs/vfs_vnops.c
+@@ -964,7 +964,7 @@ vn_rdwr_64(
+ 	int spacetype;
+ 	struct vfs_context context;
+ 	int error = 0;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 
+ 	context.vc_thread = current_thread();
+ 	context.vc_ucred = cred;
+diff --git a/config/Private.arm64.exports b/config/Private.arm64.exports
+index db31d71..3ccaaf7 100644
+--- a/config/Private.arm64.exports
++++ b/config/Private.arm64.exports
+@@ -75,48 +75,13 @@ _mach_bridge_recv_timestamps
+ _mach_bridge_init_timestamp
+ _mach_bridge_set_params
+ _vfs_resolver_result
+-_pmap_iommu_init
+-_pmap_iommu_iovmalloc
+-_pmap_iommu_map
+-_pmap_iommu_unmap
+-_pmap_iommu_iovmfree
+-_pmap_iommu_ioctl
+-_pmap_iommu_alloc_contiguous_pages
+-_nvme_ppl_get_desc
+-_sart_get_desc
+-_t8020dart_get_desc
+-_t8020dart_vo_tte
+-_t6000dart_get_desc
+-_t6000dart_vo_tte
+-_t8110dart_get_desc
+-_t8110dart_max_translation_levels
+-_t8110dart_vo_tte
+-_t8110dart_vo_tt_index
+ _ml_mcache_flush_callback_register
+-_uat_get_desc
+ _set_invalidate_hmac_function
+ _PE_panic_debugging_enabled
+ _register_additional_panic_data_buffer
+ _apply_func_phys
+ _Switch_context
+ _gT1Sz
+-__ZN26IOUnifiedAddressTranslator10gMetaClassE
+-__ZN26IOUnifiedAddressTranslator10superClassE
+-__ZN26IOUnifiedAddressTranslator17getPageTableEntryEy
+-__ZN26IOUnifiedAddressTranslator18setClientContextIDEjb
+-__ZN26IOUnifiedAddressTranslator21removeClientContextIDEv
+-__ZN26IOUnifiedAddressTranslator19isPageFaultExpectedEyj
+-__ZN26IOUnifiedAddressTranslator22registerTaskForServiceEP4taskP9IOService
+-__ZN26IOUnifiedAddressTranslator23createMappingInApertureEjP18IOMemoryDescriptorjym
+-__ZN26IOUnifiedAddressTranslator23getTotalPageTableMemoryEv
+-__ZN26IOUnifiedAddressTranslator3mapEP11IOMemoryMapj
+-__ZN26IOUnifiedAddressTranslator5doMapEP18IOMemoryDescriptoryyj
+-__ZN26IOUnifiedAddressTranslator5unmapEP11IOMemoryMap
+-__ZN26IOUnifiedAddressTranslator7doUnmapEP18IOMemoryDescriptoryy
+-__ZN26IOUnifiedAddressTranslator8taskDiedEv
+-__ZN26IOUnifiedAddressTranslator12commitUnmapsEv
+-__ZN26IOUnifiedAddressTranslator14prepareFWUnmapEyy
+-__ZTV26IOUnifiedAddressTranslator
+ __ZN24IOBufferMemoryDescriptor18initWithGuardPagesEP4taskjy
+ __ZN24IOBufferMemoryDescriptor20inTaskWithGuardPagesEP4taskjy
+ __ZN27IOGuardPageMemoryDescriptor12initWithSizeEm
+diff --git a/config/Private.exports b/config/Private.exports
+index 9432f34..179b510 100644
+--- a/config/Private.exports
++++ b/config/Private.exports
+@@ -775,11 +775,9 @@ _kernel_image4_get_monitor_exports
+ _pmap_claim_reserved_ppl_page
+ _pmap_free_reserved_ppl_page
+ _pmap_in_ppl
+-_pmap_has_iofilter_protected_write
+ _pmap_iofilter_protected_write
+ _pmap_lookup_in_static_trust_cache
+ _pmap_lookup_in_loaded_trust_caches
+-_pmap_cs_configuration
+ _port_name_to_task:_port_name_to_task_external
+ _port_name_to_thread
+ _post_sys_powersource
+diff --git a/iokit/Kernel/IOService.cpp b/iokit/Kernel/IOService.cpp
+index 8559a66..6e8dc85 100644
+--- a/iokit/Kernel/IOService.cpp
++++ b/iokit/Kernel/IOService.cpp
+@@ -5126,7 +5126,9 @@ IOService::publishHiddenMedia(IOService * parent)
+ 	bool                wasHiding;
+ 
+ 	iomediaClass = OSMetaClass::getMetaClassWithName(gIOMediaKey);
++#if !defined(ARM64_BOARD_CONFIG_MARBLE)
+ 	assert(iomediaClass);
++#endif
+ 
+ 	LOCKWRITENOTIFY();
+ 	wasHiding = gIOServiceHideIOMedia;
+@@ -5135,6 +5137,13 @@ IOService::publishHiddenMedia(IOService * parent)
+ 	}
+ 	UNLOCKNOTIFY();
+ 
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++	/* MARBLE has no IOStorageFamily: without the IOMedia class no media exists to unhide. */
++	if (!iomediaClass) {
++		wasHiding = false;
++	}
++#endif
++
+ 	FindRootMediaContext ctx = { .services = NULL, .parent = parent };
+ 
+ 	if (wasHiding) {
+@@ -5179,7 +5188,17 @@ IOService::setRootMedia(IOService * root)
+ 	bool unhide;
+ 
+ 	ioblockstoragedriverClass = OSMetaClass::getMetaClassWithName(gIOBlockStorageDriverKey);
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++	/*
++	 * MARBLE has no IOStorageFamily, so no service can be a block storage
++	 * driver: the root (e.g. a RAM disk) is not block media, as for image boot.
++	 */
++	if (!ioblockstoragedriverClass) {
++		root = NULL;
++	}
++#else
+ 	assert(ioblockstoragedriverClass);
++#endif
+ 
+ 	while (root) {
+ 		if (root->metaCast(ioblockstoragedriverClass)) {
+diff --git a/iokit/Kernel/IOUserClient.cpp b/iokit/Kernel/IOUserClient.cpp
+index 2613ab5..bd825a3 100644
+--- a/iokit/Kernel/IOUserClient.cpp
++++ b/iokit/Kernel/IOUserClient.cpp
+@@ -27,6 +27,8 @@
+  */
+ 
+ #include <libkern/c++/OSKext.h>
++#include <libkern/c++/OSSerialize.h>
++#include <pexpert/pexpert.h>
+ #include <libkern/c++/OSSharedPtr.h>
+ #include <IOKit/IOKitServer.h>
+ #include <IOKit/IOKitKeysPrivate.h>
+@@ -2599,6 +2601,130 @@ is_io_service_match_property_table_bin(
+ 	return internal_io_service_match_property_table(service, matching, matchingCnt, matches);
+ }
+ 
++
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++extern "C" void marble_disp_note(const char *line);
++extern "C" void proc_selfname(char *buf, int size);
++
++
++static int
++marble_has(const char *hay, const char *needle)
++{
++	size_t i, j;
++	if (hay == NULL || needle == NULL || needle[0] == 0) {
++		return 0;
++	}
++	for (i = 0; hay[i] != 0; i++) {
++		for (j = 0; needle[j] != 0 && hay[i + j] == needle[j]; j++) {
++		}
++		if (needle[j] == 0) {
++			return 1;
++		}
++	}
++	return 0;
++}
++
++
++/* Dedicated budget: unrelated device-tree probes cannot exhaust this trace. */
++static uint32_t marble_graphics_service_lines;
++static bool
++marble_graphics_caller(char *name, size_t size)
++{
++	uint32_t enabled = 0;
++	if (!PE_parse_boot_argn("marble_graphics_services", &enabled, sizeof(enabled)) || enabled != 1) {
++		return false;
++	}
++	proc_selfname(name, (int)size);
++	name[size - 1] = 0;
++	return strcmp(name, "backboardd") == 0 || strcmp(name, "SpringBoard") == 0;
++}
++
++static void
++marble_graphics_emit(const char *name, const char *line)
++{
++	uint32_t old = __atomic_load_n(&marble_graphics_service_lines, __ATOMIC_RELAXED);
++	do {
++		if (old >= 192) {
++			return;
++		}
++	} while (!__atomic_compare_exchange_n(&marble_graphics_service_lines,
++	    &old, old + 1, false, __ATOMIC_RELAXED, __ATOMIC_RELAXED));
++	IOLog("MARBLE GFX %u %s[%d]: %s\n", old + 1, name, proc_selfpid(), line);
++}
++
++static void
++marble_graphics_matching(const char *kind, OSObject *object, unsigned int count)
++{
++	char name[32] = {0};
++	char line[384];
++	if (!marble_graphics_caller(name, sizeof(name))) {
++		return;
++	}
++	OSDictionary *dict = OSDynamicCast(OSDictionary, object);
++	if (dict == NULL) {
++		return;
++	}
++	const char *keys[] = {"IOProviderClass", "IONameMatch", "IOResourceMatch", "IOPropertyMatch"};
++	for (unsigned int i = 0; i < sizeof(keys) / sizeof(keys[0]); i++) {
++		OSObject *value = dict->getObject(keys[i]);
++		if (value == NULL) {
++			continue;
++		}
++		OSString *string = OSDynamicCast(OSString, value);
++		OSSerialize *ser = NULL;
++		const char *text = string != NULL ? string->getCStringNoCopy() : NULL;
++		if (text == NULL) {
++			ser = OSSerialize::withCapacity(128);
++			if (ser != NULL && value->serialize(ser)) {
++				text = ser->text();
++			}
++		}
++		snprintf(line, sizeof(line), "%s count=%u %s=%.240s", kind, count, keys[i], text != NULL ? text : "?");
++		for (unsigned int j = 0; line[j] != 0; j++) {
++			if (line[j] == '\n' || line[j] == '\r') line[j] = ' ';
++		}
++		marble_graphics_emit(name, line);
++		OSSafeReleaseNULL(ser);
++	}
++}
++
++static void
++marble_graphics_service(const char *kind, IOService *service, uint64_t value)
++{
++	char name[32] = {0};
++	char line[256];
++	if (!marble_graphics_caller(name, sizeof(name))) {
++		return;
++	}
++	snprintf(line, sizeof(line), "%s service=%.96s class=%.80s value=0x%llx",
++	    kind, service->getName(), service->getMetaClass()->getClassName(), value);
++	marble_graphics_emit(name, line);
++}
++
++static void
++marble_disp_matching(const char *kind, OSObject *dict, unsigned int count)
++{
++	marble_graphics_matching(kind, dict, count);
++	OSSerialize *ser = OSSerialize::withCapacity(256);
++	const char *text = "";
++	char name[32];
++	char line[180];
++
++	if (ser != NULL && dict != NULL && dict->serialize(ser) && ser->text() != NULL) {
++		text = ser->text();
++	}
++	if (marble_has(text, "IOMobileFramebuffer") == 0 && marble_has(text, "display-subsystem") == 0) {
++		OSSafeReleaseNULL(ser);
++		return;
++	}
++	name[0] = 0;
++	proc_selfname(name, (int)sizeof(name));
++	snprintf(line, sizeof(line), "%s %s count=%u %.80s", kind, name, count, text);
++	marble_disp_note(line);
++	OSSafeReleaseNULL(ser);
++}
++#endif
++
+ static kern_return_t
+ internal_io_service_get_matching_services(
+ 	mach_port_t main_port,
+@@ -2619,6 +2745,19 @@ internal_io_service_get_matching_services(
+ 
+ 	if ((dict = OSDynamicCast( OSDictionary, obj))) {
+ 		IOTaskRegistryCompatibilityMatching(current_task(), dict);
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++		{
++			unsigned int count = 0;
++			OSIterator *scan = IOService::getMatchingServices(dict);
++			if (scan != NULL) {
++				while (scan->getNextObject() != NULL) {
++					count++;
++				}
++				scan->release();
++			}
++			marble_disp_matching("services", dict, count);
++		}
++#endif
+ 		*existing = IOUserIterator::withIterator(IOService::getMatchingServices( dict ));
+ 		kr = kIOReturnSuccess;
+ 	} else {
+@@ -2703,6 +2842,9 @@ internal_io_service_get_matching_service(
+ 	if ((dict = OSDynamicCast( OSDictionary, obj))) {
+ 		IOTaskRegistryCompatibilityMatching(current_task(), dict);
+ 		*service = IOService::copyMatchingService( dict );
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++		marble_disp_matching("service", dict, *service ? 1 : 0);
++#endif
+ 		kr = *service ? kIOReturnSuccess : kIOReturnNotFound;
+ 	} else {
+ 		kr = kIOReturnBadArgument;
+@@ -2832,6 +2974,9 @@ internal_io_service_add_notification(
+ 			continue;
+ 		}
+ 
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++		marble_disp_matching(notification_type, dict, 0);
++#endif
+ 		notify = IOService::addMatchingNotification( sym, dict,
+ 		    &userNotify->_handler, userNotify );
+ 		if (notify) {
+@@ -3274,6 +3419,22 @@ is_io_registry_entry_from_path(
+ 	}
+ 
+ 	entry = IORegistryEntry::fromPath( path );
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++	{
++		char pname[32];
++		pname[0] = 0;
++		proc_selfname(pname, (int)sizeof(pname));
++		if (strcmp(pname, "nfcd") != 0 && path != NULL &&
++		    (strcmp(pname, "SpringBoard") == 0 || strcmp(pname, "backboardd") == 0 ||
++		     strncmp(pname, "IOMFB", 5) == 0 || marble_has(path, "arm-io") ||
++		     marble_has(path, "disp"))) {
++			char line[180];
++			snprintf(line, sizeof(line), "path %s %.120s -> %s", pname, path,
++			    entry != NULL ? entry->getName() : "none");
++			marble_disp_note(line);
++		}
++	}
++#endif
+ 
+ 	if (!entry && IOTaskRegistryCompatibility(current_task())) {
+ 		OSDictionary * matching;
+@@ -3563,6 +3724,23 @@ is_io_registry_entry_get_property_bytes(
+ #endif
+ 
+ 	obj = IOCopyPropertyCompatible(entry, property_name);
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++	if (property_name != NULL && entry->getName() != NULL &&
++	    (strcmp(property_name, "device_type") == 0 || strcmp(property_name, "external") == 0 ||
++	     strcmp(property_name, "dfr") == 0 || strcmp(property_name, "AppleTV") == 0 ||
++	     strcmp(property_name, "canvas-width") == 0 || strcmp(property_name, "canvas-height") == 0)) {
++		char pname[32];
++		pname[0] = 0;
++		proc_selfname(pname, (int)sizeof(pname));
++		if (strcmp(pname, "SpringBoard") == 0 || strcmp(pname, "backboardd") == 0 ||
++		    strncmp(pname, "IOMFB", 5) == 0) {
++			char line[180];
++			snprintf(line, sizeof(line), "prop %s %s %s -> %s", pname, entry->getName(),
++			    property_name, obj != NULL ? obj->getMetaClass()->getClassName() : "none");
++			marble_disp_note(line);
++		}
++	}
++#endif
+ 	if (!obj) {
+ 		return kIOReturnNoResources;
+ 	}
+@@ -3631,6 +3809,23 @@ is_io_registry_entry_get_property(
+ #endif
+ 
+ 	obj = IOCopyPropertyCompatible(entry, property_name);
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++	if (property_name != NULL && entry->getName() != NULL &&
++	    (strcmp(property_name, "device_type") == 0 || strcmp(property_name, "external") == 0 ||
++	     strcmp(property_name, "dfr") == 0 || strcmp(property_name, "AppleTV") == 0 ||
++	     strcmp(property_name, "canvas-width") == 0 || strcmp(property_name, "canvas-height") == 0)) {
++		char pname[32];
++		pname[0] = 0;
++		proc_selfname(pname, (int)sizeof(pname));
++		if (strcmp(pname, "SpringBoard") == 0 || strcmp(pname, "backboardd") == 0 ||
++		    strncmp(pname, "IOMFB", 5) == 0) {
++			char line[180];
++			snprintf(line, sizeof(line), "prop %s %s %s -> %s", pname, entry->getName(),
++			    property_name, obj != NULL ? obj->getMetaClass()->getClassName() : "none");
++			marble_disp_note(line);
++		}
++	}
++#endif
+ 	if (!obj) {
+ 		return kIOReturnNotFound;
+ 	}
+@@ -4083,6 +4278,18 @@ is_io_registry_entry_get_child_iterator(
+ 
+ 	*iterator = IOUserIterator::withIterator(entry->getChildIterator(
+ 		    IORegistryEntry::getPlane( plane )));
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++	if (entry->getName() != NULL && strcmp(entry->getName(), "arm-io") == 0) {
++		char name[32];
++		char line[96];
++		name[0] = 0;
++		proc_selfname(name, (int)sizeof(name));
++		if (strcmp(name, "nfcd") != 0) {
++			snprintf(line, sizeof(line), "children %s plane=%s", name, plane);
++			marble_disp_note(line);
++		}
++	}
++#endif
+ 
+ 	return kIOReturnSuccess;
+ }
+@@ -4146,7 +4353,14 @@ is_io_service_wait_quiet(
+ 	timeoutNS *= kSecondScale;
+ 	timeoutNS += wait_time.tv_nsec;
+ 
+-	return service->waitQuiet(timeoutNS);
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++	marble_graphics_service("waitQuiet-begin-ns", service, timeoutNS);
++#endif
++	kern_return_t result = service->waitQuiet(timeoutNS);
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++	marble_graphics_service("waitQuiet-end", service, (uint32_t)result);
++#endif
++	return result;
+ }
+ 
+ /* Routine io_service_wait_quiet_with_options */
+@@ -4173,7 +4387,14 @@ is_io_service_wait_quiet_with_options(
+ 		options &= ~kIOWaitQuietPanicOnFailure;
+ 	}
+ 
+-	return service->waitQuietWithOptions(timeoutNS, options);
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++	marble_graphics_service("waitQuietWithOptions-begin-ns", service, timeoutNS);
++#endif
++	kern_return_t result = service->waitQuietWithOptions(timeoutNS, options);
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++	marble_graphics_service("waitQuietWithOptions-end", service, (uint32_t)result);
++#endif
++	return result;
+ }
+ 
+ 
+@@ -4248,6 +4469,9 @@ is_io_service_open_extended(
+ 	bool           disallowAccess = false;
+ 
+ 	CHECK( IOService, _service, service );
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++	marble_graphics_service("open-begin-type", service, connect_type);
++#endif
+ 
+ 	if (!owningTask) {
+ 		return kIOReturnBadArgument;
+@@ -4461,6 +4685,9 @@ is_io_service_open_extended(
+ 
+ 	*connection = client;
+ 	*result = res;
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++	marble_graphics_service("open-end", service, (uint32_t)res);
++#endif
+ 
+ 	return err;
+ }
+diff --git a/iokit/KernelConfigTables.cpp b/iokit/KernelConfigTables.cpp
+index 2b14eda..ce6a7f0 100644
+--- a/iokit/KernelConfigTables.cpp
++++ b/iokit/KernelConfigTables.cpp
+@@ -34,6 +34,50 @@
+ 
+ const char * gIOKernelConfigTables =
+     "("
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++    "   {"
++    "     'IOClass'         = MarblePlatformExpert;"
++    "     'IOProviderClass' = IOPlatformExpertDevice;"
++    "     'IONameMatch'     = 'xiaomi,marble';"
++    "     'IOProbeScore'    = 10000:32;"
++    "   },"
++    "   {"
++    "     'IOClass'         = MarbleCPU;"
++    "     'IOProviderClass' = IOPlatformDevice;"
++    "     'IONameMatch'     = 'marble,boot-cpu';"
++    "     'IOProbeScore'    = 10000:32;"
++    "   },"
++    "   {"
++    "     'IOClass'         = IOWatchdog;"
++    "     'IOProviderClass' = IOResources;"
++    "     'IOMatchCategory' = IOWatchdog;"
++    "   },"
++    "   {"
++    "     'IOClass'         = IOCoreSurfaceRoot;"
++    "     'IOProviderClass' = IOResources;"
++    "     'IOMatchCategory' = IOCoreSurfaceRoot;"
++    "   },"
++    "   {"
++    "     'IOClass'         = AppleCLCD;"
++    "     'IOProviderClass' = IOPlatformDevice;"
++    "     'IONameMatch'     = 'marble,display';"
++    "   },"
++    "   {"
++    "     'IOClass'         = AppleKeyStore;"
++    "     'IOProviderClass' = IOResources;"
++    "     'IOMatchCategory' = AppleKeyStore;"
++    "   },"
++    "   {"
++    "     'IOClass' = MarbleHIDButtons;"
++    "     'IOProviderClass' = IOResources;"
++    "     'IOMatchCategory' = MarbleHIDButtons;"
++    "   },"
++    "   {"
++    "     'IOClass' = MarbleHIDTouch;"
++    "     'IOProviderClass' = IOResources;"
++    "     'IOMatchCategory' = MarbleHIDTouch;"
++    "   },"
++#endif
+     "   {"
+     "     'IOClass'         = IOPanicPlatform;"
+     "     'IOProviderClass' = IOPlatformExpertDevice;"
+diff --git a/iokit/bsddev/IOKitBSDInit.cpp b/iokit/bsddev/IOKitBSDInit.cpp
+index 5219fb0..16206cb 100644
+--- a/iokit/bsddev/IOKitBSDInit.cpp
++++ b/iokit/bsddev/IOKitBSDInit.cpp
+@@ -651,10 +651,18 @@ do_reboot:
+ 	return true;
+ }
+ 
++#include "marble_ufs_probe.inc"
++
+ kern_return_t
+ IOFindBSDRoot( char * rootName, unsigned int rootNameSize,
+     dev_t * root, u_int32_t * oflags )
+ {
++#if defined(MARBLE)
++    IOLog("MARBLE BOOT: IOFindBSDRoot reached\n");
++#endif
++
++    marble_ufs_readonly_probe();
++    if (marble_ufs_select_root(rootName, rootNameSize, root, oflags)) return KERN_SUCCESS;
+ 	mach_timespec_t     t;
+ 	IOService *         service;
+ 	IORegistryEntry *   regEntry;
+diff --git a/iokit/conf/files.arm64 b/iokit/conf/files.arm64
+index f731d43..6c64aea 100644
+--- a/iokit/conf/files.arm64
++++ b/iokit/conf/files.arm64
+@@ -5,3 +5,18 @@ iokit/Kernel/IOPMrootDomain.cpp    					optional iokitcpp
+ 
+ # SMP
+ iokit/Kernel/arm/AppleARMSMP.cpp    					optional iokitcpp
++
++# MARBLE device-tree platform (empty translation unit on other boards)
++iokit/Kernel/arm/MarblePlatformExpert.cpp                         optional iokitcpp
++
++iokit/Kernel/arm/MarbleCPU.cpp                                    optional iokitcpp
++iokit/Kernel/arm/MarbleEntitlements.cpp                           optional iokitcpp
++iokit/Kernel/arm/MarbleKeyStore.cpp                                optional iokitcpp
++iokit/Kernel/arm/MarbleSurface.cpp                              optional iokitcpp
++iokit/Kernel/arm/MarbleFramebuffer.cpp                          optional iokitcpp
++iokit/Kernel/arm/MarbleWatchdog.cpp                              optional iokitcpp
++
++iokit/Kernel/arm/hid/MarbleHID.cpp optional iokitcpp
++iokit/Kernel/arm/hid/IOHIDEvent.cpp optional iokitcpp
++iokit/Kernel/arm/hid/IOHIDEventServiceQueue.cpp optional iokitcpp
++iokit/Kernel/arm/hid/IOHIDEventServiceUserClient.cpp optional iokitcpp
+diff --git a/libkern/conf/Makefile.template b/libkern/conf/Makefile.template
+index f0c8a72..f7e81a8 100644
+--- a/libkern/conf/Makefile.template
++++ b/libkern/conf/Makefile.template
+@@ -19,6 +19,42 @@ include $(MakeInc_def)
+ CFLAGS+= -include meta_features.h -DLIBKERN_KERNEL_PRIVATE -DOSALLOCDEBUG=1
+ SFLAGS+= -include meta_features.h
+ 
++ifeq ($(CURRENT_MACHINE_CONFIG),MARBLE)
++MARBLE_AES_ROOT = $(SRCROOT)/libkern/crypto/marble_bearssl
++MARBLE_AES_INC = -I$(MARBLE_AES_ROOT)/inc -I$(MARBLE_AES_ROOT)/src
++marble_aes.o_INCFLAGS = $(MARBLE_AES_INC)
++marble_aes_ct.o_INCFLAGS = $(MARBLE_AES_INC)
++marble_aes_ct_enc.o_INCFLAGS = $(MARBLE_AES_INC)
++marble_aes_ct_dec.o_INCFLAGS = $(MARBLE_AES_INC)
++marble_aes_ct_cbcenc.o_INCFLAGS = $(MARBLE_AES_INC)
++marble_aes_ct_cbcdec.o_INCFLAGS = $(MARBLE_AES_INC)
++marble_aes.o_CFLAGS_ADD += -mgeneral-regs-only
++marble_aes_ct.o_CFLAGS_ADD += -mgeneral-regs-only
++marble_aes_ct_enc.o_CFLAGS_ADD += -mgeneral-regs-only
++marble_aes_ct_dec.o_CFLAGS_ADD += -mgeneral-regs-only
++marble_aes_ct_cbcenc.o_CFLAGS_ADD += -mgeneral-regs-only
++marble_aes_ct_cbcdec.o_CFLAGS_ADD += -mgeneral-regs-only
++corecrypto_aes.o_CFLAGS_ADD += -mgeneral-regs-only
++# BearSSL MD5 behind the legacy MD5Init/Update/Final API (corecrypto_md5.c).
++marble_md5.o_INCFLAGS = $(MARBLE_AES_INC)
++marble_dec32le.o_INCFLAGS = $(MARBLE_AES_INC)
++marble_enc32le.o_INCFLAGS = $(MARBLE_AES_INC)
++corecrypto_md5.o_INCFLAGS = $(MARBLE_AES_INC)
++marble_md5.o_CFLAGS_ADD += -mgeneral-regs-only
++marble_dec32le.o_CFLAGS_ADD += -mgeneral-regs-only
++marble_enc32le.o_CFLAGS_ADD += -mgeneral-regs-only
++corecrypto_md5.o_CFLAGS_ADD += -mgeneral-regs-only
++# BearSSL SHA-1 behind the legacy SHA1Init/Update/Final API (corecrypto_sha1.c).
++marble_sha1.o_INCFLAGS = $(MARBLE_AES_INC)
++marble_dec32be.o_INCFLAGS = $(MARBLE_AES_INC)
++marble_enc32be.o_INCFLAGS = $(MARBLE_AES_INC)
++corecrypto_sha1.o_INCFLAGS = $(MARBLE_AES_INC)
++marble_sha1.o_CFLAGS_ADD += -mgeneral-regs-only
++marble_dec32be.o_CFLAGS_ADD += -mgeneral-regs-only
++marble_enc32be.o_CFLAGS_ADD += -mgeneral-regs-only
++corecrypto_sha1.o_CFLAGS_ADD += -mgeneral-regs-only
++endif
++
+ # Runtime support functions don't interact well with LTO (9294679)
+ stack_protector.o_CFLAGS_ADD += $(CFLAGS_NOLTO_FLAG)
+ 
+diff --git a/libkern/conf/files b/libkern/conf/files
+index ece14c7..8df7fd3 100644
+--- a/libkern/conf/files
++++ b/libkern/conf/files
+@@ -97,6 +97,18 @@ libkern/crypto/corecrypto_sha1.c		optional crypto
+ libkern/crypto/corecrypto_md5.c			optional crypto
+ libkern/crypto/corecrypto_des.c			optional crypto
+ libkern/crypto/corecrypto_aes.c			optional crypto
++libkern/crypto/marble_aes.c	optional crypto
++libkern/crypto/marble_aes_ct.c	optional crypto
++libkern/crypto/marble_aes_ct_enc.c	optional crypto
++libkern/crypto/marble_aes_ct_dec.c	optional crypto
++libkern/crypto/marble_aes_ct_cbcenc.c	optional crypto
++libkern/crypto/marble_aes_ct_cbcdec.c	optional crypto
++libkern/crypto/marble_md5.c	optional crypto
++libkern/crypto/marble_dec32le.c	optional crypto
++libkern/crypto/marble_enc32le.c	optional crypto
++libkern/crypto/marble_sha1.c	optional crypto
++libkern/crypto/marble_dec32be.c	optional crypto
++libkern/crypto/marble_enc32be.c	optional crypto
+ libkern/crypto/corecrypto_aesxts.c		optional crypto
+ libkern/crypto/corecrypto_rand.c		optional crypto
+ libkern/crypto/corecrypto_rsa.c		    optional crypto
+diff --git a/libkern/crypto/corecrypto_aes.c b/libkern/crypto/corecrypto_aes.c
+index 20ff4f1..d9cd700 100644
+--- a/libkern/crypto/corecrypto_aes.c
++++ b/libkern/crypto/corecrypto_aes.c
+@@ -32,10 +32,21 @@
+ #include <corecrypto/ccaes.h>
+ #include <kern/debug.h>
+ 
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++/* MARBLE has a built-in portable AES provider for the legacy CBC/ECB API. */
++extern const struct ccmode_cbc marble_aes_cbc_encrypt;
++extern const struct ccmode_cbc marble_aes_cbc_decrypt;
++#define AES_CBC_ENCRYPT_MODE (&marble_aes_cbc_encrypt)
++#define AES_CBC_DECRYPT_MODE (&marble_aes_cbc_decrypt)
++#else
++#define AES_CBC_ENCRYPT_MODE (g_crypto_funcs->ccaes_cbc_encrypt)
++#define AES_CBC_DECRYPT_MODE (g_crypto_funcs->ccaes_cbc_decrypt)
++#endif
++
+ aes_rval
+ aes_encrypt_key(const unsigned char *key, int key_len, aes_encrypt_ctx cx[1])
+ {
+-	const struct ccmode_cbc *cbc = g_crypto_funcs->ccaes_cbc_encrypt;
++	const struct ccmode_cbc *cbc = AES_CBC_ENCRYPT_MODE;
+ 
+ 	/* Make sure the context size for the mode fits in the one we have */
+ 	if (cbc->size > sizeof(aes_encrypt_ctx)) {
+@@ -49,7 +60,7 @@ aes_rval
+ aes_encrypt_cbc(const unsigned char *in_blk, const unsigned char *in_iv, unsigned int num_blk,
+     unsigned char *out_blk, aes_encrypt_ctx cx[1])
+ {
+-	const struct ccmode_cbc *cbc = g_crypto_funcs->ccaes_cbc_encrypt;
++	const struct ccmode_cbc *cbc = AES_CBC_ENCRYPT_MODE;
+ 	cccbc_iv_decl(cbc->block_size, ctx_iv);
+ 
+ 	int rc = cccbc_set_iv(cbc, ctx_iv, in_iv);
+@@ -72,7 +83,7 @@ aes_encrypt(const unsigned char *in_blk, unsigned char *out_blk, aes_encrypt_ctx
+ aes_rval
+ aes_decrypt_key(const unsigned char *key, int key_len, aes_decrypt_ctx cx[1])
+ {
+-	const struct ccmode_cbc *cbc = g_crypto_funcs->ccaes_cbc_decrypt;
++	const struct ccmode_cbc *cbc = AES_CBC_DECRYPT_MODE;
+ 
+ 	/* Make sure the context size for the mode fits in the one we have */
+ 	if (cbc->size > sizeof(aes_decrypt_ctx)) {
+@@ -86,7 +97,7 @@ aes_rval
+ aes_decrypt_cbc(const unsigned char *in_blk, const unsigned char *in_iv, unsigned int num_blk,
+     unsigned char *out_blk, aes_decrypt_ctx cx[1])
+ {
+-	const struct ccmode_cbc *cbc = g_crypto_funcs->ccaes_cbc_decrypt;
++	const struct ccmode_cbc *cbc = AES_CBC_DECRYPT_MODE;
+ 	cccbc_iv_decl(cbc->block_size, ctx_iv);
+ 
+ 	int rc = cccbc_set_iv(cbc, ctx_iv, in_iv);
+diff --git a/libkern/crypto/corecrypto_md5.c b/libkern/crypto/corecrypto_md5.c
+index 242dcdb..0efe1a8 100644
+--- a/libkern/crypto/corecrypto_md5.c
++++ b/libkern/crypto/corecrypto_md5.c
+@@ -17,6 +17,62 @@ setCount(MD5_CTX *ctx, uint64_t count)
+ }
+ 
+ /* Copy a ccdigest ctx into a legacy MD5 context */
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++/*
++ * MARBLE has no corecrypto kext (g_crypto_funcs stays NULL). MD5 uses
++ * BearSSL's portable implementation (libkern/crypto/marble_md5.c), with
++ * MD5_CTX carrying exactly its state: chaining value, byte count and the
++ * partial block, converted around each call like the corecrypto path does.
++ */
++#include "marble_bearssl/inc/bearssl_hash.h"
++
++static void
++MD5ToBr(MD5_CTX *md5_ctx, br_md5_context *br_ctx)
++{
++	br_md5_init(br_ctx);
++	memcpy(br_ctx->val, md5_ctx->state, sizeof(br_ctx->val));
++	br_ctx->count = getCount(md5_ctx);
++	memcpy(br_ctx->buf, md5_ctx->buffer, sizeof(br_ctx->buf));
++}
++
++static void
++BrToMD5(const br_md5_context *br_ctx, MD5_CTX *md5_ctx)
++{
++	memcpy(md5_ctx->state, br_ctx->val, sizeof(md5_ctx->state));
++	setCount(md5_ctx, br_ctx->count);
++	memcpy(md5_ctx->buffer, br_ctx->buf, sizeof(md5_ctx->buffer));
++}
++
++void
++MD5Init(MD5_CTX *ctx)
++{
++	br_md5_context br_ctx;
++
++	br_md5_init(&br_ctx);
++	BrToMD5(&br_ctx, ctx);
++}
++
++void
++MD5Update(MD5_CTX *ctx, const void *data, unsigned int len)
++{
++	br_md5_context br_ctx;
++
++	MD5ToBr(ctx, &br_ctx);
++	br_md5_update(&br_ctx, data, len);
++	BrToMD5(&br_ctx, ctx);
++}
++
++void
++MD5Final(unsigned char digest[MD5_DIGEST_LENGTH], MD5_CTX *ctx)
++{
++	br_md5_context br_ctx;
++
++	MD5ToBr(ctx, &br_ctx);
++	br_md5_out(&br_ctx, digest);
++}
++
++#else /* !ARM64_BOARD_CONFIG_MARBLE */
++
+ static void
+ DiToMD5(const struct ccdigest_info *di, struct ccdigest_ctx *di_ctx, MD5_CTX *md5_ctx)
+ {
+@@ -68,3 +124,5 @@ MD5Final(unsigned char digest[MD5_DIGEST_LENGTH], MD5_CTX *ctx)
+ 	MD5ToDi(di, ctx, di_ctx);
+ 	ccdigest_final(di, di_ctx, digest);
+ }
++
++#endif /* !ARM64_BOARD_CONFIG_MARBLE */
+diff --git a/libkern/crypto/corecrypto_sha1.c b/libkern/crypto/corecrypto_sha1.c
+index 5fd982b..58b61a6 100644
+--- a/libkern/crypto/corecrypto_sha1.c
++++ b/libkern/crypto/corecrypto_sha1.c
+@@ -16,6 +16,62 @@ setCount(SHA1_CTX *ctx, uint64_t count)
+ 	ctx->c.b64[0] = count;
+ }
+ 
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++/*
++ * MARBLE has no corecrypto kext (g_crypto_funcs stays NULL). SHA-1 uses
++ * BearSSL's portable implementation (libkern/crypto/marble_sha1.c), with
++ * SHA1_CTX carrying exactly its state: chaining value, byte count and the
++ * partial block, converted around each call like the corecrypto path does.
++ */
++#include "marble_bearssl/inc/bearssl_hash.h"
++
++static void
++SHA1ToBr(SHA1_CTX *sha1_ctx, br_sha1_context *br_ctx)
++{
++	br_sha1_init(br_ctx);
++	memcpy(br_ctx->val, sha1_ctx->h.b32, sizeof(br_ctx->val));
++	br_ctx->count = getCount(sha1_ctx);
++	memcpy(br_ctx->buf, sha1_ctx->m.b8, sizeof(br_ctx->buf));
++}
++
++static void
++BrToSHA1(const br_sha1_context *br_ctx, SHA1_CTX *sha1_ctx)
++{
++	memcpy(sha1_ctx->h.b32, br_ctx->val, sizeof(sha1_ctx->h.b32));
++	setCount(sha1_ctx, br_ctx->count);
++	memcpy(sha1_ctx->m.b8, br_ctx->buf, sizeof(sha1_ctx->m.b8));
++}
++
++void
++SHA1Init(SHA1_CTX *ctx)
++{
++	br_sha1_context br_ctx;
++
++	br_sha1_init(&br_ctx);
++	BrToSHA1(&br_ctx, ctx);
++}
++
++void
++SHA1Update(SHA1_CTX *ctx, const void *data, size_t len)
++{
++	br_sha1_context br_ctx;
++
++	SHA1ToBr(ctx, &br_ctx);
++	br_sha1_update(&br_ctx, data, len);
++	BrToSHA1(&br_ctx, ctx);
++}
++
++void
++SHA1Final(void *digest, SHA1_CTX *ctx)
++{
++	br_sha1_context br_ctx;
++
++	SHA1ToBr(ctx, &br_ctx);
++	br_sha1_out(&br_ctx, digest);
++}
++
++#else /* !ARM64_BOARD_CONFIG_MARBLE */
++
+ /* Copy a ccdigest ctx into a legacy SHA1 context */
+ static void
+ DiToSHA1(const struct ccdigest_info *di, struct ccdigest_ctx *di_ctx, SHA1_CTX *sha1_ctx)
+@@ -69,6 +125,8 @@ SHA1Final(void *digest, SHA1_CTX *ctx)
+ 	ccdigest_final(di, di_ctx, digest);
+ }
+ 
++#endif /* !ARM64_BOARD_CONFIG_MARBLE */
++
+ /* This is not publicised in header, but exported in libkern.exports */
+ void SHA1Final_r(SHA1_CTX *context, void *digest);
+ void
+diff --git a/libkern/crypto/corecrypto_sha2.c b/libkern/crypto/corecrypto_sha2.c
+index 7392f0c..3ff330e 100644
+--- a/libkern/crypto/corecrypto_sha2.c
++++ b/libkern/crypto/corecrypto_sha2.c
+@@ -34,34 +34,50 @@
+ 
+ #if defined(CRYPTO_SHA2)
+ 
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++/*
++ * MARBLE has no corecrypto kext, so g_crypto_funcs stays NULL. SHA-256 uses
++ * XNU's built-in implementation directly, as the MARBLE PRNG does; this also
++ * serves code-signing page hashes. SHA-384/512 have no built-in provider.
++ */
++#include <corecrypto/ccsha2.h>
++#define SHA256_DI()                     (&ccsha256_ltc_di)
++#define SHA256_INIT(di, ctx)            ccdigest_init(di, ctx)
++#define SHA256_UPDATE(di, ctx, len, d)  ccdigest_update(di, ctx, len, d)
++#else
++#define SHA256_DI()                     (g_crypto_funcs->ccsha256_di)
++#define SHA256_INIT(di, ctx)            g_crypto_funcs->ccdigest_init_fn(di, ctx)
++#define SHA256_UPDATE(di, ctx, len, d)  g_crypto_funcs->ccdigest_update_fn(di, ctx, len, d)
++#endif
++
+ void
+ SHA256_Init(SHA256_CTX *ctx)
+ {
+ 	const struct ccdigest_info *di;
+-	di = g_crypto_funcs->ccsha256_di;
++	di = SHA256_DI();
+ 
+ 	/* Make sure the context size for the digest info fits in the one we have */
+ 	if (ccdigest_di_size(di) > sizeof(SHA256_CTX)) {
+ 		panic("%s: inconsistent size for SHA256 context", __FUNCTION__);
+ 	}
+ 
+-	g_crypto_funcs->ccdigest_init_fn(di, ctx->ctx);
++	SHA256_INIT(di, ctx->ctx);
+ }
+ 
+ void
+ SHA256_Update(SHA256_CTX *ctx, const void *data, size_t len)
+ {
+ 	const struct ccdigest_info *di;
+-	di = g_crypto_funcs->ccsha256_di;
++	di = SHA256_DI();
+ 
+-	g_crypto_funcs->ccdigest_update_fn(di, ctx->ctx, len, data);
++	SHA256_UPDATE(di, ctx->ctx, len, data);
+ }
+ 
+ void
+ SHA256_Final(void *digest, SHA256_CTX *ctx)
+ {
+ 	const struct ccdigest_info *di;
+-	di = g_crypto_funcs->ccsha256_di;
++	di = SHA256_DI();
+ 
+ 	ccdigest_final(di, ctx->ctx, digest);
+ }
+diff --git a/makedefs/MakeInc.def b/makedefs/MakeInc.def
+index 5bd6f23..9e4ac44 100644
+--- a/makedefs/MakeInc.def
++++ b/makedefs/MakeInc.def
+@@ -29,7 +29,7 @@ SUPPORTED_ARM64_MACHINE_CONFIGS = NONE
+ else ifneq ($(findstring _host,$(RC_ProjectName)),)
+ SUPPORTED_ARM64_MACHINE_CONFIGS = NONE
+ else
+-SUPPORTED_ARM64_MACHINE_CONFIGS = BCM2837 T6000 T8101 T8103 VMAPPLE
++SUPPORTED_ARM64_MACHINE_CONFIGS = BCM2837 T6000 T8101 T8103 VMAPPLE MARBLE
+ 
+ endif
+ 
+@@ -61,6 +61,7 @@ MACHINE_FLAGS_ARM64_T8103 = -DARM64_BOARD_CONFIG_T8103                  -mcpu=ap
+ MACHINE_FLAGS_ARM64_T6000 = -DARM64_BOARD_CONFIG_T6000 		-mcpu=apple-a14
+ MACHINE_FLAGS_ARM64_VMAPPLE = -DARM64_BOARD_CONFIG_VMAPPLE              -march=armv8.5a
+ MACHINE_FLAGS_ARM64_BCM2837 = -DARM64_BOARD_CONFIG_BCM2837
++MACHINE_FLAGS_ARM64_MARBLE = -DARM64_BOARD_CONFIG_MARBLE                -march=armv8.2-a+crypto
+ 
+ 
+ #
+@@ -259,8 +260,11 @@ ifeq ($(ARCH_STRING_FOR_CURRENT_MACHINE_CONFIG),)
+ # Without embdedded device map, use a default arch string
+ export ARCH_STRING_FOR_CURRENT_MACHINE_CONFIG := $(shell echo $(CURRENT_ARCH_CONFIG) | tr A-Z a-z)
+ ifneq ($(filter arm64,$(ARCH_STRING_FOR_CURRENT_MACHINE_CONFIG)),)
++# marble's Cortex-A76/A55 have no pointer authentication: stay plain arm64
++ifneq ($(CURRENT_MACHINE_CONFIG),MARBLE)
+ export ARCH_STRING_FOR_CURRENT_MACHINE_CONFIG := arm64e
+ endif
++endif
+ 
+ endif
+ 
+@@ -306,7 +310,6 @@ CFLAGS_GEN = $(DEBUG_CFLAGS) -nostdinc \
+ 	-fno-builtin \
+ 	-fno-common \
+ 	-ftrivial-auto-var-init=zero \
+-	-enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang \
+ 	-fsigned-bitfields \
+ 	-fmerge-all-constants \
+ 	-fno-c++-static-destructors \
+@@ -642,7 +645,7 @@ LDFLAGS_KERNEL_GEN = \
+ 	-Wl,-headerpad,152
+ 
+ # LDFLAGS_KERNEL_SDK	= -L$(SDKROOT)/usr/local/lib/kernel -lfirehose_kernel
+-LDFLAGS_KERNEL_SDK	= -L$(SDKROOT)/usr/local/lib/kernel -L$(SDKROOT)/usr/local/lib/kernel/platform
++LDFLAGS_KERNEL_SDK = -L$(FAKEROOT_DIR)/usr/local/lib/kernel
+ 
+ LDFLAGS_KERNEL_RELEASE	=
+ LDFLAGS_KERNEL_DEVELOPMENT =
+@@ -884,7 +887,7 @@ INCFLAGS_IMPORT	= $(patsubst %, -I$(OBJROOT)/EXPORT_HDRS/%, $(COMPONENT_IMPORT_L
+ INCFLAGS_EXTERN	= -I$(SRCROOT)/EXTERNAL_HEADERS
+ INCFLAGS_GEN	= -I$(SRCROOT)/$(COMPONENT) -I$(OBJROOT)/EXPORT_HDRS/$(COMPONENT)
+ INCFLAGS_LOCAL	= -I.
+-INCFLAGS_SDK	= -I$(SDKROOT)/usr/local/include/kernel
++INCFLAGS_SDK = -I$(FAKEROOT_DIR)/usr/local/include/kernel
+ INCFLAGS_PLATFORM = -I$(SDKROOT)/$(KPINCDIR)/platform
+ 
+ INCFLAGS	= $(INCFLAGS_LOCAL) $(INCFLAGS_GEN) $(INCFLAGS_IMPORT) $(INCFLAGS_EXTERN) $(INCFLAGS_MAKEFILE) $(INCFLAGS_SDK) $(INCFLAGS_PLATFORM)
+diff --git a/osfmk/arm/arm_init.c b/osfmk/arm/arm_init.c
+index e26a1d7..c7b0fde 100644
+--- a/osfmk/arm/arm_init.c
++++ b/osfmk/arm/arm_init.c
+@@ -56,6 +56,7 @@
+ #include <pexpert/arm/consistent_debug.h>
+ #include <pexpert/device_tree.h>
+ #include <arm64/proc_reg.h>
++#include <arm64/marble_early.h>
+ #include <arm/pmap.h>
+ #include <arm/caches_internal.h>
+ #include <arm/cpu_internal.h>
+@@ -346,6 +347,8 @@ arm_init(
+ 	DTEntry chosen = NULL;
+ 	unsigned int dt_entry_size = 0;
+ 
++	marble_early_mark(1, "arm_init entered (MMU on)");
++
+ 	arm_setup_pre_sign();
+ 
+ 	arm_slide_rebase_and_sign_image();
+@@ -362,6 +365,7 @@ arm_init(
+ #endif /* defined(HAS_APPLE_PAC) */
+ 
+ 	PE_init_platform(FALSE, args); /* Get platform expert set up */
++	marble_early_mark(2, "PE_init_platform done");
+ 
+ #if __arm64__
+ 	configure_timer_apple_regs();
+@@ -423,6 +427,7 @@ arm_init(
+ #endif
+ 
+ 	ml_parse_cpu_topology();
++	marble_early_mark(3, "ml_parse_cpu_topology done");
+ 
+ 
+ 	master_cpu = ml_get_boot_cpu_number();
+@@ -453,11 +458,13 @@ arm_init(
+ 	 */
+ 	thread->machine.preemption_count = 0;
+ 	cpu_bootstrap();
++	marble_early_mark(4, "cpu_bootstrap done");
+ 
+ 	rtclock_early_init();
+ 
+ 	kernel_debug_string_early("kernel_startup_bootstrap");
+ 	kernel_startup_bootstrap();
++	marble_early_mark(5, "kernel_startup_bootstrap done");
+ 
+ 	/*
+ 	 * Initialize the timer callout world
+@@ -466,6 +473,7 @@ arm_init(
+ 
+ 	cpu_init();
+ 
++	marble_early_mark(6, "cpu_init done");
+ 	processor_bootstrap();
+ 
+ 	if (PE_parse_boot_argn("maxmem", &maxmem, sizeof(maxmem))) {
+@@ -513,7 +521,9 @@ arm_init(
+ 	__builtin_arm_wsr("pan", 1);
+ #endif  /* __ARM_PAN_AVAILABLE__ */
+ 
++	marble_early_mark(7, "entering arm_vm_init");
+ 	arm_vm_init(xmaxmem, args);
++	marble_early_mark(15, "arm_vm_init returned");
+ 
+ 	if (debug_boot_arg) {
+ 		patch_low_glo();
+@@ -526,9 +536,15 @@ arm_init(
+ 	PE_consistent_debug_inherit();
+ 
+ 	/* Setup debugging output. */
++	marble_early_mark(16, "calling serial_init");
+ 	const unsigned int serial_exists = serial_init();
++	marble_early_mark(19, "serial_init returned");
+ 	kernel_startup_initialize_upto(STARTUP_SUB_KPRINTF);
+ 	kprintf("kprintf initialized\n");
++	marble_early_mark(20, "kprintf startup complete");
++	if (serial_exists) {
++		marble_early_disable();
++	}
+ 
+ 	serialmode = 0;
+ 	if (PE_parse_boot_argn("serial", &serialmode, sizeof(serialmode))) {
+@@ -579,9 +595,13 @@ arm_init(
+ #endif
+ #endif
+ 
++	kprintf("MARBLE ARM: 1 before cpu_machine_idle_init(TRUE)\n");
+ 	cpu_machine_idle_init(TRUE);
++	kprintf("MARBLE ARM: 1 after\n");
+ 
++	kprintf("MARBLE ARM: 2 before PE_init_platform(TRUE, &BootCpuData)\n");
+ 	PE_init_platform(TRUE, &BootCpuData);
++	kprintf("MARBLE ARM: 2 after\n");
+ 
+ #if __arm64__
+ 	extern bool cpu_config_correct;
+@@ -589,7 +609,9 @@ arm_init(
+ 		panic("The cpumask=N boot arg cannot be used together with cpus=N, and the boot CPU must be enabled");
+ 	}
+ 
++	kprintf("MARBLE ARM: 3 before ml_map_cpu_pio()\n");
+ 	ml_map_cpu_pio();
++	kprintf("MARBLE ARM: 3 after\n");
+ 
+ #if APPLE_ARM64_ARCH_FAMILY
+ 	configure_late_apple_regs();
+@@ -597,15 +619,23 @@ arm_init(
+ 
+ #endif
+ 
++	kprintf("MARBLE ARM: 4 before cpu_timebase_init(TRUE)\n");
+ 	cpu_timebase_init(TRUE);
++	kprintf("MARBLE ARM: 4 after\n");
+ 
+ #if KPERF
+ 	/* kptimer_curcpu_up() must be called after cpu_timebase_init */
++	kprintf("MARBLE ARM: 5 before kptimer_curcpu_up()\n");
+ 	kptimer_curcpu_up();
++	kprintf("MARBLE ARM: 5 after\n");
+ #endif /* KPERF */
+ 
++	kprintf("MARBLE ARM: 6 before PE_init_cpu()\n");
+ 	PE_init_cpu();
++	kprintf("MARBLE ARM: 6 after\n");
++	kprintf("MARBLE ARM: 7 before fiq_context_init(TRUE)\n");
+ 	fiq_context_init(TRUE);
++	kprintf("MARBLE ARM: 7 after\n");
+ 
+ 
+ #if HIBERNATION
+@@ -647,7 +677,9 @@ arm_init(
+ 	 * against string vulnerabilities
+ 	 */
+ 	__stack_chk_guard &= ~(0xFFULL << 8);
++	kprintf("MARBLE ARM: 8 before machine_startup(args)\n");
+ 	machine_startup(args);
++	kprintf("MARBLE ARM: 8 after\n");
+ }
+ 
+ /*
+diff --git a/osfmk/arm/pmap/pmap.c b/osfmk/arm/pmap/pmap.c
+index fc2096f..00568d3 100644
+--- a/osfmk/arm/pmap/pmap.c
++++ b/osfmk/arm/pmap/pmap.c
+@@ -4676,8 +4676,9 @@ pmap_page_protect_options_with_flush_range(
+ 			}
+ #endif
+ 			if (remove && (options & PMAP_OPTIONS_COMPRESSOR)) {
+-				panic("pmap_page_protect: attempt to compress ppnum 0x%x owned by iommu %p, pve_p=%p",
+-				    ppnum, ptep_get_iommu(pte_p), pve_p);
++				/* ptep_get_iommu() only exists in Apple's PPL builds: report the raw PV entry */
++				panic("pmap_page_protect: attempt to compress ppnum 0x%x owned by iommu pte %p, pve_p=%p",
++				    ppnum, pte_p, pve_p);
+ 			}
+ 			goto protect_skip_pve_pass1;
+ 		}
+@@ -5816,6 +5817,9 @@ pmap_construct_pte(
+ 	return pte;
+ }
+ 
++/* defined further down; used by pmap_enter_options_internal() */
++MARK_AS_PMAP_TEXT static void pmap_phys_write_disable(vm_address_t va);
++
+ MARK_AS_PMAP_TEXT kern_return_t
+ pmap_enter_options_internal(
+ 	pmap_t pmap,
+@@ -11623,7 +11627,8 @@ pmap_cs_lockdown_pages(vm_address_t kva, vm_size_t size, bool ppl_writable)
+ #if XNU_MONITOR
+ 	pmap_ppl_lockdown_pages(kva, size, PVH_FLAG_LOCKDOWN_CS, ppl_writable);
+ #else
+-	pmap_ppl_lockdown_pages(kva, size, 0, ppl_writable);
++	/* No PPL: nothing can lock pages down (pmap_ppl_lockdown_pages is PPL-only) */
++#pragma unused(kva, size, ppl_writable)
+ #endif
+ }
+ 
+@@ -11633,7 +11638,7 @@ pmap_cs_unlockdown_pages(vm_address_t kva, vm_size_t size, bool ppl_writable)
+ #if XNU_MONITOR
+ 	pmap_ppl_unlockdown_pages(kva, size, PVH_FLAG_LOCKDOWN_CS, ppl_writable);
+ #else
+-	pmap_ppl_unlockdown_pages(kva, size, 0, ppl_writable);
++#pragma unused(kva, size, ppl_writable)
+ #endif
+ }
+ 
+diff --git a/osfmk/arm/pmap/pmap.h b/osfmk/arm/pmap/pmap.h
+index df672c6..75f3db0 100644
+--- a/osfmk/arm/pmap/pmap.h
++++ b/osfmk/arm/pmap/pmap.h
+@@ -442,7 +442,7 @@ struct pmap {
+ #if HAS_APPLE_PAC
+ 	bool disable_jop;
+ #else
+-	bool reserved10;
++	bool reserved10b;       /* was a second "reserved10": clashes when !CONFIG_ROSETTA */
+ #endif /* HAS_APPLE_PAC */
+ 
+ 	bool reserved11;
+diff --git a/osfmk/arm/pmap/pmap_misc.c b/osfmk/arm/pmap/pmap_misc.c
+index b820595..a6d52f9 100644
+--- a/osfmk/arm/pmap/pmap_misc.c
++++ b/osfmk/arm/pmap/pmap_misc.c
+@@ -38,6 +38,19 @@
+  */
+ 
+ 
++#if SCHED_HYGIENE_DEBUG && (DEVELOPMENT || DEBUG) && !XNU_MONITOR
++/*
++ * marble: pmap.h declares this out of line for these configs, but the only
++ * definition ships in Apple's closed per-SoC pmap. Without the PPL there is
++ * no extra state to check.
++ */
++bool
++pmap_pending_preemption(void)
++{
++	return _pmap_pending_preemption_real();
++}
++#endif /* SCHED_HYGIENE_DEBUG && (DEVELOPMENT || DEBUG) && !XNU_MONITOR */
++
+ void
+ pmap_abandon_measurement(void)
+ {
+diff --git a/osfmk/arm/rtclock.c b/osfmk/arm/rtclock.c
+index 5989b48..2e88dc6 100644
+--- a/osfmk/arm/rtclock.c
++++ b/osfmk/arm/rtclock.c
+@@ -38,6 +38,7 @@
+  */
+ 
+ #include <mach/mach_types.h>
++#include <pexpert/pexpert.h>
+ 
+ #include <kern/clock.h>
+ #include <kern/thread.h>
+@@ -331,6 +332,12 @@ rtclock_intr(__unused unsigned int is_user_context)
+ 	cdp = getCpuDatap();
+ 
+ 	cdp->cpu_stat.timer_cnt++;
++#if defined(MARBLE)
++    if (cdp->cpu_stat.timer_cnt <= 3 || cdp->cpu_stat.timer_cnt == 100) {
++        kprintf("MARBLE TIMER: count=%llu\n", (unsigned long long)cdp->cpu_stat.timer_cnt);
++    }
++#endif
++
+ 	SCHED_STATS_INC(timer_pop_count);
+ 
+ 	assert(!ml_get_interrupts_enabled());
+diff --git a/osfmk/arm64/Makefile b/osfmk/arm64/Makefile
+index f819fea..ddf3187 100644
+--- a/osfmk/arm64/Makefile
++++ b/osfmk/arm64/Makefile
+@@ -40,6 +40,7 @@ EXPORT_MD_LIST = \
+ 	monotonic.h \
+ 	perfmon_arm64_regs.h \
+ 	proc_reg.h \
++	marble_early.h \
+ 	asm.h \
+ 	tlb.h \
+ 	pal_hibernate.h
+diff --git a/osfmk/arm64/arm_vm_init.c b/osfmk/arm64/arm_vm_init.c
+index d89b0f1..fc9ea43 100644
+--- a/osfmk/arm64/arm_vm_init.c
++++ b/osfmk/arm64/arm_vm_init.c
+@@ -41,6 +41,7 @@
+ #include <machine/atomic.h>
+ #include <arm64/proc_reg.h>
+ #include <arm64/lowglobals.h>
++#include <arm64/marble_early.h>
+ #include <arm/cpu_data_internal.h>
+ #include <arm/misc_protos.h>
+ #include <pexpert/arm64/boot.h>
+@@ -1812,6 +1813,20 @@ init_ptpages(tt_entry_t *tt, vm_map_address_t start, vm_map_address_t end, bool
+ #define ARM64_PHYSMAP_SLIDE_RANGE (1ULL << 30) // 1 GB
+ #define ARM64_PHYSMAP_SLIDE_MASK  (ARM64_PHYSMAP_SLIDE_RANGE - 1)
+ 
++#if XNU_MONITOR
++#define ARM64_PHYSMAP_ALIGNMENT_PADDING 0ULL
++#else
++/*
++ * arm_vm_physmap_slide() preserves each PA's block offset. Each PTOV entry
++ * can therefore consume up to one extra twig of VA space. Reserve that
++ * space in both the aperture bound and its L1 allocation, including the
++ * ARM_LARGE_MEMORY configuration used by MARBLE's non-PPL kernel.
++ */
++#define ARM64_PHYSMAP_ALIGNMENT_PADDING (PTOV_TABLE_SIZE * ARM_TT_TWIG_SIZE)
++#endif
++
++/* Early framebuffer alias retired; serial uses the ADT mapping. */
++
+ void
+ arm_vm_init(uint64_t memory_size, boot_args * args)
+ {
+@@ -1859,7 +1874,7 @@ arm_vm_init(uint64_t memory_size, boot_args * args)
+ 	}
+ 
+ #if defined(ARM_LARGE_MEMORY)
+-	unsigned long physmap_l1_entries = ((real_phys_size + ARM64_PHYSMAP_SLIDE_RANGE) >> ARM_TT_L1_SHIFT) + 1;
++	unsigned long physmap_l1_entries = ((real_phys_size + ARM64_PHYSMAP_SLIDE_RANGE + ARM64_PHYSMAP_ALIGNMENT_PADDING) >> ARM_TT_L1_SHIFT) + 1;
+ 	physmap_base = VM_MIN_KERNEL_ADDRESS - (physmap_l1_entries << ARM_TT_L1_SHIFT);
+ #else
+ 	physmap_base = phystokv(args->topOfKernelData);
+@@ -1883,10 +1898,10 @@ arm_vm_init(uint64_t memory_size, boot_args * args)
+ #if defined(ARM_LARGE_MEMORY)
+ 	/* For large memory systems with no PPL such as virtual machines */
+ 	static_memory_end = phystokv(args->topOfKernelData);
+-	physmap_end = physmap_base + real_phys_size;
++	physmap_end = physmap_base + real_phys_size + ARM64_PHYSMAP_ALIGNMENT_PADDING;
+ #else
+-	static_memory_end = physmap_base + mem_size + (PTOV_TABLE_SIZE * ARM_TT_TWIG_SIZE); // worst possible case for block alignment
+-	physmap_end = physmap_base + real_phys_size + (PTOV_TABLE_SIZE * ARM_TT_TWIG_SIZE);
++	static_memory_end = physmap_base + mem_size + ARM64_PHYSMAP_ALIGNMENT_PADDING; // worst possible case for block alignment
++	physmap_end = physmap_base + real_phys_size + ARM64_PHYSMAP_ALIGNMENT_PADDING;
+ #endif // ARM_LARGE_MEMORY
+ #endif
+ 
+@@ -2140,18 +2155,28 @@ arm_vm_init(uint64_t memory_size, boot_args * args)
+ 
+ 	arm_set_user_tbi();
+ 
++#if defined(MARBLE)
++	/* phystokv() must still refer to the bootstrap aperture here. */
++	/* No reference framebuffer mapping. */
++#endif
+ 	arm_vm_physmap_init(args);
+ 	set_mmu_ttb_alternate(cpu_ttep & TTBR_BADDR_MASK);
+ 
+ 	ml_enable_monitor();
+ 
++#if defined(MARBLE)
++	/* The final TTBR1 is live; leave the outgoing VA=PA framebuffer alias. */
++	/* No reference framebuffer relocation. */
++#endif
+ 	set_mmu_ttb(invalid_ttep & TTBR_BADDR_MASK);
+ 
+ 	flush_mmu_tlb();
++	marble_early_mark(10, "TTBR0 off; TLB flushed");
+ 	kva_active = TRUE;
+ 	// global table pointers may need to be different due to physical aperture remapping
+ 	cpu_tte = (tt_entry_t*)(phystokv(cpu_ttep));
+ 	invalid_tte = (tt_entry_t*)(phystokv(invalid_ttep));
++	marble_early_mark(11, "physmap table pointers rebound");
+ 
+ 	// From here on out, we're off the bootstrap translation tables.
+ 
+@@ -2244,7 +2269,9 @@ arm_vm_init(uint64_t memory_size, boot_args * args)
+     }
+ #endif
+ #endif
++	marble_early_mark(12, "calling pmap_bootstrap");
+ 	pmap_bootstrap(dynamic_memory_begin);
++	marble_early_mark(13, "pmap_bootstrap done");
+ 
+ 	disable_preemption();
+ 
+@@ -2295,6 +2322,7 @@ arm_vm_init(uint64_t memory_size, boot_args * args)
+ 		va_l1 = va_l2_end;
+ 		cpu_l1_tte++;
+ 	}
++	marble_early_mark(14, "early I/O page tables ready");
+ 
+ #if defined(KERNEL_INTEGRITY_KTRR) || defined(KERNEL_INTEGRITY_CTRR)
+ 	/*
+diff --git a/osfmk/arm64/caches_asm.s b/osfmk/arm64/caches_asm.s
+index f2c2a00..267e565 100644
+--- a/osfmk/arm64/caches_asm.s
++++ b/osfmk/arm64/caches_asm.s
+@@ -212,6 +212,7 @@ L_ipui_loop:
+ 	.globl EXT(CleanPoC_Dcache)
+ 	.globl EXT(clean_mmu_dcache)
+ LEXT(CleanPoC_Dcache)
++LEXT(clean_mmu_dcache)		/* marble: was exported without a label */
+ #if  defined(APPLE_ARM64_ARCH_FAMILY)
+ 	dsb		sy
+ 	ret
+@@ -342,6 +343,23 @@ LEXT(CleanPoC_DcacheRegion_Force)
+ 	b		EXT(CleanPoC_DcacheRegion_internal)
+ #endif /* APPLE_ARM64_ARCH_FAMILY */
+ 
++#if !defined(APPLE_ARM64_ARCH_FAMILY)
++/*
++ *	void CleanPoC_DcacheRegion_Force_nopreempt(vm_offset_t va, size_t length)
++ *	void CleanPoC_DcacheRegion_Force_nopreempt_nohid(vm_offset_t va, size_t length)
++ *
++ *		marble: the Apple variants toggle HID bits around DC CVAC; generic
++ *		ARMv8 has no such bits, so both are the plain region clean.
++ */
++	.text
++	.align 2
++	.globl EXT(CleanPoC_DcacheRegion_Force_nopreempt)
++	.globl EXT(CleanPoC_DcacheRegion_Force_nopreempt_nohid)
++LEXT(CleanPoC_DcacheRegion_Force_nopreempt)
++LEXT(CleanPoC_DcacheRegion_Force_nopreempt_nohid)
++	b		EXT(CleanPoC_DcacheRegion_internal)
++#endif /* !APPLE_ARM64_ARCH_FAMILY */
++
+ /*
+  *	void FlushPoC_Dcache(void)
+  *
+diff --git a/osfmk/arm64/machine_routines.c b/osfmk/arm64/machine_routines.c
+index 76582da..457e165 100644
+--- a/osfmk/arm64/machine_routines.c
++++ b/osfmk/arm64/machine_routines.c
+@@ -2164,6 +2164,18 @@ ml_get_decrementer(void)
+ 	return dec;
+ }
+ 
++#if defined(MARBLE)
++/*
++ * marble: arm_vm_init() calls this unconditionally; Apple's definition (it
++ * enters the PPL/monitor) ships only in the closed per-SoC library. There is
++ * no monitor on MARBLE.
++ */
++void
++ml_enable_monitor(void)
++{
++}
++#endif /* MARBLE */
++
+ boolean_t
+ ml_get_timer_pending(void)
+ {
+@@ -2245,8 +2257,10 @@ _enable_virtual_timer(void)
+ 	uint64_t cntvctl = CNTV_CTL_EL0_ENABLE; /* One wants to use 32 bits, but "mrs" prefers it this way */
+ 
+ 	__builtin_arm_wsr64("CNTV_CTL_EL0", cntvctl);
++#if !defined(MARBLE)
+ 	/* disable the physical timer as a precaution, as its registers reset to architecturally unknown values */
+ 	__builtin_arm_wsr64("CNTP_CTL_EL0", CNTP_CTL_EL0_IMASKED);
++#endif /* MARBLE: Gunyah (SM8450) traps EL1 CNTP_* as undefined; its PPI is never enabled in the GIC */
+ }
+ 
+ void
+diff --git a/osfmk/arm64/proc_reg.h b/osfmk/arm64/proc_reg.h
+index 133b07f..b5cdd8c 100644
+--- a/osfmk/arm64/proc_reg.h
++++ b/osfmk/arm64/proc_reg.h
+@@ -213,6 +213,14 @@
+ /* D-Cache. */
+ #define MMU_CLINE   6
+ 
++#elif defined (MARBLE) /* Qualcomm Kryo 470: Cortex-A76 + Cortex-A55 */
++
++/* I-Cache. */
++#define MMU_I_CLINE 6
++
++/* D-Cache. */
++#define MMU_CLINE   6
++
+ #elif defined (VMAPPLE)
+ 
+ /* I-Cache. */
+diff --git a/osfmk/arm64/sleh.c b/osfmk/arm64/sleh.c
+index c40c6ea..5a79664 100644
+--- a/osfmk/arm64/sleh.c
++++ b/osfmk/arm64/sleh.c
+@@ -32,6 +32,7 @@
+ #include <arm/misc_protos.h>
+ #include <arm/thread.h>
+ #include <arm/rtclock.h>
++#include <arm/machine_cpu.h>
+ #include <arm/trap.h> /* for IS_ARM_GDB_TRAP() et al */
+ #include <arm64/proc_reg.h>
+ #include <arm64/machine_machdep.h>
+@@ -1855,6 +1856,42 @@ sleh_irq(arm_saved_state_t *state)
+ #endif
+ 
+ 
++#if defined(MARBLE)
++	/*
++	 * marble: TrustZone owns GIC Group 0, so the timer and IPIs that other
++	 * ARM64 targets take as FIQs arrive here as Group 1 IRQs.
++	 */
++	uint64_t iar = __builtin_arm_rsr64("ICC_IAR1_EL1");
++	uint32_t intid = (uint32_t)(iar & 0xFFFFFF);
++
++	if (intid >= 1020 && intid <= 1023) {
++		return; /* spurious */
++	}
++	if (intid == marble_vtimer_intid) {
++		sleh_interrupt_handler_prologue(state, DBG_INTR_TYPE_TIMER);
++		cdp->cpu_decrementer = -1; /* Large */
++		INTERRUPT_MASKED_DEBUG_START(rtclock_intr, DBG_INTR_TYPE_TIMER);
++		rtclock_intr(TRUE);
++		INTERRUPT_MASKED_DEBUG_END();
++		__builtin_arm_wsr64("ICC_EOIR1_EL1", iar);
++	} else if (intid < 16) {
++		sleh_interrupt_handler_prologue(state, DBG_INTR_TYPE_IPI);
++		/* Ack before handling so an IPI raised meanwhile is not lost */
++		__builtin_arm_wsr64("ICC_EOIR1_EL1", iar);
++		__builtin_arm_isb(ISB_SY);
++		cpu_signal_handler();
++	} else {
++		sleh_interrupt_handler_prologue(state, DBG_INTR_TYPE_OTHER);
++		if (cdp->interrupt_handler) {
++			cdp->interrupt_handler(cdp->interrupt_target,
++			    cdp->interrupt_refCon,
++			    cdp->interrupt_nub,
++			    intid);
++		}
++		__builtin_arm_wsr64("ICC_EOIR1_EL1", iar);
++	}
++	__builtin_arm_isb(ISB_SY);
++#else
+ 	sleh_interrupt_handler_prologue(state, DBG_INTR_TYPE_OTHER);
+ 
+ #if USE_APPLEARMSMP
+@@ -1866,6 +1903,7 @@ sleh_irq(arm_saved_state_t *state)
+ 	    cdp->interrupt_nub,
+ 	    cdp->interrupt_source);
+ #endif
++#endif /* MARBLE */
+ 
+ 	entropy_collect();
+ 
+diff --git a/osfmk/arm64/start.s b/osfmk/arm64/start.s
+index e5336e5..414c4c2 100644
+--- a/osfmk/arm64/start.s
++++ b/osfmk/arm64/start.s
+@@ -198,8 +198,8 @@ Lskip_cpu_reset_handler:
+ 	.align 3
+ 	.global EXT(LowResetVectorEnd)
+ LEXT(LowResetVectorEnd)
+-	.global	EXT(SleepToken)
+ #if WITH_CLASSIC_S2R
++	.global	EXT(SleepToken)
+ LEXT(SleepToken)
+ 	.space	(stSize_NUM),0
+ #endif
+@@ -463,6 +463,8 @@ LEXT(start_first_cpu)
+ 	mov		x20, x0
+ 	mov		x21, #0
+ 
++/* Reference-board early framebuffer access retired. */
++
+ 	// Set low reset vector before attempting any loads
+ 	adrp	x0, EXT(LowExceptionVectorBase)@page
+ 	add		x0, x0, EXT(LowExceptionVectorBase)@pageoff
+@@ -609,6 +611,8 @@ Lkernelcache_base_found:
+ 	lsr		x5,  x24, #(ARM_TT_L2_SHIFT)
+ 	create_bootstrap_mapping x14, x15, x5, x3, x2, x9, x10, x11, x12, x13
+ 
++/* Reference-board early framebuffer access retired. */
++
+ 	/* Ensure TTEs are visible */
+ 	dsb		ish
+ 
+@@ -745,11 +749,11 @@ common_start:
+ 	MSR_SCTLR_EL1_X0
+ 	isb		sy
+ 
+-#if !VMAPPLE
++#if !VMAPPLE && !defined(MARBLE)
+ 	MOV64   x1, SCTLR_EL1_DEFAULT
+ 	cmp		x0, x1
+ 	bne		.
+-#endif /* !VMAPPLE */
++#endif /* !VMAPPLE && !MARBLE */
+ 
+ #if (!CONFIG_KERNEL_INTEGRITY || (CONFIG_KERNEL_INTEGRITY && !defined(KERNEL_INTEGRITY_WT)))
+ 	/* Watchtower
+diff --git a/osfmk/conf/files.arm64 b/osfmk/conf/files.arm64
+index c40d57b..8c1b187 100644
+--- a/osfmk/conf/files.arm64
++++ b/osfmk/conf/files.arm64
+@@ -40,6 +40,7 @@ osfmk/arm64/dbgwrap.c		standard
+ osfmk/arm/arm_timer.c		standard
+ osfmk/arm/arm_init.c	optional config_pmap_ppl
+ osfmk/arm64/arm_vm_init.c	optional config_pmap_ppl
++osfmk/arm64/marble_early.c	standard
+ osfmk/arm64/arm64_hypercall.c	standard
+ osfmk/arm/io_map.c		standard
+ osfmk/arm64/loose_ends.c	standard
+diff --git a/osfmk/console/serial_console.c b/osfmk/console/serial_console.c
+index e5b23f2..f22790c 100644
+--- a/osfmk/console/serial_console.c
++++ b/osfmk/console/serial_console.c
+@@ -266,10 +266,30 @@ _cnputc(char c, bool poll)
+  *             waiting for an interrupt when the hardware device isn't ready
+  * @param size The number of characters to print to the console.
+  */
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++static uint32_t marble_video_console_quiet;
++void
++marble_console_pause_video(void)
++{
++    os_atomic_store(&marble_video_console_quiet, 1, relaxed);
++}
++int
++marble_console_video_paused(void)
++{
++    return os_atomic_load(&marble_video_console_quiet, relaxed) != 0 && !panic_active();
++}
++#endif
++
+ static inline void
+ _cnputs(char *c, int size, bool poll)
+ {
+ 	extern int disableConsoleOutput;
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++    if (os_atomic_load(&marble_video_console_quiet, relaxed) &&
++        !console_is_serial() && !panic_active()) {
++        return;
++    }
++#endif
+ 
+ 	if (disableConsoleOutput) {
+ 		return;
+diff --git a/osfmk/kern/debug.c b/osfmk/kern/debug.c
+index 0a00656..7ff7bbf 100644
+--- a/osfmk/kern/debug.c
++++ b/osfmk/kern/debug.c
+@@ -84,6 +84,9 @@
+ #include <stdatomic.h>
+ #include <sys/pgo.h>
+ #include <console/serial_protos.h>
++#if defined(__arm64__)
++#include <arm64/marble_early.h>
++#endif
+ #include <IOKit/IOBSD.h>
+ 
+ #if !(MACH_KDP && CONFIG_KDP_INTERACTIVE_DEBUGGING)
+@@ -1069,6 +1072,11 @@ panic_trap_to_debugger(const char *panic_format_str, va_list *panic_args, unsign
+ {
+ #pragma clang diagnostic pop
+ 
++#if defined(MARBLE)
++	/* No CPU/thread/debugger state is required for this first panic copy. */
++	marble_early_panic(panic_format_str, panic_args);
++#endif
++
+ #if defined(__x86_64__) && (DEVELOPMENT || DEBUG)
+ 	read_lbr();
+ #endif
+diff --git a/osfmk/kern/exception.c b/osfmk/kern/exception.c
+index 809dafa..7199fda 100644
+--- a/osfmk/kern/exception.c
++++ b/osfmk/kern/exception.c
+@@ -820,6 +820,181 @@ exception_triage(
+ 	return exception_triage_thread(exception, code, codeCnt, thread);
+ }
+ 
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++#include <vm/vm_shared_region.h>
++#include <arm/thread.h>
++
++/*
++ * MARBLE crash report on the console. The phone has no way to get crash
++ * logs off the device, and corpses stop after a few crashes, so print what
++ * symbolication needs: user registers, a frame-pointer backtrace, the
++ * shared cache slide (unslid = pc - slide) and the main binary's Mach-O
++ * header (offset = pc - mh). Called from proc_prepareexit on the exiting
++ * (crashing) thread.
++ */
++void marble_crash_log(const char *name, int pid, int sig, uint64_t code, uint64_t subcode);
++static void marble_crash_strings(const char *name);
++
++void
++marble_crash_log(const char *name, int pid, int sig, uint64_t code, uint64_t subcode)
++{
++	int enabled = 0;
++	if (!PE_parse_boot_argn("marble_crash_log", &enabled, sizeof(enabled)) || !enabled) return;
++	thread_t thread = current_thread();
++	task_t task = current_task();
++	arm_saved_state_t *ss = find_user_regs(thread);
++	uint64_t slide = 0, mh = task->mach_header_vm_address;
++
++	vm_shared_region_t sr = vm_shared_region_get(task);
++	if (sr != NULL) {
++		slide = sr->sr_slide;
++		vm_shared_region_deallocate(sr);
++	}
++	printf("CRASH %s[%d] sig %d code 0x%llx sub 0x%llx slide 0x%llx mh 0x%llx\n",
++	    name, pid, sig, code, subcode, slide, mh);
++	if (ss == NULL || !is_saved_state64(ss)) {
++		return;
++	}
++	uint64_t fp = get_saved_state_fp(ss);
++	printf("CRASH %s pc 0x%llx lr 0x%llx sp 0x%llx fp 0x%llx far 0x%llx\n", name,
++	    get_saved_state_pc(ss), get_saved_state_lr(ss), get_saved_state_sp(ss), fp,
++	    (uint64_t)saved_state64(ss)->far);
++
++	char line[200];
++	int n = snprintf(line, sizeof(line), "CRASH %s bt", name);
++	for (int i = 0; i < 10 && fp != 0 && (fp & 7) == 0 && n < (int)sizeof(line) - 20; i++) {
++		uint64_t frame[2];
++		if (copyin((user_addr_t)fp, frame, sizeof(frame)) != 0) {
++			break;
++		}
++		n += snprintf(line + n, sizeof(line) - n, " 0x%llx", frame[1]);
++		if (frame[0] <= fp) {
++			break;
++		}
++		fp = frame[0];
++	}
++	printf("%s\n", line);
++	if ((sig == 6 && strcmp(name, "backboardd") == 0) ||
++	    (sig == 5 && strcmp(name, "watchdogd") == 0)) {
++		int scan = 0;
++		if (PE_parse_boot_argn("marble_crash_scan", &scan, sizeof(scan)) && scan) {
++			marble_crash_strings(name);
++		}
++	}
++}
++
++/* MARBLE_CRASH_STRING_SCAN */
++static void
++marble_crash_strings(const char *name)
++{
++	vm_map_t map = current_map();
++	vm_map_offset_t addr = 0;
++	uint64_t scanned = 0;
++	unsigned int lines = 0;
++	char *buf = kalloc_data(65536, Z_WAITOK);
++	if (buf == NULL) return;
++	printf("MARBLE STR scan %s\n", name);
++	while (lines < 96 && scanned < (96ull << 20)) {
++		vm_map_size_t size = 0;
++		natural_t depth = 0;
++		vm_region_submap_info_data_64_t info;
++		mach_msg_type_number_t count = VM_REGION_SUBMAP_INFO_V2_COUNT_64;
++		if (vm_map_region_recurse_64(map, &addr, &size, &depth,
++		    (vm_region_submap_info_64_t)&info, &count) != KERN_SUCCESS) break;
++		vm_map_offset_t base = addr;
++		addr += size;
++		if (info.is_submap || (info.protection & (VM_PROT_READ | VM_PROT_WRITE)) !=
++		    (VM_PROT_READ | VM_PROT_WRITE) || info.user_tag < 1 || info.user_tag > 11) continue;
++		for (vm_map_offset_t off = 0; off < size && lines < 96; off += 65536) {
++			size_t len = (size - off) < 65536 ? (size_t)(size - off) : 65536;
++			if (copyin((user_addr_t)(base + off), buf, len) != 0) continue;
++			scanned += len;
++			size_t start = 0;
++			for (size_t i = 0; i <= len; i++) {
++				bool ok = i < len && (unsigned char)buf[i] >= 0x20 && (unsigned char)buf[i] < 0x7f;
++				if (ok) continue;
++				size_t run = i - start;
++				if (run >= 16) {
++					char s[192];
++					size_t n = run < sizeof(s) - 1 ? run : sizeof(s) - 1;
++					memcpy(s, buf + start, n); s[n] = 0;
++					if (strnstr(s, "exception", n) || strnstr(s, "Exception", n) ||
++					    strnstr(s, "reason", n) || strnstr(s, "nil", n) || strnstr(s, "failed", n) ||
++					    strnstr(s, "Failed", n) || strnstr(s, "Error", n) ||
++					    strnstr(s, "container", n) || strnstr(s, "watchdog", n) ||
++					    strnstr(s, "IOService", n) || strnstr(s, "kext", n) ||
++					    strnstr(s, "discover", n) || strnstr(s, "open", n)) {
++						printf("MARBLE STR %s\n", s); lines++;
++					}
++				}
++				start = i + 1;
++			}
++		}
++	}
++	printf("MARBLE STR done %llu KiB %u lines\n", scanned >> 10, lines);
++	kfree_data(buf, 65536);
++}
++
++/* MARBLE_UI_SAMPLE_STACKS: 6 threads, 12 frames; no locks over reads/printf. */
++#include <mach/arm/thread_status.h>
++extern kern_return_t thread_get_state(thread_t, int, thread_state_t, mach_msg_type_number_t *);
++void marble_sample_task(const char *name, int pid, task_t task);
++void
++marble_sample_task(const char *name, int pid, task_t task)
++{
++    thread_t refs[6], thread;
++    unsigned count = 0;
++    uint64_t mh = 0, slide = 0;
++    vm_map_t map = get_task_map_reference(task);
++    if (map == VM_MAP_NULL) {
++        printf("MARBLE SMP %s[%d] inactive\n", name, pid);
++        return;
++    }
++    vm_shared_region_t sr = vm_shared_region_get(task);
++    if (sr != NULL) {
++        slide = sr->sr_slide;
++        vm_shared_region_deallocate(sr);
++    }
++    task_lock(task);
++    if (task->active) {
++        mh = task->mach_header_vm_address;
++        queue_iterate(&task->threads, thread, thread_t, task_threads) {
++            if (count == 6) break;
++            thread_reference(thread);
++            refs[count++] = thread;
++        }
++    }
++    task_unlock(task);
++    printf("MARBLE SMP %s[%d] slide=0x%llx mh=0x%llx threads=%u\n", name, pid, slide, mh, count);
++    for (unsigned i = 0; i < count; i++) {
++        arm_thread_state64_t state = {0};
++        mach_msg_type_number_t words = ARM_THREAD_STATE64_COUNT;
++        kern_return_t kr = thread_get_state(refs[i], ARM_THREAD_STATE64,
++            (thread_state_t)&state, &words);
++        thread_deallocate(refs[i]);
++        if (kr != KERN_SUCCESS || words != ARM_THREAD_STATE64_COUNT) {
++            printf("MARBLE SMP %s t%u state_error=%d\n", name, i, kr);
++            continue;
++        }
++        char line[400];
++        int n = snprintf(line, sizeof(line), "MARBLE SMP %s t%u pc=0x%llx lr=0x%llx sp=0x%llx bt",
++            name, i, state.pc, state.lr, state.sp);
++        uint64_t fp = state.fp;
++        for (unsigned j = 0; j < 12 && fp && !(fp & 7) && n < (int)sizeof(line)-21; j++) {
++            uint64_t frame[2];
++            if (fp > UINT64_MAX - sizeof(frame) ||
++                vm_map_read_user(map, fp, frame, sizeof(frame)) != KERN_SUCCESS) break;
++            n += snprintf(line+n, sizeof(line)-n, " 0x%llx", frame[1]);
++            if (frame[0] <= fp || frame[0]-fp > 1024*1024) break;
++            fp = frame[0];
++        }
++        printf("%s\n", line);
++    }
++    vm_map_deallocate(map);
++}
++
++#endif /* ARM64_BOARD_CONFIG_MARBLE */
++
+ kern_return_t
+ bsd_exception(
+ 	exception_type_t        exception,
+diff --git a/osfmk/kern/startup.c b/osfmk/kern/startup.c
+index bec97fb..09f5039 100644
+--- a/osfmk/kern/startup.c
++++ b/osfmk/kern/startup.c
+@@ -422,6 +422,10 @@ kernel_startup_initialize_upto(startup_subsystem_id_t upto)
+ void
+ kernel_bootstrap(void)
+ {
++#if defined(MARBLE)
++    printf("MARBLE BOOT: kernel_bootstrap reached\n");
++#endif
++
+ 	kern_return_t   result;
+ 	thread_t        thread;
+ 	char            namep[16];
+diff --git a/osfmk/kern/task.c b/osfmk/kern/task.c
+index 24ed326..629d71b 100644
+--- a/osfmk/kern/task.c
++++ b/osfmk/kern/task.c
+@@ -1510,7 +1510,9 @@ task_create_internal(
+ 
+ 	new_task->affinity_space = NULL;
+ 
++#if KPC
+ 	new_task->t_kpc = 0;
++#endif /* KPC */
+ 
+ 	new_task->pidsuspended = FALSE;
+ 	new_task->frozen = FALSE;
+@@ -9133,3 +9135,23 @@ kdp_task_is_locked(task_t task)
+ {
+ 	return kdp_lck_mtx_lock_spin_is_acquired(&task->lock);
+ }
++
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++/* MARBLE_UI_SAMPLE_TASK_REF: candidate is compared, never dereferenced. */
++task_t marble_sample_task_reference(task_t candidate);
++task_t
++marble_sample_task_reference(task_t candidate)
++{
++    task_t item, result = TASK_NULL;
++    lck_mtx_lock(&tasks_threads_lock);
++    queue_iterate(&tasks, item, task_t, tasks) {
++        if (item == candidate) {
++            task_reference(item);
++            result = item;
++            break;
++        }
++    }
++    lck_mtx_unlock(&tasks_threads_lock);
++    return result;
++}
++#endif
+diff --git a/osfmk/prng/entropy.c b/osfmk/prng/entropy.c
+index 18b74ff..aa98d80 100644
+--- a/osfmk/prng/entropy.c
++++ b/osfmk/prng/entropy.c
+@@ -40,6 +40,10 @@
+ #include <machine/machine_routines.h>
+ #include <libkern/section_keywords.h>
+ #include <sys/cdefs.h>
++#if defined(MARBLE)
++#include <corecrypto/ccdigest.h>
++#include <corecrypto/ccsha2.h>
++#endif
+ 
+ // The number of samples we can hold in an entropy buffer.
+ #define ENTROPY_MAX_SAMPLE_COUNT (2048)
+@@ -93,13 +97,14 @@ typedef struct entropy_data {
+ 	// State for a SHA256 computation. This is used to accumulate
+ 	// entropy samples from across all CPUs. It is finalized when
+ 	// entropy is provided to the consumer of this module.
++#if defined(MARBLE)
++	ccdigest_ctx_decl(CCSHA256_STATE_SIZE, CCSHA256_BLOCK_SIZE, sha256_ctx);
++#else
+ 	SHA256_CTX sha256_ctx;
++#endif
+ 
+-	// Since the corecrypto kext is not loaded when this module is
+-	// initialized, we cannot initialize the SHA256 state at that
+-	// time. Instead, we initialize it lazily during entropy
+-	// consumption. This flag tracks whether initialization is
+-	// complete.
++	// Initialize the hash lazily during entropy consumption. On Apple
++	// platforms this also waits for the corecrypto kext to be loaded.
+ 	bool sha256_ctx_init;
+ 
+ 	// A buffer to hold a bitmap with one bit per sample of an entropy
+@@ -473,6 +478,38 @@ entropy_health_test(uint32_t sample_count, entropy_sample_t *samples, __assert_o
+ 	return result;
+ }
+ 
++/* MARBLE uses the same built-in digest as early_random, without a kext. */
++static void
++entropy_hash_init(void)
++{
++#if defined(MARBLE)
++	ccdigest_init(&ccsha256_ltc_di, entropy_data.sha256_ctx);
++#else
++	SHA256_Init(&entropy_data.sha256_ctx);
++#endif
++}
++
++static void
++entropy_hash_update(const void *data, size_t nbytes)
++{
++#if defined(MARBLE)
++	ccdigest_update(&ccsha256_ltc_di, entropy_data.sha256_ctx, nbytes, data);
++#else
++	SHA256_Update(&entropy_data.sha256_ctx, data, nbytes);
++#endif
++}
++
++static void
++entropy_hash_final(void *out)
++{
++#if defined(MARBLE)
++	ccdigest_final(&ccsha256_ltc_di, entropy_data.sha256_ctx, out);
++	ccdigest_ctx_clear(CCSHA256_STATE_SIZE, CCSHA256_BLOCK_SIZE, entropy_data.sha256_ctx);
++#else
++	SHA256_Final(out, &entropy_data.sha256_ctx);
++#endif
++}
++
+ int32_t
+ entropy_provide(size_t *entropy_size, void *entropy, __unused void *arg)
+ {
+@@ -485,12 +522,13 @@ entropy_provide(size_t *entropy_size, void *entropy, __unused void *arg)
+ 	int32_t sample_count = 0;
+ 	*entropy_size = 0;
+ 
+-	// The first call to this function comes while the corecrypto kext
+-	// is being loaded. We require SHA256 to accumulate entropy
+-	// samples.
++	// Apple platforms need the corecrypto kext's SHA256 implementation.
++	// MARBLE links the digest into the kernel instead.
++#if !defined(MARBLE)
+ 	if (__improbable(!crypto_init)) {
+ 		return sample_count;
+ 	}
++#endif
+ 
+ 	// There is only one consumer (the kernel PRNG), but they could
+ 	// try to consume entropy from different threads. We simply fail
+@@ -499,11 +537,9 @@ entropy_provide(size_t *entropy_size, void *entropy, __unused void *arg)
+ 		return sample_count;
+ 	}
+ 
+-	// This only happens on the first call to this function. We cannot
+-	// perform this initialization in entropy_init because the
+-	// corecrypto kext is not loaded yet.
++	// Initialize the accumulator on first use, after SHA256 is available.
+ 	if (__improbable(!entropy_data.sha256_ctx_init)) {
+-		SHA256_Init(&entropy_data.sha256_ctx);
++		entropy_hash_init();
+ 		entropy_data.sha256_ctx_init = true;
+ 	}
+ 
+@@ -539,7 +575,7 @@ entropy_provide(size_t *entropy_size, void *entropy, __unused void *arg)
+ 		// We accumulate the samples regardless of whether the test
+ 		// failed or a particular sample was filtered. It cannot hurt.
+ 		entropy_data.total_sample_count += filtered_sample_count;
+-		SHA256_Update(&entropy_data.sha256_ctx, e->samples, cpu_sample_count * sizeof(e->samples[0]));
++		entropy_hash_update(e->samples, cpu_sample_count * sizeof(e->samples[0]));
+ 
+ 		// "Drain" the per-CPU buffer by resetting its sample count.
+ 		os_atomic_store(&e->sample_count, 0, relaxed);
+@@ -576,8 +612,8 @@ entropy_provide(size_t *entropy_size, void *entropy, __unused void *arg)
+ 		goto out;
+ 	}
+ 
+-	SHA256_Final(entropy, &entropy_data.sha256_ctx);
+-	SHA256_Init(&entropy_data.sha256_ctx);
++	entropy_hash_final(entropy);
++	entropy_hash_init();
+ 	entropy_data.read_sample_count = entropy_data.total_sample_count;
+ 
+ 	sample_count = n;
+diff --git a/osfmk/prng/prng_random.c b/osfmk/prng/prng_random.c
+index c52f0ab..f0f3f1d 100644
+--- a/osfmk/prng/prng_random.c
++++ b/osfmk/prng/prng_random.c
+@@ -145,6 +145,140 @@ static struct {
+ 		     .strictFIPS = 0,
+ 	     }};
+ 
++#if defined(MARBLE)
++/*
++ * The corecrypto kext normally installs the kernel PRNG. MARBLE has no such
++ * kext: use the built-in HMAC-SHA256 DRBG, just as early_random does. A
++ * single mutex serializes generation and reseeding across all CPUs. This
++ * favors a small, auditable bring-up implementation over per-CPU scaling.
++ * This registers only the PRNG, not the unrelated g_crypto_funcs table.
++ */
++#include <kern/startup.h>
++
++static LCK_GRP_DECLARE(marble_prng_group, "marble-prng");
++static LCK_MTX_DECLARE(marble_prng_lock, &marble_prng_group);
++static struct cckprng_ctx marble_prng_ctx;
++static const struct ccdrbg_nisthmac_custom marble_prng_custom = {
++	.di = &ccsha256_ltc_di,
++	.strictFIPS = 0,
++};
++static cckprng_getentropy marble_getentropy;
++static void *marble_getentropy_arg;
++static unsigned marble_max_ngens;
++static bool marble_generators[MAX_CPUS];
++
++static struct ccdrbg_state *
++marble_prng_state(struct cckprng_ctx *ctx)
++{
++	return (struct ccdrbg_state *)ctx->drbg_state;
++}
++
++static void
++marble_prng_check(int status)
++{
++	if (status != CCDRBG_STATUS_OK) {
++		panic("MARBLE HMAC DRBG error %d", status);
++	}
++}
++
++static void
++marble_prng_init_with_getentropy(struct cckprng_ctx *ctx, unsigned max_ngens,
++    size_t seed_nbytes, const void *seed, size_t nonce_nbytes, const void *nonce,
++    cckprng_getentropy getentropy, void *getentropy_arg)
++{
++	assert(max_ngens > 0 && max_ngens <= MAX_CPUS);
++	ccdrbg_factory_nisthmac(&ctx->drbg_info, &marble_prng_custom);
++	assert(ctx->drbg_info.size <= sizeof(ctx->drbg_state));
++	const char ps[] = "xnu marble kernel random";
++	marble_prng_check(ccdrbg_init(&ctx->drbg_info, marble_prng_state(ctx),
++	    seed_nbytes, seed, nonce_nbytes, nonce, sizeof(ps) - 1, ps));
++	marble_getentropy = getentropy;
++	marble_getentropy_arg = getentropy_arg;
++	marble_max_ngens = max_ngens;
++}
++
++static void
++marble_prng_init(struct cckprng_ctx *ctx, size_t seed_nbytes, const void *seed,
++    size_t nonce_nbytes, const void *nonce, cckprng_getentropy getentropy,
++    void *getentropy_arg)
++{
++	marble_prng_init_with_getentropy(ctx, MAX_CPUS, seed_nbytes, seed,
++	    nonce_nbytes, nonce, getentropy, getentropy_arg);
++}
++
++static void
++marble_prng_initgen(__unused struct cckprng_ctx *ctx, unsigned gen_idx)
++{
++	lck_mtx_lock(&marble_prng_lock);
++	assert(gen_idx < marble_max_ngens);
++	assert(!marble_generators[gen_idx]);
++	marble_generators[gen_idx] = true;
++	lck_mtx_unlock(&marble_prng_lock);
++}
++
++static void
++marble_prng_reseed(struct cckprng_ctx *ctx, size_t nbytes, const void *seed)
++{
++	lck_mtx_lock(&marble_prng_lock);
++	marble_prng_check(ccdrbg_reseed(&ctx->drbg_info, marble_prng_state(ctx),
++	    nbytes, seed, 0, NULL));
++	lck_mtx_unlock(&marble_prng_lock);
++}
++
++static void
++marble_prng_refresh(struct cckprng_ctx *ctx)
++{
++	/* The entropy callback also uses try-lock; refresh must not wait. */
++	if (!lck_mtx_try_lock(&marble_prng_lock)) {
++		return;
++	}
++	uint8_t entropy[CCKPRNG_ENTROPY_SIZE];
++	size_t nbytes = sizeof(entropy);
++	int32_t nsamples = marble_getentropy(&nbytes, entropy, marble_getentropy_arg);
++	if (nsamples < 0) {
++		panic("MARBLE PRNG entropy health test failed");
++	}
++	if (nsamples >= 256) {
++		assert(nbytes >= SEED_SIZE && nbytes <= sizeof(entropy));
++		marble_prng_check(ccdrbg_reseed(&ctx->drbg_info, marble_prng_state(ctx),
++		    nbytes, entropy, 0, NULL));
++	}
++	cc_clear(sizeof(entropy), entropy);
++	lck_mtx_unlock(&marble_prng_lock);
++}
++
++static void
++marble_prng_generate(struct cckprng_ctx *ctx, unsigned gen_idx,
++    size_t nbytes, void *out)
++{
++	assert(nbytes <= CCKPRNG_GENERATE_MAX_NBYTES);
++	lck_mtx_lock(&marble_prng_lock);
++	assert(gen_idx < marble_max_ngens && marble_generators[gen_idx]);
++	marble_prng_check(ccdrbg_generate(&ctx->drbg_info, marble_prng_state(ctx),
++	    nbytes, out, 0, NULL));
++	lck_mtx_unlock(&marble_prng_lock);
++}
++
++__startup_func
++static void
++marble_prng_startup(void)
++{
++	/* Ensure the boot seed exists before registration erases the early DRBG. */
++	(void)early_random();
++	const struct cckprng_funcs funcs = {
++		.init = marble_prng_init,
++		.initgen = marble_prng_initgen,
++		.reseed = marble_prng_reseed,
++		.refresh = marble_prng_refresh,
++		.generate = marble_prng_generate,
++		.init_with_getentropy = marble_prng_init_with_getentropy,
++	};
++	register_and_init_prng(&marble_prng_ctx, &funcs);
++	kprintf("MARBLE PRNG: HMAC-SHA256 registered\n");
++}
++STARTUP(EARLY_BOOT, STARTUP_RANK_FIRST, marble_prng_startup);
++#endif /* MARBLE */
++
+ static void read_erandom(void * buf, size_t nbytes);
+ 
+ /*
+@@ -339,12 +473,22 @@ int
+ write_random(void * buffer, u_int numbytes)
+ {
+ 	uint8_t seed[SHA256_DIGEST_LENGTH];
++#if defined(MARBLE)
++	/* Hash without depending on the absent corecrypto kext's dispatch table. */
++	const struct ccdigest_info *di = &ccsha256_ltc_di;
++	ccdigest_di_decl(di, ctx);
++	ccdigest_init(di, ctx);
++	ccdigest_update(di, ctx, numbytes, buffer);
++	ccdigest_final(di, ctx, seed);
++	ccdigest_di_clear(di, ctx);
++#else
+ 	SHA256_CTX ctx;
+ 
+ 	/* hash the input to minimize the time we need to hold the lock */
+ 	SHA256_Init(&ctx);
+ 	SHA256_Update(&ctx, buffer, numbytes);
+ 	SHA256_Final(seed, &ctx);
++#endif
+ 
+ 	prng_funcs.reseed(prng_ctx, sizeof(seed), seed);
+ 	cc_clear(sizeof(seed), seed);
+diff --git a/osfmk/vm/vm_kern.c b/osfmk/vm/vm_kern.c
+index 2927d4b..715b8a1 100644
+--- a/osfmk/vm/vm_kern.c
++++ b/osfmk/vm/vm_kern.c
+@@ -2439,22 +2439,68 @@ kmem_sizeclass_init(void)
+ 	}
+ }
+ 
++#if defined(MARBLE)
++/*
++ * No corecrypto kext is loaded on MARBLE yet. The kmem RNG contract permits
++ * a non-cryptographic generator and requires lock-free generation. Keep
++ * allocator RNG state per CPU/sizeclass; seed it from XNU's built-in early
++ * HMAC-SHA256 DRBG during single-CPU initialization.
++ *
++ * SplitMix64: Sebastiano Vigna, 2015, public-domain reference:
++ * https://prng.di.unimi.it/splitmix64.c
++ * This is private to kmem; it does not register or replace crypto services.
++ */
++struct marble_kmem_rng {
++	uint64_t state;
++};
++
++static uint64_t
++marble_kmem_random64(struct marble_kmem_rng *rng)
++{
++	uint64_t value = (rng->state += 0x9e3779b97f4a7c15ULL);
++	value = (value ^ (value >> 30)) * 0xbf58476d1ce4e5b9ULL;
++	value = (value ^ (value >> 27)) * 0x94d049bb133111ebULL;
++	return value ^ (value >> 31);
++}
++
++static uint64_t
++marble_kmem_uniform(struct marble_kmem_rng *rng, uint64_t bound)
++{
++	assert(bound != 0);
++	/* Reject the incomplete residue interval to avoid modulo bias. */
++	const uint64_t threshold = -bound % bound;
++	uint64_t value;
++	do {
++		value = marble_kmem_random64(rng);
++	} while (value < threshold);
++	return value % bound;
++}
++#endif /* MARBLE */
++
+ /*
+  * This is done during EARLY_BOOT as it needs the corecrypto module to be
+- * set up.
++ * set up on platforms that use it for allocator randomness.
+  */
+ __startup_func
+ static void
+ kmem_crypto_init(void)
+ {
++#if defined(MARBLE)
++	vm_size_t ctx_size = sizeof(struct marble_kmem_rng);
++#else
+ 	vm_size_t ctx_size = crypto_random_kmem_ctx_size();
++#endif
+ 
+ 	for (uint32_t i = 0; i < KMEM_NUM_SIZECLASS; i++) {
+ 		struct kmem_sizeclass *ks = &kmem_size_array[i];
+ 
+ 		ks->ks_rng_ctx = zalloc_percpu_permanent(ctx_size, ZALIGN_PTR);
+ 		zpercpu_foreach(ctx, ks->ks_rng_ctx) {
++#if defined(MARBLE)
++			((struct marble_kmem_rng *)ctx)->state = early_random();
++#else
+ 			crypto_random_kmem_init(ctx);
++#endif
+ 		}
+ 	}
+ }
+@@ -2711,17 +2757,20 @@ kmem_get_next_slot(
+ 	assert(num_slots > 0);
+ 	if (__improbable(startup_phase < STARTUP_SUB_EARLY_BOOT)) {
+ 		/*
+-		 * Use early random prior to early boot as the ks_rng_ctx requires
+-		 * the corecrypto module to be setup before it is initialized and
+-		 * used.
++		 * Use early random before the per-CPU allocator generators have
++		 * been initialized during EARLY_BOOT.
+ 		 *
+ 		 * num_slots can't be 0 as we take this path when we have more than
+ 		 * one slot left.
+ 		 */
+ 		slot_idx = kmem_get_random16((uint16_t)num_slots - 1);
+ 	} else {
++#if defined(MARBLE)
++		slot_idx = marble_kmem_uniform(zpercpu_get(sizeclass.ks_rng_ctx), num_slots);
++#else
+ 		crypto_random_uniform(zpercpu_get(sizeclass.ks_rng_ctx), num_slots,
+ 		    &slot_idx);
++#endif
+ 	}
+ 
+ 	return kmem_get_nth_free_slot(meta, slot_idx, bitmap);
+diff --git a/pexpert/arm/pe_fiq.c b/pexpert/arm/pe_fiq.c
+index 3ad743f..d026764 100644
+--- a/pexpert/arm/pe_fiq.c
++++ b/pexpert/arm/pe_fiq.c
+@@ -3,6 +3,7 @@
+  */
+ 
+ #include <stdint.h>
++#include <libkern/section_keywords.h>
+ #include <arm64/proc_reg.h>
+ #include <kern/clock.h>
+ #include <mach/mach_time.h>
+@@ -16,6 +17,13 @@
+ #define GICR_WAKE_TIMEOUT_NS (1000000000ULL) // timeout for redistributor wakeup (default 1s)
+ MACHINE_TIMEOUT(gicr_wake_timeout_ns, "gicr-wake-timeout", GICR_WAKE_TIMEOUT_NS, MACHINE_TIMEOUT_UNIT_NSEC, NULL);
+ 
++#if defined(MARBLE)
++/* Phone default; QEMU virt wires the architected virtual timer to INTID 27. */
++SECURITY_READ_ONLY_LATE(uint32_t) marble_vtimer_intid = MARBLE_VTIMER_INTID;
++/* marble (GICv3): 2 frames per PE; SM8450 marble (GICv4, VLPI frames): 4. */
++SECURITY_READ_ONLY_LATE(uint32_t) marble_gicr_stride = GICR_PE_SIZE;
++#endif
++
+ static vm_offset_t gicd_base;
+ static vm_offset_t gicr_base;
+ static vm_offset_t gicr_size;
+@@ -50,7 +58,11 @@ find_gicr_pe_base()
+ 	// We only care about aff1 and aff0
+ 	uint32_t phys_id = __builtin_arm_rsr64("MPIDR_EL1") & (MPIDR_AFF1_MASK | MPIDR_AFF0_MASK);
+ 
++#if defined(MARBLE)
++	for (vm_offset_t offset = 0; offset < gicr_size; offset += marble_gicr_stride) {
++#else
+ 	for (vm_offset_t offset = 0; offset < gicr_size; offset += GICR_PE_SIZE) {
++#endif
+ 		vm_offset_t gicr_pe_base = gicr_base + offset;
+ 		uint64_t gicr_typer = gicr_read64(GICR_TYPER);
+ 		uint32_t aff_value = (uint32_t) (gicr_typer >> GICR_TYPER_AFFINITY_VALUE_SHIFT) & (MPIDR_AFF1_MASK | MPIDR_AFF0_MASK);
+@@ -96,6 +108,38 @@ pe_init_fiq()
+ 			panic("%s: incorrect reg property size in GIC DT node; expecting 32 bytes but got %u bytes", __func__, prop_size);
+ 		}
+ 
++#if defined(MARBLE)
++		/* Read only on the boot CPU, before the GIC and RO-late lockdown. */
++		void const *timer_prop;
++		unsigned int timer_size;
++		if (SecureDTGetProperty(entry, "virtual-timer-intid", &timer_prop, &timer_size) == kSuccess) {
++			if (timer_size != sizeof(uint32_t)) {
++				panic("%s: invalid virtual-timer-intid size %u", __func__, timer_size);
++			}
++			uint32_t intid = *(const uint32_t *)timer_prop;
++			if (intid < 16 || intid >= 32) {
++				panic("%s: virtual timer INTID %u is not a PPI", __func__, intid);
++			}
++			marble_vtimer_intid = intid;
++		}
++		kprintf("MARBLE GIC: virtual timer INTID %u\n", marble_vtimer_intid);
++
++		/* Same name and meaning as the Linux GICv3 binding's redistributor-stride. */
++		void const *stride_prop;
++		unsigned int stride_size;
++		if (SecureDTGetProperty(entry, "redistributor-stride", &stride_prop, &stride_size) == kSuccess) {
++			if (stride_size != sizeof(uint32_t)) {
++				panic("%s: invalid redistributor-stride size %u", __func__, stride_size);
++			}
++			uint32_t stride = *(const uint32_t *)stride_prop;
++			if (stride != 0x20000 && stride != 0x40000) {
++				panic("%s: unsupported redistributor stride 0x%x", __func__, stride);
++			}
++			marble_gicr_stride = stride;
++		}
++		kprintf("MARBLE GIC: redistributor stride 0x%x\n", marble_gicr_stride);
++#endif
++
+ 		vm_offset_t soc_base_phys = pe_arm_get_soc_base_phys();
+ 
+ 		uint64_t const gicd_base_prop = ((uint64_t const *) prop)[0];
+@@ -141,11 +185,25 @@ pe_init_fiq()
+ 		}
+ 	}
+ 
++#if defined(MARBLE)
++	/*
++	 * Real hardware with two security states: Group 0 is TrustZone's and
++	 * non-secure writes to it are ignored. Everything we own is Group 1 NS
++	 * and arrives as an IRQ (see sleh_irq). GICR_IGROUPR0 reads as zero
++	 * from the non-secure side even after this write; delivery still works.
++	 */
++	gicr_write32(GICR_IGROUPR0, 0xFFFFFFFF);
++	for (unsigned int i = 0; i < 32; i += 4) {
++		gicr_write32(GICR_IPRIORITYR0 + i, 0xA0A0A0A0);
++	}
++	gicr_write32(GICR_ISENABLER0, (1U << marble_vtimer_intid) | (1U << MARBLE_IPI_SGI));
++#else
+ 	// Configure timers and legacy FIQ to be group 0
+ 	gicr_write32(GICR_IGROUPR0, 0x81FFFFFF);
+ 
+ 	// Enable PPI 27
+ 	gicr_write32(GICR_ISENABLER0, (1 << 27));
++#endif /* MARBLE */
+ 
+ 	// Enable system register access
+ 	uint64_t icc_sre = __builtin_arm_rsr64("ICC_SRE_EL1");
+@@ -153,8 +211,12 @@ pe_init_fiq()
+ 	__builtin_arm_wsr64("ICC_SRE_EL1", icc_sre);
+ 	__builtin_arm_isb(ISB_SY);
+ 
++#if defined(MARBLE)
++	__builtin_arm_wsr64("ICC_BPR1_EL1", 0);
++#else
+ 	// Set priority masks and binary point for group 0
+ 	__builtin_arm_wsr64("ICC_BPR0_EL1", 0);
++#endif /* MARBLE */
+ 	__builtin_arm_wsr64("ICC_PMR_EL1", 0xFF);
+ 
+ 	// Set EOI mode of this processor
+@@ -162,12 +224,24 @@ pe_init_fiq()
+ 	icc_ctlr &= ~ICC_CTLR_EOIMODE;
+ 	__builtin_arm_wsr64("ICC_CTLR_EL1", icc_ctlr);
+ 
++#if defined(MARBLE)
++	// ABL leaves only ARE_NS set; Linux writes ARE_NS | EnableGrp1A | EnableGrp1
++	uint32_t gicd_ctlr = gicd_read32(GICD_CTLR);
++	gicd_ctlr |= GICD_CTLR_ARE_NS | GICD_CTLR_ENABLEGRP1A | GICD_CTLR_ENABLEGRP1;
++	gicd_write32(GICD_CTLR, gicd_ctlr);
++	while (gicd_read32(GICD_CTLR) & GICD_CTLR_RWP) {
++		;
++	}
++	__builtin_arm_wsr64("ICC_IGRPEN1_EL1", 1);
++	__builtin_arm_isb(ISB_SY);
++#else
+ 	// Enable the forwarding of the vtimer interrupt
+ 	uint32_t gicd_ctlr = gicd_read32(GICD_CTLR);
+ 	gicd_ctlr |= GICD_CTLR_ENABLEGRP0;
+ 	gicd_write32(GICD_CTLR, gicd_ctlr);
+ 	__builtin_arm_wsr64("ICC_IGRPEN0_EL1", 1);
+ 	__builtin_arm_isb(ISB_SY);
++#endif /* MARBLE */
+ }
+ #else
+ void
+diff --git a/pexpert/arm/pe_serial.c b/pexpert/arm/pe_serial.c
+index 997a4ab..2798296 100644
+--- a/pexpert/arm/pe_serial.c
++++ b/pexpert/arm/pe_serial.c
+@@ -26,6 +26,7 @@
+ #include <pexpert/arm/consistent_debug.h>
+ #include <pexpert/arm64/board_config.h>
+ #include <arm64/proc_reg.h>
++#include <arm64/marble_early.h>
+ #include <pexpert/arm/protos.h>
+ #include <kern/sched_prim.h>
+ #if HIBERNATION
+@@ -697,6 +698,194 @@ register_serial_functions(struct pe_serial_functions *fns)
+ 	gPESF = fns;
+ }
+ 
++/*****************************************************************************/
++
++/*
++ * marble: framebuffer "serial" for boards with no usable UART (the OnePlus
++ * 10 Pro's debug UART engine runs in SPI mode). kprintf output is drawn onto
++ * the boot framebuffer described by the ADT node "marble-fbcon":
++ *   reg    = <phys size>       absolute physical address, not arm-io relative
++ *   width, height              pixels
++ *   stride                     bytes per line, 32bpp
++ * Lines wrap back to the top instead of scrolling; the line after the cursor
++ * is kept blank so the newest output is easy to find.
++ */
++
++extern unsigned char iso_font[256 * 16];
++
++#define FBCON_SCALE     2
++#define FBCON_FG        0xffffffffu
++#define FBCON_BG        0xff000000u
++
++static volatile uint32_t *fbcon_base;
++static uint32_t fbcon_width, fbcon_height, fbcon_stride;
++static uint32_t fbcon_cols, fbcon_rows, fbcon_col, fbcon_row;
++
++static void
++fbcon_clear_row(uint32_t row)
++{
++	for (uint32_t y = row * 16 * FBCON_SCALE; y < (row + 1) * 16 * FBCON_SCALE; y++) {
++		volatile uint32_t *line = fbcon_base + y * (fbcon_stride / 4);
++		for (uint32_t x = 0; x < fbcon_width; x++) {
++			line[x] = FBCON_BG;
++		}
++	}
++}
++
++static void
++fbcon_newline(void)
++{
++	fbcon_col = 0;
++	fbcon_row = (fbcon_row + 1) % fbcon_rows;
++	fbcon_clear_row(fbcon_row);
++	fbcon_clear_row((fbcon_row + 1) % fbcon_rows);
++}
++
++static void
++fbcon_init(void)
++{
++	fbcon_cols = fbcon_width / (8 * FBCON_SCALE);
++	fbcon_rows = fbcon_height / (16 * FBCON_SCALE);
++	fbcon_col = fbcon_row = 0;
++	for (uint32_t r = 0; r < fbcon_rows; r++) {
++		fbcon_clear_row(r);
++	}
++}
++
++static unsigned int
++fbcon_transmit_ready(void)
++{
++	return 1;
++}
++
++static void
++fbcon_transmit_data(uint8_t c)
++{
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++    /* This serial backend is pixels, not a UART. Preserve panic drawing. */
++    extern int marble_console_video_paused(void);
++    if (marble_console_video_paused()) {
++        return;
++    }
++#endif
++	if (c == '\r') {
++		fbcon_col = 0;
++		return;
++	}
++	if (c == '\n') {
++		fbcon_newline();
++		return;
++	}
++	if (fbcon_col >= fbcon_cols) {
++		fbcon_newline();
++	}
++	const unsigned char *glyph = iso_font + c * 16;
++	uint32_t x0 = fbcon_col * 8 * FBCON_SCALE, y0 = fbcon_row * 16 * FBCON_SCALE;
++	for (uint32_t gy = 0; gy < 16; gy++) {
++		for (uint32_t sy = 0; sy < FBCON_SCALE; sy++) {
++			volatile uint32_t *line = fbcon_base + (y0 + gy * FBCON_SCALE + sy) * (fbcon_stride / 4) + x0;
++			for (uint32_t gx = 0; gx < 8; gx++) {
++				uint32_t px = (glyph[gy] & (1u << gx)) ? FBCON_FG : FBCON_BG;
++				for (uint32_t sx = 0; sx < FBCON_SCALE; sx++) {
++					line[gx * FBCON_SCALE + sx] = px;
++				}
++			}
++		}
++	}
++	fbcon_col++;
++}
++
++static unsigned int
++fbcon_receive_ready(void)
++{
++	return 0;
++}
++
++static uint8_t
++fbcon_receive_data(void)
++{
++	return 0;
++}
++
++SECURITY_READ_ONLY_LATE(static struct pe_serial_functions) marble_fbcon_serial_functions =
++{
++	.init = fbcon_init,
++	.transmit_ready = fbcon_transmit_ready,
++	.transmit_data = fbcon_transmit_data,
++	.receive_ready = fbcon_receive_ready,
++	.receive_data = fbcon_receive_data,
++	.device = SERIAL_MARBLE_FBCON
++};
++
++static int
++fbcon_map_and_register(uint64_t phys, uint64_t map_size)
++{
++	uint64_t need;
++
++	if (!fbcon_width || !fbcon_height || fbcon_stride < fbcon_width * 4) {
++		return 0;
++	}
++	if (fbcon_stride > 0xffffffffu / fbcon_height) {
++		return 0;
++	}
++	need = (uint64_t)fbcon_stride * fbcon_height;
++	if (phys == 0 || map_size < need) {
++		return 0;
++	}
++	marble_early_mark(17, "fbcon config read; mapping");
++	fbcon_base = (volatile uint32_t *)ml_io_map_wcomb(phys, map_size);
++	marble_early_mark(18, "fbcon mapping returned");
++	if (fbcon_base == NULL) {
++		return 0;
++	}
++	register_serial_functions(&marble_fbcon_serial_functions);
++	return 1;
++}
++
++static void
++fbcon_from_boot_video(void)
++{
++	/* Phone ADT has no marble-fbcon node. DarwinBoot copied the GOP
++	 * framebuffer into boot_args, and PE_init_platform saved it here.
++	 */
++	if (PE_state.video.v_baseAddr == 0 || PE_state.video.v_depth < 32) {
++		return;
++	}
++	if (PE_state.video.v_width > 0xffffffffu || PE_state.video.v_height > 0xffffffffu ||
++	    PE_state.video.v_rowBytes > 0xffffffffu) {
++		return;
++	}
++	fbcon_width = (uint32_t)PE_state.video.v_width;
++	fbcon_height = (uint32_t)PE_state.video.v_height;
++	fbcon_stride = (uint32_t)PE_state.video.v_rowBytes;
++	(void)fbcon_map_and_register(PE_state.video.v_baseAddr, (uint64_t)fbcon_stride * fbcon_height);
++}
++
++static void
++fbcon_probe(void)
++{
++	DTEntry entry;
++	uint64_t const *reg;
++	uint32_t const *val;
++	unsigned int size;
++
++	if (SecureDTFindEntry("name", "marble-fbcon", &entry) != kSuccess ||
++	    SecureDTGetProperty(entry, "reg", (void const **)&reg, &size) != kSuccess || size < 16) {
++		fbcon_from_boot_video();
++		return;
++	}
++	if (SecureDTGetProperty(entry, "width", (void const **)&val, &size) == kSuccess) {
++		fbcon_width = *val;
++	}
++	if (SecureDTGetProperty(entry, "height", (void const **)&val, &size) == kSuccess) {
++		fbcon_height = *val;
++	}
++	if (SecureDTGetProperty(entry, "stride", (void const **)&val, &size) == kSuccess) {
++		fbcon_stride = *val;
++	}
++	(void)fbcon_map_and_register(reg[0], reg[1]);
++}
++
+ #if HIBERNATION
+ /**
+  * Transitions the serial driver into a mode that can be run in the hibernation
+@@ -770,9 +959,20 @@ serial_init(void)
+ 	}
+ 
+ 	soc_base = pe_arm_get_soc_base_phys();
+-
++	fbcon_probe();
+ 	if (soc_base == 0) {
+-		return 0;
++		if (gPESF == NULL) {
++			return 0;
++		}
++		fns = gPESF;
++		while (fns != NULL) {
++			serial_do_transmit = 1;
++			fns->init();
++			fns = fns->next;
++		}
++		uart_initted = true;
++		uart_sends_force_poll("MARBLE FBCON GOP\n");
++		return 1;
+ 	}
+ 
+ 	PE_parse_boot_argn("disable-uart-irq", &disable_uart_irq, sizeof(disable_uart_irq));
+@@ -926,6 +1126,7 @@ serial_init(void)
+ 
+ 	/* Complete. */
+ 	uart_initted = true;
++	uart_sends_force_poll("MARBLE FBCON GOP\n");
+ 	return 1;
+ }
+ 
+diff --git a/pexpert/pexpert/arm/protos.h b/pexpert/pexpert/arm/protos.h
+index 404b50b..94891cf 100644
+--- a/pexpert/pexpert/arm/protos.h
++++ b/pexpert/pexpert/arm/protos.h
+@@ -36,6 +36,9 @@ void uart_putc_options(char, bool);
+ int uart_getc(void);
+ 
+ void pe_init_fiq(void);
++#if defined(ARM64_BOARD_CONFIG_MARBLE)
++extern uint32_t marble_vtimer_intid;
++#endif
+ 
+ #ifdef PRIVATE
+ /**
+@@ -47,7 +50,8 @@ typedef enum serial_device {
+ 	SERIAL_DOCKCHANNEL=0x2,
+ 	SERIAL_PI3_UART=0x4,
+ 	SERIAL_VMAPPLE_UART=0x8,
+-	SERIAL_DCC_UART=0x10
++	SERIAL_DCC_UART=0x10,
++	SERIAL_MARBLE_FBCON=0x20
+ } serial_device_t;
+ 
+ kern_return_t serial_irq_enable(serial_device_t device);
+diff --git a/pexpert/pexpert/arm64/Makefile b/pexpert/pexpert/arm64/Makefile
+index 8226b8c..c7df42c 100644
+--- a/pexpert/pexpert/arm64/Makefile
++++ b/pexpert/pexpert/arm64/Makefile
+@@ -17,7 +17,8 @@ PRIVATE_KERNELFILES = \
+ 	boot.h \
+ 	H13.h \
+ 	VMAPPLE.h \
+-	BCM2837.h
++	BCM2837.h \
++	MARBLE.h
+ 
+ 
+ # Headers installed into System.framework/PrivateHeaders (userspace internal SDK only).
+diff --git a/pexpert/pexpert/arm64/board_config.h b/pexpert/pexpert/arm64/board_config.h
+index 9454534..847a097 100644
+--- a/pexpert/pexpert/arm64/board_config.h
++++ b/pexpert/pexpert/arm64/board_config.h
+@@ -97,6 +97,17 @@
+ #define CORE_NCTRS                     8 /* Placeholder; KPC is not enabled for this target */
+ #endif  /* ARM64_BOARD_CONFIG_BCM2837 */
+ 
++#ifdef ARM64_BOARD_CONFIG_MARBLE
++#include <pexpert/arm64/MARBLE.h>
++
++#define MAX_L2_CLINE                   6
++#define MAX_CPUS                       8
++#define MAX_CPU_CLUSTERS               1
++
++#define CORE_NCTRS                     8 /* Placeholder; KPC is not enabled for this target */
++
++#endif  /* ARM64_BOARD_CONFIG_MARBLE */
++
+ #ifdef ARM64_BOARD_CONFIG_VMAPPLE
+ #include <pexpert/arm64/VMAPPLE.h>
+ 
+diff --git a/security/mac_vfs_subr.c b/security/mac_vfs_subr.c
+index 97028c0..ae73f62 100644
+--- a/security/mac_vfs_subr.c
++++ b/security/mac_vfs_subr.c
+@@ -167,7 +167,7 @@ mac_vnop_setxattr(struct vnode *vp, const char *name, char *buf, size_t len)
+ {
+ 	vfs_context_t ctx;
+ 	int options = XATTR_NOSECURITY;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 	uio_t auio;
+ 	int error;
+ 
+@@ -198,7 +198,7 @@ mac_vnop_getxattr(struct vnode *vp, const char *name, char *buf, size_t len,
+ {
+ 	vfs_context_t ctx = vfs_context_current();
+ 	int options = XATTR_NOSECURITY;
+-	uio_stackbuf_t uio_buf[UIO_SIZEOF(1)];
++	UIO_STACKBUF(uio_buf, 1);
+ 	uio_t auio;
+ 	int error;
+ 
+diff --git a/tools/lldbmacros/core/syntax_checker.py b/tools/lldbmacros/core/syntax_checker.py
+index 3ebc295..3c3e592 100755
+--- a/tools/lldbmacros/core/syntax_checker.py
++++ b/tools/lldbmacros/core/syntax_checker.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ from __future__ import absolute_import, print_function
+ 
+ 
+@@ -11,6 +11,8 @@ Usage:
+   python syntax_checker.py <python_source_file> [<python_source_file> ..] 
+ """
+ import sys
++# Do not shadow stdlib collections with the adjacent LLDB module.
++sys.path.pop(0)
+ import os
+ import re
+ 

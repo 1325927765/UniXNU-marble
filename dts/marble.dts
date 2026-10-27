@@ -1,0 +1,105 @@
+/dts-v1/;
+
+/* Sanitized observed-hardware subset, not a complete format 2 boot tree.
+ * Sources and omissions: docs/HARDWARE.md. No owner serial, firmware bytes,
+ * memory-size guess or fixed framebuffer address is included.
+ */
+/ {
+    model = "POCO F5 / Redmi Note 12 Turbo (marble)";
+    compatible = "xiaomi,marble", "qcom,sm7475";
+    #address-cells = <2>;
+    #size-cells = <2>;
+    interrupt-parent = <&gic>;
+
+    cpus {
+        #address-cells = <2>;
+        #size-cells = <0>;
+        cpu0: cpu@0 {
+            device_type = "cpu";
+            compatible = "qcom,kryo";
+            reg = <0 0>;
+            enable-method = "psci";
+        };
+    };
+    psci {
+        compatible = "arm,psci-1.0";
+        method = "smc";
+    };
+    timer {
+        compatible = "arm,armv8-timer";
+        clock-frequency = <19200000>;
+        interrupts = <1 13 0xff08>, <1 14 0xff08>, <1 11 0xff08>, <1 12 0xff08>;
+    };
+    soc {
+        compatible = "simple-bus";
+        #address-cells = <2>;
+        #size-cells = <2>;
+        ranges;
+        gic: interrupt-controller@17100000 {
+            compatible = "arm,gic-v3";
+            #address-cells = <0>;
+            #interrupt-cells = <3>;
+            interrupt-controller;
+            reg = <0 0x17100000 0 0x10000>, <0 0x17180000 0 0x200000>;
+            redistributor-stride = <0 0x40000>;
+        };
+        gcc: clock-controller@100000 {
+            compatible = "qcom,cape-gcc", "syscon";
+            reg = <0 0x100000 0 0x1f4200>;
+            #clock-cells = <1>;
+            status = "disabled";
+        };
+        tlmm: pinctrl@f000000 {
+            compatible = "qcom,cape-pinctrl";
+            reg = <0 0x0f000000 0 0x01000000>;
+            gpio-controller;
+            #gpio-cells = <2>;
+            interrupt-controller;
+            #address-cells = <0>;
+            #interrupt-cells = <2>;
+            interrupts = <0 208 4>;
+            status = "disabled";
+        };
+        smmu: iommu@15000000 {
+            compatible = "qcom,qsmmu-v500";
+            reg = <0 0x15000000 0 0x100000>, <0 0x151ce000 0 0x20>;
+            #iommu-cells = <2>;
+            qcom,num-smr-override = <120>;
+            status = "disabled";
+        };
+        gpi: dma-controller@900000 {
+            compatible = "qcom,gpi-dma";
+            reg = <0 0x00900000 0 0x60000>;
+            #dma-cells = <5>;
+            iommus = <&smmu 0x5b6 0>;
+            status = "disabled";
+        };
+        spi@990000 {
+            compatible = "qcom,spi-geni";
+            reg = <0 0x00990000 0 0x4000>;
+            interrupts = <0 605 4>;
+            clocks = <&gcc 94>, <&gcc 134>, <&gcc 135>;
+            clock-names = "se-clk", "m-ahb", "s-ahb";
+            dmas = <&gpi 0 4 1 64 2>, <&gpi 1 4 1 64 2>;
+            dma-names = "tx", "rx";
+            #address-cells = <1>;
+            #size-cells = <0>;
+            status = "disabled";
+            touchscreen@0 {
+                compatible = "goodix,9916r-spi";
+                reg = <0>;
+                spi-max-frequency = <15000000>;
+                interrupt-parent = <&tlmm>;
+                interrupts = <21 0x2008>;
+                reset-gpios = <&tlmm 20 0>;
+                status = "disabled";
+            };
+        };
+        ufshc@1d84000 {
+            compatible = "qcom,ufshc";
+            reg = <0 0x01d84000 0 0x3000>, <0 0x01d88000 0 0x8000>, <0 0x01d90000 0 0x9000>;
+            interrupts = <0 265 4>;
+            status = "disabled";
+        };
+    };
+};

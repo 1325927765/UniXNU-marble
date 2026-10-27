@@ -48,3 +48,15 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File device/classmates/Test-I
 ```
 
 Do not use the real installer for CI or a device-free test. Installer source is published without its private manifest, system image, boot payload or platform-tools binaries.
+
+## Official format 2 record and unresolved build gate
+
+See [docs/FORMAT2-MIGRATION.md](docs/FORMAT2-MIGRATION.md) and [porting.toml](porting.toml). The official record check and source-only DTS compile pass. Target defconfig/status/tree do not resolve yet; the exact failures are saved in docs/evidence/format2-validation.json. This is not a successful whole-build report.
+
+Three public references can be fetched/locked independently of a target profile:
+
+```sh
+python3 tools/resolve_reference_lock.py --upstream /path/to/pinned-UniXNU
+```
+
+Run that helper on Linux/macOS/WSL; Linux source filenames cannot all be checked out by native Windows Git. The resulting unixnu.lock is explicitly reference-only. It does not substitute a Linux reference for a UniXNU SoC source, and it does not select an iPadOS profile for this iPhone port. The final target fetch/lock step remains pending.

@@ -6,6 +6,10 @@ Experimental community source port for **POCO F5 / Redmi Note 12 Turbo (`marble`
 
 The maintainer's F5 has reached the real iOS Hello interface with a clean display. **Physical touch does not work; setup has not been completed.** The newer prerequisite-probe kernel regressed to a persistent Apple Logo in two runs; the older clock-probe kernel reached Hello again. Neither a Logo nor Hello establishes a usable phone.
 
+## Format 2 record
+
+The root now includes `board.toml`, `feeds.toml`, a reference-only `unixnu.lock`, `configs/`, `dts/`, `patches/xnu/series`, `package/`, input inventories and [porting.toml](porting.toml). [Migration status](docs/FORMAT2-MIGRATION.md) lists what is checked and what is missing. The official checker covers 13 areas; it does not prove the target builds. `board.example=true` remains until a matching iOS16 OS profile and reviewed SM7475 shared source exist. [Hardware inventory](docs/HARDWARE.md) deliberately omits unverified RAM/reservation values.
+
 ## What is here
 
 | Path | Contents |

@@ -11,6 +11,11 @@ jobs:
         with:
           python-version: '3.12'
       - run: python tools/check_source_tree.py
+      - name: Compile sanitized hardware description only
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y device-tree-compiler
+          dtc -I dts -O dtb -o /tmp/marble-hardware.dtb dts/marble.dts
       - run: python -m unittest discover -s touch -p 'test_collect_marble_spi_state.py'
       - run: python touch/test_install_marble_touch_probe.py
       - name: Host C fixtures with sanitizers

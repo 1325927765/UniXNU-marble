@@ -36,3 +36,6 @@ research/
 inputs/
 reports/
 sources/
+
+.cache/
+unixnu.local.toml

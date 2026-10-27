@@ -1,0 +1,5 @@
+# Format 2 migration configuration; board.example=true remains a build guard.
+# Physical evidence currently covers one boot CPU; no SMP support is claimed.
+# Legacy build target: DEVELOPMENT ARM64 MARBLE (XNU 8796); see BUILDING.md.
+# Canonical CONFIG_XNU component options remain unselected pending an iOS 16
+# ABI-compatible component set and a reviewed SM7475 SoC profile.

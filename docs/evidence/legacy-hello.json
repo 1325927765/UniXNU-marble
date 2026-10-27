@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "scope": "historical legacy XNU 8796 temporary boot; not Format 2",
+  "observed_date": "2026-10-26",
+  "device_family": "POCO F5 / Redmi Note 12 Turbo, marble, SM7475 family",
+  "os": "iPhone iOS 16.7.16 (20H392)",
+  "boot_method": "fastboot boot (temporary)",
+  "result": "Reached multilingual Hello interface with clean display and home indicator",
+  "setup_completed": false,
+  "physical_touch_working": false,
+  "userdata_flashed": false,
+  "boot_partition_flashed": false,
+  "private_image_sha256": "69bd6555dde4ecc2792f2febcf6c913c0a1331318d0bc1c2d6eb1fd4c20087bd",
+  "private_kernel_sha256": "42f94737386b5ef850f8af5c368a3be97d0dcfcf0fa06bdd3e8a9e7ae71a2b5f",
+  "exact_tested_source_commit_preserved": false,
+  "public_snapshot_base": "1b191cb58250d0705d8a51287127505aa4bc0789",
+  "caveat": "Published v4 dirty source snapshot predates the tested kernel; these hashes identify unpublished test artifacts and do not establish reproducibility."
+}

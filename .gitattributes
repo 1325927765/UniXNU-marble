@@ -1,3 +1,4 @@
 * text eol=lf
 # Imported snapshot bytes and pinned generated sources must remain exact.
 legacy-xnu/** -text
+patches/xnu/*.patch -text

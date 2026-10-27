@@ -1,0 +1,71 @@
+schema_version = 2
+
+[board]
+name = "marble"
+soc = "SM7475"
+soc_source = "sm7475"
+os_profile = "ios-16.7.16-20H392"
+kit = "marble"
+description = "POCO F5 / Redmi Note 12 Turbo; iPhone iOS 16.7.16 legacy port undergoing format 2 migration"
+# Build guard: upstream has no matching OS profile or reviewed SM7475 SoC source.
+# This is an intentionally non-buildable migration record, not an example phone.
+example = true
+
+[components]
+# Current legacy drivers are published in legacy-xnu/ and touch/. Do not select
+# catalog components with only an iPadOS 17 ABI as if they verified iOS 16 support.
+include = []
+
+[kernel]
+defconfig = "marble_defconfig"
+config_fragments = []
+patch_series = ["device:patches/xnu/series"]
+
+[device_tree]
+source = "device:dts/marble.dts"
+include_dirs = ["device:dts"]
+
+[firmware]
+config = "marble"
+dsc = "Platforms/Xiaomi/marblePkg/marble.dsc"
+fd = "Build/marblePkg/{target}_CLANGPDB/FV/SILICIUM_UEFI.fd"
+packages = ["{uefi}", "{uefi}/Platforms/Xiaomi", "{uefi}/Common/Mu", "{uefi}/Common/Mu_OEM_Sample", "{uefi}/Silicon/Qualcomm", "{uefi}/Silicon/Silicium", "{uefi}/Silicium-ACPI", "{uefi}/Silicium-ACPI/Platforms/Xiaomi", "{uefi}/Silicium-ACPI/SoCs/Qualcomm", "{tree}/package", "{tree}/drivers/DarwinBoot", "{edk2}"]
+# These measured legacy paths are not a validated format 2 firmware recipe.
+
+[firmware.defines]
+DEVICE_MODEL = "marble"
+
+[bootimg.image]
+header_version = 4
+
+# Restore identity verified from the matching manifest. Supply --ipsw locally;
+# no default image download or Apple binary is published.
+[ipsw]
+product = "iPhone10,6"
+version = "16.7.16"
+build = "20H392"
+device_class = "d221ap"
+chip_id = 32789
+board_id = 14
+fetch = ["KernelCache", "DeviceTree", "StaticTrustCache", "Cryptex1,SystemTrustCache", "Cryptex1,AppTrustCache", "OS"]
+
+[ipsw.sha256]
+"kernelcache.release.iphone10b" = "2d6a13d040aaf87cec09bb6906d43e9bd8cea951e43d1aa1cd62707dfdc5aaec"
+"Firmware/all_flash/DeviceTree.d221ap.im4p" = "889e838319619c10f5f7f6ef25f9ff2a3a652a3c078803038ba678efa1201b79"
+"Firmware/087-86698-044.dmg.trustcache" = "63e01c03b31e1532a5581a24865490673f0b5c297b0199fe0095637c6100ef4b"
+"Firmware/087-86593-047.dmg.trustcache" = "9cc478fe3525e2683b5b9ea1eea0851eaebebdab21d206556233400e59d2e361"
+"Firmware/087-86715-047.dmg.trustcache" = "4e5fc21a171e7fc0e05698c83b9c080307e7cf57a3e88b09cfe0b4e135674067"
+"087-86698-044.dmg" = "80f426d5b8fca8552f95be427434f1911dbb4c2c6d28aad94f2426ddd0c92483"
+
+# These legacy payload inputs are inventoried, not a verified format 2 recipe.
+[payload]
+volume = "MARBLEXNU"
+size_mib = 64
+loader = "firmware"
+title = "Marble iPhone iOS 16 experimental migration"
+kernel_args = ["-v", "serial=3", "cpus=1"]
+
+[payload.adt]
+owned_memory_size = "0x20000000"
+unique_chip_id = "required"
+ipad_identity = false

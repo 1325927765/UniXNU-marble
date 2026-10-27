@@ -1,0 +1,11 @@
+# REFERENCE-ONLY LOCK: not a resolved format 2 build lock.
+# Resolved git sources, written by "unixnu fetch". Local sources are never recorded.
+
+[source."legacy-xnu-reference"]
+commit = "1b191cb58250d0705d8a51287127505aa4bc0789"
+
+[source."marble-linux-reference"]
+commit = "48952ed36228217531482b39d5bef13e7fd808ec"
+
+[source."marble-uefi-reference"]
+commit = "fc9e410d025cd9bd8cc3af7cdd450761e8ab6429"

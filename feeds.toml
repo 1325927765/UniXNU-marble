@@ -1,0 +1,24 @@
+# Pinned, available references for the legacy port. These are not substitutes
+# for a format 2 source of kind "soc" with a reviewed soc.toml.
+[[source]]
+name = "marble-linux-reference"
+kind = "refer"
+git = "https://github.com/MiCode/Xiaomi_Kernel_OpenSource.git"
+commit = "48952ed36228217531482b39d5bef13e7fd808ec"
+path = "drivers/input/touchscreen/goodix_9916"
+
+[[source]]
+name = "marble-uefi-reference"
+kind = "refer"
+git = "https://github.com/chibishizuku/Mu-Silicium-marble.git"
+commit = "fc9e410d025cd9bd8cc3af7cdd450761e8ab6429"
+path = "Resources/Configs"
+
+[[source]]
+name = "legacy-xnu-reference"
+kind = "refer"
+git = "https://github.com/apple-oss-distributions/xnu.git"
+commit = "1b191cb58250d0705d8a51287127505aa4bc0789"
+path = "config"
+
+# No fabricated sm7475 SoC repository, commit, or iPadOS substitution is listed.

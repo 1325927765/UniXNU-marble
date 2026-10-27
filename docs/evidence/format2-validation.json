@@ -1,0 +1,43 @@
+{
+  "upstream_revision": "0fc0fc1f9ddd0fbd4787738afef38667df5e0a95",
+  "date": "2026-10-27",
+  "environment": "Windows host; only preflight/resolver commands, no compiler/firmware/device",
+  "record_check": {
+    "command": "python scripts/porting-record.py check --device <device>",
+    "exit_code": 0,
+    "result": "marble: 13 structured areas checked"
+  },
+  "dts_compile": {
+    "command": "dtc -I dts -O dtb -o <temporary-output> dts/marble.dts (Linux/WSL)",
+    "exit_code": 0,
+    "result": "No diagnostics; sanitized subset only, not a complete boot tree"
+  },
+  "reference_lock": {
+    "result": "Three declared references actually fetched with pinned official feeds implementation on Linux/WSL",
+    "scope": "reference-only, not a resolved format 2 build lock"
+  },
+  "resolver_checks": [
+    {
+      "command": "./unixnu defconfig marble_defconfig -D <device> --out <local-output>",
+      "exit_code": 1,
+      "result": "unixnu: developed and tested on macOS and Linux only; the kernel step needs Xcode or the Linux toolchain, and --skip-setup needs hdiutil\nunixnu: feeds.toml needs a source with kind = \"soc\" and name = \"sm7475\"",
+      "interpretation": "Expected unresolved SoC/profile gate; not a successful build check"
+    },
+    {
+      "command": "./unixnu status --json -D <device> --out <local-output>",
+      "exit_code": 1,
+      "result": "unixnu: developed and tested on macOS and Linux only; the kernel step needs Xcode or the Linux toolchain, and --skip-setup needs hdiutil\nunixnu: feeds.toml needs a source with kind = \"soc\" and name = \"sm7475\"",
+      "interpretation": "Expected unresolved SoC/profile gate; not a successful build check"
+    },
+    {
+      "command": "./unixnu tree -D <device> --out <local-output>",
+      "exit_code": 1,
+      "result": "unixnu: developed and tested on macOS and Linux only; the kernel step needs Xcode or the Linux toolchain, and --skip-setup needs hdiutil\nunixnu: feeds.toml needs a source with kind = \"soc\" and name = \"sm7475\"",
+      "interpretation": "Expected unresolved SoC/profile gate; not a successful build check"
+    }
+  ],
+  "format2_kernel_built": false,
+  "format2_hardware_tested": false,
+  "mac_accessed": false,
+  "phone_accessed": false
+}

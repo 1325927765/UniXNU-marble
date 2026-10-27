@@ -1,0 +1,8 @@
+# Copy to ignored local.toml. Never commit local paths or private firmware.
+[local]
+drivers = "~/Code/UniXNU-local/drivers"
+kits = "~/Code/UniXNU-local/kits"
+
+# After a REAL matching SoC implementation exists, an optional development
+# source override may be added with kind="soc", name="sm7475", and its local
+# directory containing soc.toml. This example does not invent one.

@@ -1,0 +1,8 @@
+# Inventory only; no vendor binaries are distributed.
+# Goodix9916R names observed in the board tree:
+# goodix_firmware_TM.bin | source: matching device firmware/recovery | hash: not exported
+# goodix_cfg_group_TM.bin | source: matching device firmware/recovery | hash: not exported
+# Firmware extraction/selection/embedding is incomplete. No invented hash or
+# zero-filled blob is accepted. Local vendor inputs belong under .cache/firmware.
+# UEFI vendor payload requirements must be obtained from the pinned marble
+# Mu-Silicium source and audited before the format 2 firmware build is enabled.
