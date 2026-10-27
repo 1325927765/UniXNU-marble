@@ -22,3 +22,5 @@ The placeholders are intentionally invalid. Derive lengths/hashes from the calle
 The maintainer's old kernel reached Hello, but the clean restore-derived root plus that kernel has not been validated together. Apple Logo is not a success certificate, touch is not working, and a fastboot OKAY only means a command was accepted. The installer log uses command-accepted statuses accordingly.
 
 Run `Test-Install-MarbleTest.ps1` for isolated Windows mock tests. It does not use real phones or system images.
+
+The automated tests replace the console-reader adapter only in a disposable script copy, and run a compiled fake fastboot. They exercise the real strict confirmation comparison (including rejection), hashes and command policy; they do not certify interactive console I/O on a CI runner. The production script has no environment-variable confirmation bypass.

@@ -33,20 +33,14 @@ function Run-Installer([string[]] $Arguments, [string] $Mode = 'ok', [string] $I
     $psi.RedirectStandardOutput = $true
     $psi.RedirectStandardError = $true
     $psi.RedirectStandardInput = $true
-    # The confirmation fixture is ASCII. Avoid a UTF-8 BOM on UTF-8-codepage
-    # runners becoming an extra character in the strict confirmation phrase.
     $psi.EnvironmentVariables['MOCK_MODE'] = $Mode
     $psi.EnvironmentVariables['MOCK_LOG'] = $logPath
+    $psi.EnvironmentVariables['MARBLE_MOCK_CONFIRMATION'] = $InputText
     $proc = New-Object System.Diagnostics.Process
     $proc.StartInfo = $psi
     [void]$proc.Start()
     $outTask = $proc.StandardOutput.ReadToEndAsync()
     $errTask = $proc.StandardError.ReadToEndAsync()
-    if ($InputText) {
-        $inputBytes = [Text.Encoding]::ASCII.GetBytes($InputText + "`r`n")
-        $proc.StandardInput.BaseStream.Write($inputBytes, 0, $inputBytes.Length)
-        $proc.StandardInput.BaseStream.Flush()
-    }
     $proc.StandardInput.BaseStream.Close()
     $proc.WaitForExit()
     return [pscustomobject]@{ ExitCode = $proc.ExitCode; Output = $outTask.Result + $errTask.Result; Log = if (Test-Path -LiteralPath $logPath) { @(Get-Content -LiteralPath $logPath) } else { @() } }
@@ -56,7 +50,15 @@ $temp = Join-Path $env:TEMP ('marble-installer-test-' + [guid]::NewGuid().ToStri
 New-Item -ItemType Directory -Path $temp | Out-Null
 try {
     $installerCopy = Join-Path $temp 'Install-MarbleTest.ps1'
-    Copy-Item -LiteralPath $installerSource -Destination $installerCopy
+    # Mock only the console I/O adapter in a disposable copy. The production
+    # script has no environment-variable confirmation bypass; the real strict
+    # phrase check and all device/command policy stay in the tested code.
+    $source = Get-Content -LiteralPath $installerSource -Raw
+    $consoleRead = 'return [Console]::ReadLine()'
+    if (($source.Split(@($consoleRead), [StringSplitOptions]::None).Count - 1) -ne 1) {
+        throw 'Expected exactly one production confirmation console adapter.'
+    }
+    [IO.File]::WriteAllText($installerCopy, $source.Replace($consoleRead, 'return $env:MARBLE_MOCK_CONFIRMATION'))
     $mockSource = Join-Path $temp 'mock.cs'
     @'
 using System;

@@ -32,6 +32,10 @@ function Stop-Install {
     throw $Message
 }
 
+function Read-UserConfirmation {
+    return [Console]::ReadLine()
+}
+
 function Invoke-Fastboot {
     param([string[]] $Arguments, [switch] $CheckExit = $true)
     $displayArgs = @($Arguments | ForEach-Object {
@@ -191,7 +195,7 @@ try {
         Write-Host 'WARNING: This installs the marble test root and erases all user data on the selected device.' -ForegroundColor Yellow
         Write-Host ('To continue, type exactly: {0}' -f $expected) -ForegroundColor Yellow
         Write-Host 'Confirmation: ' -NoNewline
-        $typed = [Console]::ReadLine()
+        $typed = Read-UserConfirmation
         if ($typed -cne $expected) { Stop-Install 'Confirmation did not match; no device write was issued.' }
         Write-Host 'Preflight checks and payload SHA-256 verification passed. Writing userdata now.' -ForegroundColor Yellow
         Write-Host 'Writing userdata; wait for completion and do not disconnect USB.'
