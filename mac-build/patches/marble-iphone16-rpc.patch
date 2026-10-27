@@ -1,0 +1,50 @@
+--- a/iokit/Kernel/IOUserServer.cpp
++++ b/iokit/Kernel/IOUserServer.cpp
+@@ -3589,6 +3589,47 @@
+ 
+ /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ 
++// Restored ordinary-ARM64 iPhone iOS 16 RPC entry from Apple xnu-8796.141.3.
++// Preserve the original request/reply parser; no synthetic completion.
++extern "C" IORPCMessage *
++IORPCMessageFromMach(IORPCMessageMach * msg, bool reply)
++{
++	mach_msg_size_t              idx, count;
++	mach_msg_port_descriptor_t * desc;
++	mach_msg_port_descriptor_t * maxDesc;
++	size_t                       size, msgsize;
++	bool                         upgrade;
++
++	msgsize = msg->msgh.msgh_size;
++	count   = msg->msgh_body.msgh_descriptor_count;
++	desc    = &msg->objects[0];
++	maxDesc = (typeof(maxDesc))(((uintptr_t) msg) + msgsize);
++	upgrade = (msg->msgh.msgh_id != (reply ? kIORPCVersionCurrentReply : kIORPCVersionCurrent));
++
++	if (upgrade) {
++		OSReportWithBacktrace("obsolete message");
++		return NULL;
++	}
++
++	for (idx = 0; idx < count; idx++) {
++		if (desc >= maxDesc) {
++			return NULL;
++		}
++		switch (desc->type) {
++		case MACH_MSG_PORT_DESCRIPTOR:
++			size = sizeof(mach_msg_port_descriptor_t);
++			break;
++		case MACH_MSG_OOL_DESCRIPTOR:
++			size = sizeof(mach_msg_ool_descriptor_t);
++			break;
++		default:
++			return NULL;
++		}
++		desc = (typeof(desc))(((uintptr_t) desc) + size);
++	}
++	return (IORPCMessage *)(uintptr_t) desc;
++}
++
+ static IORPCMessage *
+ IORPCMessageFromMachReply(IORPCMessageMach * msg)
+ {

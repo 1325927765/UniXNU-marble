@@ -1,0 +1,77 @@
+--- a/osfmk/prng/prng_random.c
++++ b/osfmk/prng/prng_random.c
+@@ -46,6 +46,16 @@
+ static SECURITY_READ_ONLY_LATE(struct cckprng_funcs) prng_funcs;
+ static SECURITY_READ_ONLY_LATE(int) prng_ready;
+ 
++/* iPhone iOS 16 publishes PRNG callbacks before its crypto KPI table. Darwin
++ * 23 entropy_init uses that KPI table. Retain the real callbacks until the
++ * original provider publishes it, then run the unchanged initialization. */
++#include <libkern/crypto/register_crypto.h>
++extern crypto_functions_t g_crypto_funcs;
++static struct cckprng_ctx *marble_iphone16_pending_prng;
++static struct cckprng_funcs marble_iphone16_pending_funcs;
++SECURITY_READ_ONLY_LATE(uint32_t) marble_iphone16_prng_deferred = 0;
++SECURITY_READ_ONLY_LATE(uint32_t) marble_iphone16_prng_completed = 0;
++
+ #define SEED_SIZE (SHA256_DIGEST_LENGTH)
+ static uint8_t bootseed[SEED_SIZE];
+ 
+@@ -266,6 +276,17 @@
+ 	assert(cpu_number() == master_cpu);
+ 	assert(!prng_ready);
+ 
++	if (!g_crypto_funcs) {
++		if (!ctx || !funcs || !funcs->init_with_getentropy || !funcs->initgen ||
++		    !funcs->generate || marble_iphone16_pending_prng || marble_iphone16_prng_deferred) {
++			panic("iPhone16 PRNG: invalid or repeated deferred provider registration");
++		}
++		marble_iphone16_pending_prng = ctx;
++		marble_iphone16_pending_funcs = *funcs;
++		++marble_iphone16_prng_deferred;
++		return;
++	}
++
+ 	entropy_init();
+ 
+ 	prng_ctx = ctx;
+@@ -278,6 +299,28 @@
+ 
+ 	cc_clear(sizeof(bootseed), bootseed);
+ 	cc_clear(sizeof(erandom), &erandom);
++}
++
++
++/* Called only after register_crypto_functions has installed the real table.
++ * No entropy, PRNG result or readiness flag is supplied by this adapter. */
++void
++marble_iphone16_complete_prng_registration(void)
++{
++	if (!marble_iphone16_pending_prng) {
++		return;
++	}
++	if (!g_crypto_funcs || prng_ready || marble_iphone16_prng_completed ||
++	    marble_iphone16_prng_deferred != 1) {
++		panic("iPhone16 PRNG: invalid deferred completion phase");
++	}
++	struct cckprng_ctx *ctx = marble_iphone16_pending_prng;
++	marble_iphone16_pending_prng = NULL;
++	register_and_init_prng(ctx, &marble_iphone16_pending_funcs);
++	if (!prng_ready) {
++		panic("iPhone16 original PRNG initialization did not complete");
++	}
++	++marble_iphone16_prng_completed;
+ }
+ 
+ void
+--- a/libkern/crypto/register_crypto.c
++++ b/libkern/crypto/register_crypto.c
+@@ -44,5 +44,8 @@
+ 	g_crypto_funcs = funcs;
+ 	crypto_init = true;
+ 
++	extern void marble_iphone16_complete_prng_registration(void);
++	marble_iphone16_complete_prng_registration();
++
+ 	return 0;
+ }

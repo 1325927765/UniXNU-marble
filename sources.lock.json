@@ -1,0 +1,106 @@
+{
+  "research_date": "2026-10-22",
+  "sources": {
+    "UniXNU": {
+      "url": "https://github.com/UniXNU/UniXNU.git",
+      "commit": "5fdbd5d08518bc2d5c196264c56a377dd80cf5ca"
+    },
+    "Mu-Silicium-marble": {
+      "url": "https://github.com/chibishizuku/Mu-Silicium-marble.git",
+      "commit": "fc9e410d025cd9bd8cc3af7cdd450761e8ab6429"
+    }
+  },
+  "clone_mode": "Pinned marble UEFI recursive modules; selected UniXNU DarwinBoot, ArmCpu, ArmDTPlatform and NativePrelink gitlinks initialized",
+  "phone_state_source": "Read-only live collection research/hardware-live-20261023-connected; user videos for runtime evidence",
+  "observed_runtime": "Virtual timer reset witness observed on hardware after CNTP_CTL_EL0 source fix; W now reached the iOS root-device failure panic, with filename/line arguments verified. No mounted root filesystem or Apple userspace.",
+  "selected_ipsw": "iphone-ios16716-20H392",
+  "flashable_output": false,
+  "modules": {
+    "DarwinBoot": {
+      "parent": "UniXNU",
+      "path": "drivers/DarwinBoot",
+      "commit": "d099354d0eab34df5088ca1ba89c9c88bc3260bb"
+    },
+    "ArmCpu": {
+      "parent": "UniXNU",
+      "path": "drivers/ArmCpu",
+      "commit": "1951cc8444b340d7d8879e9418220cf29eb711d7"
+    },
+    "ArmDTPlatform": {
+      "parent": "UniXNU",
+      "path": "drivers/ArmDTPlatform",
+      "commit": "0d544705c2e89725caabc0542bb96bc8febd8c70"
+    },
+    "NativePrelink": {
+      "parent": "UniXNU",
+      "path": "kits/NativePrelink",
+      "commit": "2b6ffb50117eee820b98aca9bd51b5c7dfb2970e"
+    }
+  },
+  "last_updated": "2026-10-23",
+  "userspace_requirement": {
+    "product_family": "iPhone",
+    "os": "iOS",
+    "exclude_ipados": true,
+    "requested_by_user": true,
+    "selected_ipsw": "iphone-ios16716-20H392",
+    "compatibility_verified": false,
+    "note": "Selected by user for iPhone-only port. Native component/restore dyld execution is offline QEMU evidence; no F5 root/userspace or full iOS boot qualification.",
+    "version": "16.7.16",
+    "build": "20H392",
+    "board": "d221ap"
+  },
+  "storage_research_modules": {
+    "NativeRamBlock": {
+      "commit": "d4d22d9819b0162eda49f6402235dddc2279410d",
+      "enabled_in_build": false
+    },
+    "NativeUfs": {
+      "commit": "af785c1777161a62931425c2faaa536ce0bebd5b",
+      "enabled_in_build": false
+    }
+  },
+  "root_loader_experiment": {
+    "date": "2026-10-23",
+    "scope": "offline QEMU only; no phone root observation",
+    "kernel_sha256": "3200d7d6badd813bc66e9efeb1e73de03832ca57a61910c3fc802d66ae5884ec",
+    "public_filesystem": "XNU md0 + MockFS",
+    "vfs_root_mount_pass": true,
+    "malformed_root_refused": true,
+    "own_static_el0_executed": false,
+    "failure_stage": "AMFI_entitlement_provider_missing",
+    "report": "research/root-loader-20261023/README-zh-HK.md"
+  },
+  "iphone_input_qualification": {
+    "iphone-ios176-21G80": {
+      "source": "https://updates.cdn-apple.com/2024SummerFCS/fullrestores/062-44429/7004C340-47E3-4C52-B257-C089E76558DC/iPhone11,2,iPhone11,4,iPhone11,6_17.6_21G80_Restore.ipsw",
+      "product": "iPhone11,2",
+      "version": "17.6",
+      "build": "21G80",
+      "build_manifest_sha256": "ad1cafb17313f14849b5154dfb2b135861e4a16b139b5c308a60b7b9fe63f34f",
+      "kernelcache_sha256": "a9aded661b0c223b7f6318af4e3210ac9609c654d179cb9ca61a0498d743d7b6",
+      "full_component_abi_qualified": false
+    },
+    "iphone-ios16716-20H392": {
+      "source": "https://updates.cdn-apple.com/2025FallFCS/fullrestores/122-77006/1158E502-D76D-4226-AA06-ED5E30CD1111/iPhone10,3,iPhone10,6_16.7.16_20H392_Restore.ipsw",
+      "product": "iPhone10,6",
+      "version": "16.7.16",
+      "build": "20H392",
+      "build_manifest_sha256": "2d1452103a2f5ad71cb78d94454977fc70632472201980a468c247fba14b10b7",
+      "kernelcache_sha256": "2ec297bac95bcba01046fd0148e97e7e5885c05a6c18827f39f534ba375c1221",
+      "full_component_abi_qualified": false
+    }
+  },
+  "iphone16_port": {
+    "report": "research/iphone16-port-20261023/README-zh-HK.md",
+    "latest_native_sha256": "e65fceb526c6dbafc51b5ffbe1d1613e35fb31a03877bdf7d65682e3cb255c37",
+    "latest_candidate_sha256": "b78aa610fb2a9b6cfdc4e39f592e72c7bbbaf04716c08391820ed36def99b0ca",
+    "offline_original_apfs_mounted": true,
+    "offline_original_dyld_el0_executed": true,
+    "original_launchd_main_observed": false,
+    "full_ios_boot_qualified": false,
+    "marble_hardware_tested": false,
+    "failure": "Original Image4 ignition publication waits for an IOAESAccelerator provider; iPhone16 NativeAES ABI not yet qualified",
+    "native_aes_research_pin": "a34964b8c2fec2e83c8e4f68fb7d6fb7e4b2227b"
+  }
+}

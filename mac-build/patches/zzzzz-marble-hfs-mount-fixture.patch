@@ -1,0 +1,50 @@
+diff --git a/iokit/bsddev/IOKitBSDInit.cpp b/iokit/bsddev/IOKitBSDInit.cpp
+--- a/iokit/bsddev/IOKitBSDInit.cpp
++++ b/iokit/bsddev/IOKitBSDInit.cpp
+@@ -730,9 +730,14 @@
+ #include "marble_ufs_probe.inc"
++extern "C" void marble_hfs_register(void);
+ 
+ kern_return_t
+ IOFindBSDRoot( char * rootName, unsigned int rootNameSize,
+     dev_t * root, u_int32_t * oflags )
+ {
+     marble_ufs_readonly_probe();
++    unsigned int hfs_fixture=0;
++    if (PE_parse_boot_argn("marble_hfs_fixture", &hfs_fixture, sizeof(hfs_fixture)) &&
++        hfs_fixture==1)
++        marble_hfs_register();
+ 	mach_timespec_t     t;
+ 	IOService *         service;
+diff --git a/bsd/kern/bsd_init.c b/bsd/kern/bsd_init.c
+--- a/bsd/kern/bsd_init.c
++++ b/bsd/kern/bsd_init.c
+@@ -1020,4 +1020,14 @@
+ 		if (0 == (err = vfs_mountroot())) {
+ 			boot_progress_stage("vfs_mountroot mounted; authentication pending");
++			unsigned int marble_hfs_stop = 0;
++			if (PE_parse_boot_argn("marble_hfs_stop", &marble_hfs_stop,
++			    sizeof(marble_hfs_stop)) && marble_hfs_stop == 1) {
++				struct mount *mp = mountlist.tqh_first;
++				if (!mp || strcmp(mp->mnt_vtable->vfc_name, "hfs"))
++					panic("MARBLE HFS ROOT: unexpected mounted filesystem");
++				panic("MARBLE HFS ROOT MOUNT OK DEV=%llx FLAGS=%llx",
++				    (unsigned long long)(unsigned int)rootdev,
++				    (unsigned long long)mp->mnt_flag);
++			}
+ 			break;
+ 		}
+@@ -1034,6 +1044,13 @@
+ 		rootdevice[0] = '\0';
++		unsigned int marble_ufs_mode = 0;
++		if (PE_parse_boot_argn("marble_ufs_probe", &marble_ufs_mode,
++		    sizeof(marble_ufs_mode)) && marble_ufs_mode == 9) {
++			extern uint64_t marble_ufs_root_read_count(void);
++			panic("MARBLE UFS ROOT MOUNT FAIL ERR=%llx READS=%llx",
++			    (unsigned long long)(unsigned int)err, marble_ufs_root_read_count());
++		}
+ #if CONFIG_NETBOOT
+ 		if (netboot) {
+ 			PE_display_icon( 0, "noroot");  /* XXX a netboot-specific icon would be nicer */
+ 			vc_progress_set(FALSE, 0);
+ 			for (uint32_t i = 1; 1; i *= 2) {

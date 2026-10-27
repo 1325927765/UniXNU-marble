@@ -27,3 +27,12 @@ dumps/
 *.gz
 *.mp4
 *.mov
+*.simg
+*.macho
+*.pem
+*.p12
+*.mobileprovision
+research/
+inputs/
+reports/
+sources/

@@ -1,0 +1,2301 @@
+{
+  "publication": "2026-10-27",
+  "scope": "Source and documentation only; no system or firmware binaries",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 108,
+      "sha256": "b8ef4518fd69f5f198f87ec6907505730de6f5ad4a118818a20b5b67a662bd97"
+    },
+    {
+      "path": ".github/workflows/source-checks.yml",
+      "bytes": 808,
+      "sha256": "a900fe8a8d2039720fea9c908acbb70306c57131bc1abc6e618c8df7d46fbeeb"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 375,
+      "sha256": "cf286cea498f0bae9ba81af68522747bb9c581adc52ab86cf286a779bdf95038"
+    },
+    {
+      "path": "BUILDING.md",
+      "bytes": 4453,
+      "sha256": "1b35bfbaab7ce36cd300a1e68deda338bc85f9394c9759ac67bd445ec2fb0065"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "bytes": 1428,
+      "sha256": "37d06b1fc69a9accf40065dc2c0b0316211333bb7eae74551bf9c01c20676ef7"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 1065,
+      "sha256": "8a6e23d0732ea56b6ea01f05048d39ff7b660050b6ae9f4b72596869954566a5"
+    },
+    {
+      "path": "LICENSES/BSD-2-Clause-Patent.txt",
+      "bytes": 2645,
+      "sha256": "45e326bc5ca67488a547a30fbb713f1303d2770b3340443ebcf38717a62534f9"
+    },
+    {
+      "path": "LICENSING.md",
+      "bytes": 2018,
+      "sha256": "7577a922b0a965866392839e3e2c5ef96c9a5d96069b42c6766e815be866ac01"
+    },
+    {
+      "path": "README.md",
+      "bytes": 5349,
+      "sha256": "27b47a1fe64234cf1f72cd0cf09ea9366d5a864bb6742487349dd1fc954f4a41"
+    },
+    {
+      "path": "STATUS.md",
+      "bytes": 1648,
+      "sha256": "0eb2c5f01d505e66d0e8d96f58aef5c23c2da1e3e4ee78f9678e5d31cc3ba1f8"
+    },
+    {
+      "path": "add-compact-panic.py",
+      "bytes": 3399,
+      "sha256": "3ea87f7604909e9b80436e5087c19d4f52abb90e291738fc463b0bdf232f099f"
+    },
+    {
+      "path": "add-root-wait-band.py",
+      "bytes": 2981,
+      "sha256": "6891511925bc1f357a47de8b2ce1fa3f1dde3a21407067597948aa99c7c166c3"
+    },
+    {
+      "path": "audit-dt-panic-kernel.py",
+      "bytes": 2616,
+      "sha256": "51ba7fd1d6fa9c33db0b40d92897327a30b69d87de5f1af35cfc8dbeb702a1b5"
+    },
+    {
+      "path": "audit-iphone16-aes.py",
+      "bytes": 6457,
+      "sha256": "eb807a93fbadc5210cd437d7432e3b8409b0ded1ee076d4d7fd9c7d713c1baf5"
+    },
+    {
+      "path": "audit-iphone16-interfaces.py",
+      "bytes": 6950,
+      "sha256": "986faef1591f0758d3ecf747287822145a5152a86f348da55e5db246028cee94"
+    },
+    {
+      "path": "audit-virtual-timer-kernel.py",
+      "bytes": 3705,
+      "sha256": "c8b77bd3407ea050458fe28839910e9e678afb3ffcef99f4b14b51572ff76111"
+    },
+    {
+      "path": "check-readiness.py",
+      "bytes": 30929,
+      "sha256": "2d3ad6b3915fcd692b208c28899d2d860d9160eb067f6ce083f1bb8abba87c6c"
+    },
+    {
+      "path": "collect-marble-adt.py",
+      "bytes": 3395,
+      "sha256": "95d33f4223a2617dbf15dd46e5f06ff737c6ea051e4ebb12947bb2b7d2a763ce"
+    },
+    {
+      "path": "create-entry-probe.py",
+      "bytes": 10275,
+      "sha256": "3d99486538446653fe22b424a9dd61ce3d083cd7ddde5c776dfb75ec89274653"
+    },
+    {
+      "path": "device/classmates/Install-MarbleTest.ps1",
+      "bytes": 11265,
+      "sha256": "185ca27852fdd6e7cc2a0cbb31a67d2900f387971b626a140d15c1f7017ca0bf"
+    },
+    {
+      "path": "device/classmates/README.md",
+      "bytes": 1845,
+      "sha256": "2e2d36ea4315a3204f393b27da74864499cf2825996fe0544b8e9368c413567b"
+    },
+    {
+      "path": "device/classmates/Test-Install-MarbleTest.ps1",
+      "bytes": 8701,
+      "sha256": "6af0c7605c761b4ca79a32de11150d10155f00c425572b3891ee262dab9ca024"
+    },
+    {
+      "path": "device/early/BootShim.S",
+      "bytes": 1140,
+      "sha256": "60c787196a1372e1bcba022cd77ce309f124d4208209fcd6438b0247a6fc1d0d"
+    },
+    {
+      "path": "device/early/PayloadBoot.c",
+      "bytes": 6154,
+      "sha256": "03891eef2355615a5a74d53cdde99caf85b9bedfeb10cb8a2abe650550c97a45"
+    },
+    {
+      "path": "device/early/PayloadBoot.inf",
+      "bytes": 784,
+      "sha256": "0ea63a5849102a5ef40149aa5e3f6d64d6ea36f83c5d1306ee1809a3073eefa2"
+    },
+    {
+      "path": "device/early/PayloadFixture.c",
+      "bytes": 3490,
+      "sha256": "b5d0bbc9693d454e73bc4064a08c475117f6d6604f21e3dbaaf5a8938810d55e"
+    },
+    {
+      "path": "device/early/PayloadFixture.inf",
+      "bytes": 609,
+      "sha256": "303791030f3cfbbbdb558b85800f694fdbe882362307f968f4aedbeab47dc1c9"
+    },
+    {
+      "path": "device/early/compact-panic-registers.c",
+      "bytes": 4346,
+      "sha256": "1c2292f1f98f6e04f0a648655df311b5dfd668590d82faa4c2e5c04d9dfe8390"
+    },
+    {
+      "path": "device/early/compact-panic.c",
+      "bytes": 3186,
+      "sha256": "77ddb6b6616c96fa843a81776c53f4eeb837603a292463bbfb728e604eac4e73"
+    },
+    {
+      "path": "device/early/marble-ufs-block.cpp",
+      "bytes": 6909,
+      "sha256": "067d1e6b3700affd65e51771d83aa0a6fd48e810ae41c12af94a42b1f566b97e"
+    },
+    {
+      "path": "device/early/marble-ufs-probe.cpp",
+      "bytes": 3683,
+      "sha256": "4415ee4e5895743e764e18eadd4e8ce5783ed811bb732b0471a86b46ee2ded4d"
+    },
+    {
+      "path": "device/early/marble-ufs-scsi.cpp",
+      "bytes": 13672,
+      "sha256": "b77b7dfc8679e62f79bf98630fe0814db9326a12027b98a3b7fa4adc2d385a13"
+    },
+    {
+      "path": "device/early/root-wait-band.c",
+      "bytes": 1238,
+      "sha256": "b86980b1b1b5f68fd56865f61f85564ea8501e983d2aa82ccff8de5184272496"
+    },
+    {
+      "path": "integrate-menu.py",
+      "bytes": 5503,
+      "sha256": "087190b8949051d0ed372219d0db96aebb55ce418222fc950259e40d05108aae"
+    },
+    {
+      "path": "legacy-xnu/README.md",
+      "bytes": 3622,
+      "sha256": "012c0e3e466b25c358d1a7d1a411fb0c7982f81aed54c3578e22643d1d64d773"
+    },
+    {
+      "path": "legacy-xnu/SOURCE-MANIFEST.review.json",
+      "bytes": 38670,
+      "sha256": "a6c145d65da39d8b22d2d4dadcce8311dc587e2525684c5942ca004af3228068"
+    },
+    {
+      "path": "legacy-xnu/SOURCE-REVIEW.md",
+      "bytes": 3436,
+      "sha256": "36afec6f85f7fca5b72968c236045617bd075c9916fdc7db24910104365edc61"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IOBufferMemoryDescriptor.h",
+      "bytes": 7553,
+      "sha256": "f94c44c193e2848a7a60cfb243416edce67f01db73dba26fbfc06371e07701db"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IOBufferMemoryDescriptor.iig.cpp",
+      "bytes": 15457,
+      "sha256": "4af517065cf6c454f990569527f8f499e601adacfd0bc37adf561e809448706b"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IODMACommand.h",
+      "bytes": 12700,
+      "sha256": "c804b3b30a13918511955dc205ad585cda8a118dd2aefbd740c381450d2df54a"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IODMACommand.iig.cpp",
+      "bytes": 31534,
+      "sha256": "49b661eb5a46123bd65ac8137bf3fe5949c4ac3f944aefb5c8859b90b429d879"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IODataQueueDispatchSource.h",
+      "bytes": 20226,
+      "sha256": "f84db5be8cbf03eedce846f4b7e10a1744e58e8c3ef4659ebc8690af37551395"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IODataQueueDispatchSource.iig.cpp",
+      "bytes": 46681,
+      "sha256": "a0604b51283e7e7e29389fe87aa1bba36be516e5ef9059844c0966ccc1e1c43a"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IODispatchQueue.h",
+      "bytes": 14460,
+      "sha256": "298474017874d3ce1765fda41cd2f17a9a0c61ecb3ba5b5206447647687c5d5f"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IODispatchQueue.iig.cpp",
+      "bytes": 14797,
+      "sha256": "0360a81bf7bb0924b3d48acf02b674440c46843c9e9c6629794d7052a95462ee"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IODispatchSource.h",
+      "bytes": 6710,
+      "sha256": "d86775bc417d5b74c7f75042a6e83ae41c936efa758e66d50d76dc871cdc15ad"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IODispatchSource.iig.cpp",
+      "bytes": 23879,
+      "sha256": "1570740d35d7dcdb85410b06344b8433f9feb746a8559eb0e0218b6268827a86"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IOEventLink.h",
+      "bytes": 13795,
+      "sha256": "01d1b3eb769540155765bbcbb02079903245622b0fed22700d2faeec3cda5183"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IOEventLink.iig.cpp",
+      "bytes": 20085,
+      "sha256": "250b17bbeacc56815b73e984014c44aa745b7d87c69cf17b98d3f8c07f4f5690"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IOInterruptDispatchSource.h",
+      "bytes": 13333,
+      "sha256": "32f5b3d8be2ef1f5ee9a7f48a0cba9e800ab7a58a9ee2565b300f7c24531a01f"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IOInterruptDispatchSource.iig.cpp",
+      "bytes": 32422,
+      "sha256": "b9cc580f1754903a52394fd321594234f392e4421a0159eef2eaa3cd52628bcf"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IOMemoryDescriptor.h",
+      "bytes": 12951,
+      "sha256": "6d87c158c7b76bd4141c929a34e9f35134428c29472ba67c6bee862a5b5495b1"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IOMemoryDescriptor.iig.cpp",
+      "bytes": 28786,
+      "sha256": "7fb8e77c85cbb0a075d4e314189331d94cb644eca90ba75091f6df13429fc398"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IOMemoryMap.h",
+      "bytes": 5249,
+      "sha256": "911177c8c7f526e327dd887f319840616e36af773676c31a0288a19d4f284701"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IOMemoryMap.iig.cpp",
+      "bytes": 9323,
+      "sha256": "5fa81d0c4880a4ad6b48d69c4f8832705848f6ffa1723a34b4fed763b264b87a"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IOService.h",
+      "bytes": 49636,
+      "sha256": "06e993982da992aede4522c7f6efd5bb642b7f73259ed7ef5ce60eaec97647c3"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IOService.iig.cpp",
+      "bytes": 186710,
+      "sha256": "07ade382539c44d1a9889dd3986e7ddda6b49ad083457129236d2f179aa60125"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IOServiceNotificationDispatchSource.h",
+      "bytes": 12278,
+      "sha256": "c5b472d0baa8b07f819aa734100e94888aec2a9c2031d2543e4107d71ad18727"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IOServiceNotificationDispatchSource.iig.cpp",
+      "bytes": 29403,
+      "sha256": "f3457ded0e25cdf9832f774de84de2b7ace7598606baf007e2110fba0adf8c83"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IOServiceStateNotificationDispatchSource.h",
+      "bytes": 11409,
+      "sha256": "674cd650178af900d274065e3f8b0290e1f2d2b89a519b527d4235d1a1705463"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IOServiceStateNotificationDispatchSource.iig.cpp",
+      "bytes": 29445,
+      "sha256": "2c96b9afa88693fcda629d2b0487834cc633b5ddd0716a20990a4a5efd7bd1d7"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IOUserClient.h",
+      "bytes": 24125,
+      "sha256": "1eaf8c0193d1afbad122a364fbd8b59c0f700e5479f44b09c6000256fa8a9eac"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IOUserClient.iig.cpp",
+      "bytes": 44811,
+      "sha256": "17314d07453be4e9061145bd80aaa96508faff595ea0fa24bda8b90c6efc9e90"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IOUserServer.h",
+      "bytes": 5986,
+      "sha256": "82724343555ba818aa235f45af1327eb1e5ffc5334decc7f26637e774ffef04b"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IOUserServer.iig.cpp",
+      "bytes": 20420,
+      "sha256": "3b7b31944c357964b2463517844d0dc1ddec0da7a0693c5e82392734eac2276e"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IOWorkGroup.h",
+      "bytes": 10135,
+      "sha256": "8aa44276089a7d10c439076bc748c92f5382c580d71054c25dc3099044d2c2c7"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/IOWorkGroup.iig.cpp",
+      "bytes": 20133,
+      "sha256": "4e0289243d453c946a5eadc5296ff68b68e75f296b15d92929f10b47026ccec2"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/OSAction.h",
+      "bytes": 12251,
+      "sha256": "3f5397b49d7b5ea6ed1954d09e588cc58a8a8c6adf586a6e3b888bcc7f7f4f83"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/OSAction.iig.cpp",
+      "bytes": 18661,
+      "sha256": "e996bb408071562a993616a245a49bd1482d068efe57f14a4768c16a4103cf60"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/OSObject.h",
+      "bytes": 9362,
+      "sha256": "9b3913d3b77fdc225cbf740153e541e5963f7e2242ad9689b075d78697b0b4db"
+    },
+    {
+      "path": "legacy-xnu/iig/generated/OSObject.iig.cpp",
+      "bytes": 14743,
+      "sha256": "d2ccdb58b0ec7331ea24c7bc034ac544f63103ba0674f8785c42bdb60e533ade"
+    },
+    {
+      "path": "legacy-xnu/iig/manifest.json",
+      "bytes": 7959,
+      "sha256": "5f3912aaa720e772e037d27b9fe072e70c0faafd5c7421850c09dab6eeec24a1"
+    },
+    {
+      "path": "legacy-xnu/notices/APPLE_LICENSE",
+      "bytes": 19829,
+      "sha256": "e5881019d8766c1e88a5fe1dbca4ba40c78011d41fcb18f6e9f50df60182685b"
+    },
+    {
+      "path": "legacy-xnu/notices/BearSSL-LICENSE.txt",
+      "bytes": 1080,
+      "sha256": "771bf18c8633ea69ec9b07d2e604c4b99b7bef41b0f5ce6385d24df4448f61ca"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/dev/marble_ui_sample.c",
+      "bytes": 1884,
+      "sha256": "c53be97f49638837c0c07fa33813fe57bf51091b5c2b359b8668f9ce37897874"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/kern/marble_amfi.c",
+      "bytes": 13962,
+      "sha256": "88f76db6321ee8bd9b47ccc546c97203de586106353417c7b8599997f80f9ec4"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/TargetConditionals.h",
+      "bytes": 17632,
+      "sha256": "af113bd46c407e305aeda0b7bb1a488c31cfb674afe2cef28416caee1666bb33"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/BTree.c",
+      "bytes": 58228,
+      "sha256": "5e5218841483cad27b726ddb3236ec338193703317a896bf35fe954bb2557f85"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/BTreeAllocate.c",
+      "bytes": 20852,
+      "sha256": "d3b93c18ab2b4288ce7db1bfe06b19062d0a5534c28ea68727f24187b7b5d46f"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/BTreeMiscOps.c",
+      "bytes": 19593,
+      "sha256": "b1c05e1fd329ec78d2a969272894808ebf4524690728aaa74a516007078f1114"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/BTreeNodeOps.c",
+      "bytes": 30085,
+      "sha256": "e6d6fb45246196a812578d04a120d66b514f382417c397aee3ed4de7006b7c76"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/BTreeNodeReserve.c",
+      "bytes": 9078,
+      "sha256": "a661629c2f3b880a1b11df76b2be5f2a3bc89a771051a1d4a64868f8ffaa7449"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/BTreeScanner.c",
+      "bytes": 12554,
+      "sha256": "53830b590cdee4d5b2573673ceb34dbd9047ffe9a7a888f89438b7fff4dd624d"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/BTreeScanner.h",
+      "bytes": 4512,
+      "sha256": "d699b9d97fb8e34ea21877c4c5b211fa3d299113b5e850068dca865b3d9d92f1"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/BTreeTreeOps.c",
+      "bytes": 38141,
+      "sha256": "0f2e99ba6787de63a10c1bd3f77114b6620524b6988d70f453a61854cc4f6581"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/BTreeWrapper.c",
+      "bytes": 5436,
+      "sha256": "eef9a2c0134413831985d4c9634a901bb06b686f8e8c6c340c33b60595882a9c"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/BTreesInternal.h",
+      "bytes": 11554,
+      "sha256": "5570f580314567526391af167015177dd6b49fc06506993fdbb9c1e3d0cc3d95"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/BTreesPrivate.h",
+      "bytes": 16966,
+      "sha256": "7dd82baf612edde7f0ffc61f705eb80e5d837e0e3457f5d6174261753234b2b8"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/CatalogPrivate.h",
+      "bytes": 4988,
+      "sha256": "27a50b7eb29d0b5ff82e148f6bf7aeaacdb05c3fbe31bf56eab26ba8c567f156"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/CatalogUtilities.c",
+      "bytes": 8474,
+      "sha256": "c4c1f3b20b01ef6979dd12d8fc5570b3bf1ff0afeaab53c74b6a2a3fd32ee4a7"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/FileExtentMapping.c",
+      "bytes": 58862,
+      "sha256": "ff09aa78dff0a31e54bbbfc13f092c191e38fc82b847120f928823f674408fe8"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/FileIDsServices.c",
+      "bytes": 20357,
+      "sha256": "6c1d9ed2f250424aa260f456acc2256b4fa75660d22642bceebd6b7ff00320d3"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/FileMgrInternal.h",
+      "bytes": 12502,
+      "sha256": "debc8d04fd4ff9f97c4d56db91007c64e7ad2bb94afd6b7134da043e53810808"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/HFSUnicodeWrappers.h",
+      "bytes": 4384,
+      "sha256": "d5ef6fe1d30a4737a80f39e99cc52b193105fd1f7bb56e5166a434cc65b037f1"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/MacOSStubs.c",
+      "bytes": 3708,
+      "sha256": "102530be503838883e6845851dbcdcb803fa688f094abbcbd95ddcd860780b06"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/UCStringCompareData.h",
+      "bytes": 30151,
+      "sha256": "88773669ce79ebe2d6bcc84d3341c3c2586e649984ac97453adb1b8706440464"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/UnicodeWrappers.c",
+      "bytes": 12533,
+      "sha256": "7300de813b94d41d14faf9aa2a0ddf436010bb43d258f81fc92ab841bc7157f2"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/VolumeAllocation.c",
+      "bytes": 193586,
+      "sha256": "7432017a062974b79e250d3b85854e1ad0b426dd3e7d17033bdc3f0b76c606b1"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs.h",
+      "bytes": 53820,
+      "sha256": "abc79026f3cbeb6de3d60b169d83b5b6bbae6cba468c30acd53ad2c41fd9db87"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_alloc_trace.h",
+      "bytes": 504,
+      "sha256": "75cf3c92ba0669326db3564604829f6c7172643f3ebef7a3cb816010b579407e"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_attrlist.c",
+      "bytes": 52859,
+      "sha256": "7b235015840726cf9e8ae9f964cde5c440f50ace9f2c4f959368f68bfc1f7781"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_attrlist.h",
+      "bytes": 3728,
+      "sha256": "0a0077a26583fc92d3a11d2889d17d79e08b4897c73bdc3cb27dfb6771a03708"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_btreeio.c",
+      "bytes": 28100,
+      "sha256": "a31b4e9e1e88f9be39abb93d9cfb5cc833db6098452e8d918a041f32b3c6df16"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_btreeio.h",
+      "bytes": 2245,
+      "sha256": "41a1a2cb48727b5491c87e2aa1dc9fa36906c8b551c4ff61fe5ac8e4b3cb6998"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_catalog.c",
+      "bytes": 124591,
+      "sha256": "40f061082afa0067d7f8c02a096f86ff49bf933a811cf91069e3ac7bd22687ff"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_catalog.h",
+      "bytes": 15716,
+      "sha256": "912f082970cdf33777644d9e6202e01cdb138dacbf01f8457e0e06d83ea7fb9a"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_chash.c",
+      "bytes": 15963,
+      "sha256": "e6a19187d3541ad0bd9bc728d6f5aff2cfa7f5f0b34ff34d1c5d021f8185cfac"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_cnode.c",
+      "bytes": 80213,
+      "sha256": "d9fffdcd7cf157ba1fb9b804f27fef7e2dc712054452fd48c7baeab0966eb109"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_cnode.h",
+      "bytes": 24480,
+      "sha256": "10b5461ba5d69f9e417576a8e3f06d8f82e0983dd72e265d35cbfb2aac79c1d9"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_cprotect.c",
+      "bytes": 76765,
+      "sha256": "c7b7b8ec63626d4f2f6de48c363ea8483770b0e7d212e6ec409c627c277337b3"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_cprotect.h",
+      "bytes": 13494,
+      "sha256": "0a3fc13e26803138580a0755e9f4c8fe49c576950b3aca9725ea1d6a79cd0f26"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_dbg.h",
+      "bytes": 2927,
+      "sha256": "f3e4c64d62058b4df85357894a13e8782befb63e87a2f7ed6ce5d38cbf07c723"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_endian.c",
+      "bytes": 38574,
+      "sha256": "5b2d6fef8acc45bc6d2317639a8a9f3a1ecb6f3fb1cc5dc19bb50101be003749"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_endian.h",
+      "bytes": 3474,
+      "sha256": "dcdada4fd78a1b4e48856ecb2361a6caf953f6f69e800ef9e20862c15e1a6899"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_extents.c",
+      "bytes": 22015,
+      "sha256": "26dcef3c47b4cda7c8b0a5b8dd8dac0eb5cd1ba6808eedc51835ac9ac6adc249"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_extents.h",
+      "bytes": 2457,
+      "sha256": "434a0089a7517e926398708fcbff3269283260653452fe61be53614c97a76dc8"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_format.h",
+      "bytes": 31897,
+      "sha256": "8ac2afc412220f401f7c966a08f1d0ea7199345eb4d8cefa7dc28281fb0e8cb6"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_fsctl.h",
+      "bytes": 13480,
+      "sha256": "6ab11993c5bdccc67612e8c724cfad256425c970095c64749b0b5ced012bea80"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_fsinfo.c",
+      "bytes": 29203,
+      "sha256": "c1c23045f259a2ee32628d103a49b7ccd3e60f3be47ffa1b2ce2f60916921079"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_hotfiles.c",
+      "bytes": 106027,
+      "sha256": "b9e935d6915a5dc5386542801b8b15a951a2b02973e6ec3ef27d583eb3d3788e"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_hotfiles.h",
+      "bytes": 3942,
+      "sha256": "6e23cb4821193d2056c070f4022087484a8843d767ec29d94420bf518248dfd1"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_iokit.cpp",
+      "bytes": 8545,
+      "sha256": "8047883b94d16833af4b69e017eeeaf5778cbaab5f433ae0313034d6931e20ea"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_iokit.h",
+      "bytes": 2383,
+      "sha256": "03f7a86e49ea3e6c97084b18f48ac36ce6de0b8302b1036d2b461db328f21e42"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_journal.c",
+      "bytes": 155978,
+      "sha256": "750db9aec63ba98013b641ab3aba416c442caf6949e9a8b69f3d653541c05312"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_journal.h",
+      "bytes": 15445,
+      "sha256": "1de7e23acb743775d99970ce83ddad68d2f56200ab52f5dfd7aafa8038b4aa40"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_kdebug.h",
+      "bytes": 7259,
+      "sha256": "2af9d6c3c9e7e0d7edd0994317ebb23a0b1429e9dcd870c9ad050a9bc6c2bdc7"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_link.c",
+      "bytes": 40454,
+      "sha256": "0f05caf589cc1b322765385e966ae16f977a41eb3ea31fd64fbc506fde021184"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_lookup.c",
+      "bytes": 23266,
+      "sha256": "5babbc098fd439b440621c9e92fe9f6ceb7129e998500ca159277fa7548dad62"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_macos_defs.h",
+      "bytes": 8439,
+      "sha256": "2a0091093935d41f154ea4ce0cecbbd321175329e06e801591337de38c8b663b"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_mount.h",
+      "bytes": 3147,
+      "sha256": "665c064e92254bb2537c9a42c644cf937f9b4e28eeff03324394d484a3d4f40d"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_notification.c",
+      "bytes": 8056,
+      "sha256": "8a11e181d759080627a3b8520b1cf6fe2b007a5cb2310d0afb588af8fb599135"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_quota.c",
+      "bytes": 24376,
+      "sha256": "cd4fb914264324da7cede2b3d47b5f5875e112ee5769fd805c4a174e0a7119ed"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_quota.h",
+      "bytes": 4691,
+      "sha256": "88b8708d537e9cd61cf00cfac51f5185a5323022112edc8f90018897aa6b546a"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_readwrite.c",
+      "bytes": 166983,
+      "sha256": "196702665910bb06261b447dbbbcef7a517394d5b5d0a98468c7a192d864fda9"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_resize.c",
+      "bytes": 121912,
+      "sha256": "062eea886737072c323ef32ca633ccc337f9a41a4e150209fe19a7010e790950"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_search.c",
+      "bytes": 38888,
+      "sha256": "a14999ea5f46a5d4dd761493a25ba0f5164dfc1f903af80d2939351af11d516c"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_unistr.h",
+      "bytes": 2090,
+      "sha256": "fe22ca3ff255369fe5d45e4b749bfb4e1e7cac320e2269ced432890953752d81"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_vfsops.c",
+      "bytes": 138352,
+      "sha256": "e34c2ea563991fbcde51a639764505bd5ac0d74b74b65b5e29cbc39b7456a480"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_vfsutils.c",
+      "bytes": 118804,
+      "sha256": "7e84e0fa7ee08e94bfe68e6320bbf1cf4ed2f26ab6c84e27cf8ec7f07a600b5f"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_vnops.c",
+      "bytes": 230502,
+      "sha256": "5ed71427a7a9cd7a6bfc3b0040a3b1e3fc847325138b15a348d1d75cea932edd"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/hfs_xattr.c",
+      "bytes": 97485,
+      "sha256": "72a46b1d1c474e00f481baf922fd6efaa9706c22e31b44be5cd004f9c46add08"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/kext-config.h",
+      "bytes": 1768,
+      "sha256": "db2bbd846901863cd8d25f1502354703de69f9ec3c7ed114dfb8988e1719bd8f"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/mk-root.sh",
+      "bytes": 1550,
+      "sha256": "05d404eb58219cd15d5494452fcd26629acc1a084e7b711979b0d62cfd3b1902"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/rangelist.c",
+      "bytes": 11114,
+      "sha256": "68be20c590f8560cefed9d019e59334f9003bc2d206bee06ddaf3deff9c31ec6"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/core/rangelist.h",
+      "bytes": 2772,
+      "sha256": "fe6db3c57b781b570bb892d45da09c339ee3f2f904b9fc8501111081921baf31"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/hfs_encodings/hfs_encodinghint.c",
+      "bytes": 3160,
+      "sha256": "e2c94b4c8fb418ac8c4c104afab0f8b24fa051080cbf1c9ffdca518ad6ed9d2e"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/hfs_encodings/hfs_encodings.c",
+      "bytes": 20093,
+      "sha256": "4465b509151aaf7ef3b25203ef96ae59bf6315247909b52b848b95363d66c30b"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/hfs_encodings/hfs_encodings.h",
+      "bytes": 3218,
+      "sha256": "8045a6f3d2bea7ee5a6646308fc6196df280d8fc418b3a1d5dbe05961fdb88e6"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/hfs_encodings/hfs_encodings_internal.h",
+      "bytes": 1539,
+      "sha256": "17e47e26f21875cb48c1fa02a1c0f45788e8ebfa3a50f31304c0e297895ed873"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/hfs_encodings/hfs_encodings_kext.cpp",
+      "bytes": 2076,
+      "sha256": "9592fb555d573580aac9f01acd5b9b81d819537cd6f1189423c16e8b6857ef56"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/marble_hfs_compat.h",
+      "bytes": 850,
+      "sha256": "3351bceb18ffacdbd1dabd5ff8f928e0fe063e7b45382d702c2432d7f44b47d5"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/marble_hfs/marble_hfs_iokit.c",
+      "bytes": 3550,
+      "sha256": "ea1265c2e11166b55b11e670146cdd7f80a2ed038a1ada4bd2caa24f6a60c269"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/TargetConditionals.h",
+      "bytes": 17632,
+      "sha256": "af113bd46c407e305aeda0b7bb1a488c31cfb674afe2cef28416caee1666bb33"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/include/pthread/introspection.h",
+      "bytes": 5887,
+      "sha256": "20c4bc646045d17c06c20abce76c731714870ebffed87b1702614a01be9aa338"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/include/pthread/pthread.h",
+      "bytes": 28079,
+      "sha256": "bed3da232c3658d94c2676745a80cef443bb207fd4a226f796b3ae5dbaaf8c19"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/include/pthread/pthread_impl.h",
+      "bytes": 1977,
+      "sha256": "42896cbc575d9099c53f8c0afbaa04f40b2d11d24f92af5ccd7dacdaf8690231"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/include/pthread/pthread_spis.h",
+      "bytes": 3640,
+      "sha256": "ffaeb19bee2fcebe460a6a201b1aa5354a01cb664c70d1564a9102f2f56efa10"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/include/pthread/qos.h",
+      "bytes": 10256,
+      "sha256": "bfcfcf23501c328f5aa7f3bb39c0c8167730ab111393063c5b5fb4bd72d074f2"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/include/pthread/sched.h",
+      "bytes": 1410,
+      "sha256": "07d65b8d135be978a33579b5a333bd4576a8c6b36351ef510e0cca2aa0987020"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/include/pthread/spawn.h",
+      "bytes": 2761,
+      "sha256": "0eddd1d85276ea57f9985e2eb3b3ef0b76d30c6d05de4ad3c6f5c972d99458e4"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/include/pthread/stack_np.h",
+      "bytes": 2062,
+      "sha256": "94c7c6824cb241256ae5496443e8a4dd89b0de11922df0ecf965e5a751fc5824"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/include/sys/_pthread/_pthread_attr_t.h",
+      "bytes": 1522,
+      "sha256": "987973d4e4f0c84a929fb1288755637453d88bf1410b778f81b2550ea4ad211c"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/include/sys/_pthread/_pthread_cond_t.h",
+      "bytes": 1521,
+      "sha256": "1f44e579de86408da3f83e47918e11d62d41fdce1c0230a7e30f5c56414ef914"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/include/sys/_pthread/_pthread_condattr_t.h",
+      "bytes": 1545,
+      "sha256": "167ad51c9e184c2f22e67dd7100e321305b11b3fe2cbeffd074015f20ce4e315"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/include/sys/_pthread/_pthread_key_t.h",
+      "bytes": 1515,
+      "sha256": "aa386e8d73d64c95432c42133e1ce1a0f4e6b5769a4720ad38c81c71355e12b9"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/include/sys/_pthread/_pthread_mutex_t.h",
+      "bytes": 1526,
+      "sha256": "9af87ec733f482f5bb59ff9c49b7884c6fd58444669fac8e64525da82f03cc91"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/include/sys/_pthread/_pthread_mutexattr_t.h",
+      "bytes": 1551,
+      "sha256": "93686494113a5167f198d6a586c1ac1c5f87eb0ef5751b9c441db52df0e9edd9"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/include/sys/_pthread/_pthread_once_t.h",
+      "bytes": 1521,
+      "sha256": "5ea5cc064b4770a6c776a0c84f9458f8089540a62244417de37309aa72c89fc9"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/include/sys/_pthread/_pthread_rwlock_t.h",
+      "bytes": 1533,
+      "sha256": "1e20731f227b6c0c83d149c9564bceaa62220128d81c04833abd835d469115c7"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/include/sys/_pthread/_pthread_rwlockattr_t.h",
+      "bytes": 1557,
+      "sha256": "f60fae1acfd6742846ffdd7a07a47996caab73ac12bb421b49a4aae3edb80d66"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/include/sys/_pthread/_pthread_t.h",
+      "bytes": 1491,
+      "sha256": "7bcef3e2436e7a96bf0201e99bad5a11e6d495dbac85b10207441c05d7fb461e"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/include/sys/_pthread/_pthread_types.h",
+      "bytes": 3855,
+      "sha256": "741433612525badf767d48b1924d4c7ba564ccc5c1bab5cb7045c238850fa86b"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/include/sys/qos.h",
+      "bytes": 7884,
+      "sha256": "3f1e1e9a2b707f22407df44ee8a8b270348d3b4b53313ec52d06a6198716e273"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/kern/kern_init.c",
+      "bytes": 1942,
+      "sha256": "9d789729129734e26d7d68f331e3760dc3bf38ebdad8eace2193745af9544c5d"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/kern/kern_internal.h",
+      "bytes": 11594,
+      "sha256": "01d3e629a683e8ce0a931068adc851423c4d11fdf9c605fc279f6d429607d0e8"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/kern/kern_support.c",
+      "bytes": 33137,
+      "sha256": "f1f74dc637925b1cda7bf994a6f7f8990eded2cb8ea7e4d14e6d1d4ae51ddbe6"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/kern/kern_synch.c",
+      "bytes": 82874,
+      "sha256": "821aa3f2d02554827de4b604e36564c4e8c3caef13b01f55bed7d6885488da8d"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/kern/kern_trace.h",
+      "bytes": 5524,
+      "sha256": "7bd90948a45f19e74b6ef8733273c4cefc9103d20b1764b7d41b0feaabd2840c"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_libpthread/kern/synch_internal.h",
+      "bytes": 5096,
+      "sha256": "0ef6d51c695deb9adccc65c6b13277d722a3739124caae32354d262b73b23564"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_pthread_compat.h",
+      "bytes": 997,
+      "sha256": "5a70cb61c1a79675ce1ebfea513aad6b6f7aa2f89b38feceb51f5f945deb5471"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_pthread_init.c",
+      "bytes": 987,
+      "sha256": "093bff6bd271b0b01a027b1b6d2fa2bddf4548fe779250be361f75f46f8861ae"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_pthread_support.c",
+      "bytes": 243,
+      "sha256": "5704e0ca09bcb94b7fcad52f746d412971ed53cd475821332fc6b30a183c5426"
+    },
+    {
+      "path": "legacy-xnu/overlay/bsd/pthread/marble_pthread_synch.c",
+      "bytes": 241,
+      "sha256": "6fd0e5695166411c5504d4b2e7a4bcbff7751277a68131ccb10328c1a313d713"
+    },
+    {
+      "path": "legacy-xnu/overlay/config/MASTER.arm64.marble",
+      "bytes": 7442,
+      "sha256": "d01c85ea42630bac3e1820424bbfee1405c1cc27e5aaf423505e9e773584f13b"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/MarbleCPU.cpp",
+      "bytes": 5071,
+      "sha256": "3fe11b337fbd9cacee60d2f5c9225154b0a398250aecaa9dc6b358d2d1812786"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/MarbleEntitlements.cpp",
+      "bytes": 4773,
+      "sha256": "b3d2b628adeccf9101477268224ce6acc0f60c97a8e016e29c71bde2292b0e14"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/MarbleFramebuffer.cpp",
+      "bytes": 27712,
+      "sha256": "54a48fcd45552f1a230d1d5f0700f65dc3021d2e0c56a76587ffbb58aaf83575"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/MarbleKeyStore.cpp",
+      "bytes": 6914,
+      "sha256": "0e55a86e25242324a041da3e5afce8e87fba28ec4683de36201d6717f70c6769"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/MarblePlatformExpert.cpp",
+      "bytes": 2102,
+      "sha256": "fe9961a60e0c8b4b974de8dcee61dd9ef9bf8e8ef03cae1cedbe042c99bac5b5"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/MarbleSurface.cpp",
+      "bytes": 26959,
+      "sha256": "3311fd7079cbc04f8c673d8e234ff911a411093dc12c43f75aed0664be3dde60"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/MarbleSurface.h",
+      "bytes": 2189,
+      "sha256": "c94e47812c149efed59e7bce9e956fdfd207ff8712126af3bd550bf0b00abf6b"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/MarbleWatchdog.cpp",
+      "bytes": 2363,
+      "sha256": "98b18c8a3e4806dfded4676759bf1265f457db3de84fdad810c940e74eb9a8fe"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/AppleHIDUsageTables.h",
+      "bytes": 986,
+      "sha256": "9ea9d9b9f656ef95c4e54e66ce695189ce1a60d3d3483c4061e60c50fef3cc5e"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOGraphicsTypes.h",
+      "bytes": 444,
+      "sha256": "dbe1357352e4e0f3b27fbc39370818ae223d50a0ab0e963b83d38e1eadacdb53"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDDebug.h",
+      "bytes": 1103,
+      "sha256": "e32a3757514d33a93a7cfa6a2e7ff84fcef9b15ebf191e79c37a928408c28d8f"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDDeviceKeys.h",
+      "bytes": 5981,
+      "sha256": "7b01abda6a4cb4c55eda286a68b2bb4c0e2f7cb756ea68e600131c254aaec11b"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDDeviceTypes.h",
+      "bytes": 9325,
+      "sha256": "2ca4f842279d593644ecd447ed5bbcb3607c31f6260f8bfd9d6254cdfa8ff04b"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDEvent.cpp",
+      "bytes": 71786,
+      "sha256": "196fddd18ce3b6dd7c6ca174766b04e5ba4f4a7065c64b199414c4f89f0866ba"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDEvent.h",
+      "bytes": 29809,
+      "sha256": "2f3e4d198130dca4f1217fd2a4873c23f2ac10d9ef0e1f2812f8e5fe708cee21"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDEventData.h",
+      "bytes": 11525,
+      "sha256": "97808766375e902c28a82e60c63d487dcee168fbc47c61fa44c93d4db500b091"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDEventFieldDefs.h",
+      "bytes": 34109,
+      "sha256": "0eca82052c47abc921ac39b08303c2e9ab79c2fc23cf50c65786b8c0fd9ce366"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDEventMacroDefs.h",
+      "bytes": 425120,
+      "sha256": "d8b143bc12157b0f6e9c07522b5023f03970e09e06fd5fb0f3196232d7132e5c"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDEventService.h",
+      "bytes": 3220,
+      "sha256": "7f376c5c62b45c8b9bab7f3be6337e40de54e58e9516ab19fbf350e94d864ca9"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDEventServiceKeys.h",
+      "bytes": 4769,
+      "sha256": "3542b341205e87921b06f757ca6391d0a77fe67150f08f0265576e8007f63f08"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDEventServiceKeys_Private.h",
+      "bytes": 12026,
+      "sha256": "d0cdbc063566294b7f47ac16e5be3ea04b09f7d1fceabbab1bb810bf577dda8a"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDEventServiceQueue.cpp",
+      "bytes": 9574,
+      "sha256": "1ef010e8818545162af0a69962a4e466a1d2764aef60107ad26bec2fb092cbdc"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDEventServiceQueue.h",
+      "bytes": 2677,
+      "sha256": "9777fe1581bc71340823297b1e56806792b836eb06a4279bd76834f4cfbed283"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDEventServiceTypes.h",
+      "bytes": 2558,
+      "sha256": "37ff815ec21610b8016398039c79c61b2389be023dc2a55a518b4d65c009911b"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDEventServiceUserClient.cpp",
+      "bytes": 25456,
+      "sha256": "0e8df68c047322c220cdbd1b4c9db194c5dc1fb80117bfc8c726e9fab967637e"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDEventServiceUserClient.h",
+      "bytes": 6474,
+      "sha256": "48ca18ce19b388b486f0c45af8953d86a50c987e0d47560e1c3ef7cfd9ac2026"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDEventStructDefs.h",
+      "bytes": 17296,
+      "sha256": "2aa22d9ab965a6ff808441a5d1f21aaa38dcc27db9df79e330072c1ba30c236e"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDEventTypes.h",
+      "bytes": 34448,
+      "sha256": "47e4cac4c18dea845d8d2fa3bad09d82bb79fe3581e4af9dce37cf3aa13d5863"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDFamilyTrace.h",
+      "bytes": 3189,
+      "sha256": "ee8e02c0524a84ab08996d57398b51958c0c2fb41666f880864a227efa177f1e"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDKeys.h",
+      "bytes": 21214,
+      "sha256": "b69732eb9b251b39c06827ca792dd8fd26b1e009a075464121b67a68f8d3014c"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDParameter.h",
+      "bytes": 12993,
+      "sha256": "d9862a867957a27eb23f55ee482c24093dc672a64901ca25c7f70609ebb97ccc"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDPrivateKeys.h",
+      "bytes": 8636,
+      "sha256": "5b242771beb6fa22958a8976c92a8894581180446cc279668a9dac6a89e9ea17"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDProperties.h",
+      "bytes": 3618,
+      "sha256": "defc770e56be470ba73d038655df51271f273271bdf31d8bcddacd26cd7f8ae8"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDShared.h",
+      "bytes": 11148,
+      "sha256": "9eb1e0cf5a78ef5e228b38500e8c6aa053c88c35d9801f7c3532071a56c0d176"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDTypes.h",
+      "bytes": 6049,
+      "sha256": "fed788fec7534a9894ea03f071f1abc686083ffff013cf2f2ece137db2ffd064"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOHIDUsageTables.h",
+      "bytes": 178369,
+      "sha256": "30d104a660ede6237fc8ce8db727671dabef5850b86976ceafea9ca1fbc8887a"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/IOLLEvent.h",
+      "bytes": 23132,
+      "sha256": "7ce527c124993e3b3299bb7d58939fcfd77342a400f37799623385a5552c60b2"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/MarbleHID.cpp",
+      "bytes": 15492,
+      "sha256": "918c576c997a7d56afbbcaac975f33be436f317e0840f3224e6b3cad72fdbccb"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/Kernel/arm/hid/ev_keymap.h",
+      "bytes": 6242,
+      "sha256": "42ccb8c878af69187731b57fa9e13981439d9a41ddb1a0fd82bcd4db6a0a56ac"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/bsddev/marble_ufs_block.inc",
+      "bytes": 13004,
+      "sha256": "4683031a75ba58c3f13cb49db1303d16f3833d6be9881d29a7a14034f1eb8433"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/bsddev/marble_ufs_probe.inc",
+      "bytes": 3870,
+      "sha256": "0fade7855e23d8d5be463dc1f4a560acb5253e5f71cd82a698aa016948e110cb"
+    },
+    {
+      "path": "legacy-xnu/overlay/iokit/bsddev/marble_ufs_scsi.inc",
+      "bytes": 16621,
+      "sha256": "81d6b41514c6d5212ddb29613500522501f0a652a1073352580399b2e663b935"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_aes.c",
+      "bytes": 3601,
+      "sha256": "5db9991899e76ec0098e14fe4a93a55ad5a415b35dda324781d0fb6fb0ca0c73"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_aes_ct.c",
+      "bytes": 178,
+      "sha256": "d596a9aa5e02caba3dede8ce6e6d1e2c8a99af32fc4bb15b2b9c652025b151d1"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_aes_ct_cbcdec.c",
+      "bytes": 185,
+      "sha256": "291b34a45372595cd1619617d2d4c2d7a3677465fe274ea78785d3e45273119f"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_aes_ct_cbcenc.c",
+      "bytes": 185,
+      "sha256": "013193767252f1856231c75bceffd9e4dc4f8ed3c4817adbe48b8e64eb53c091"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_aes_ct_dec.c",
+      "bytes": 182,
+      "sha256": "d17722259aae6617f250c141eb82fd8b24bbd1fbd5a5cc6029eb79c2255355cc"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_aes_ct_enc.c",
+      "bytes": 182,
+      "sha256": "66220bf647cdd8f769cbd8c3eb8ae758ee9072a7cec9c7c925dacd03d4d514ec"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/inc/bearssl.h",
+      "bytes": 7219,
+      "sha256": "8543ceb43850a5121782ebb0cff767a610ea7d215b1ad57ff9866deca214e92f"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/inc/bearssl_aead.h",
+      "bytes": 41036,
+      "sha256": "9d90afbc65535335517c028817ac0704af6b58971f2c262a65eb26e0b4099201"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/inc/bearssl_block.h",
+      "bytes": 89199,
+      "sha256": "a00b4a48c42c824f2ec4ee775672df9cec86ad455b08cb8ae7eb8c89e63d082a"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/inc/bearssl_ec.h",
+      "bytes": 33770,
+      "sha256": "6e9eb7490b5b256f9a98bea86906e008bd0d5f2bf1423c9c2eeb7af29ad1e9df"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/inc/bearssl_hash.h",
+      "bytes": 44872,
+      "sha256": "d31186fcdfe224965d1028592d1df78e1a10cb61fb8830fdafac847921e26572"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/inc/bearssl_hmac.h",
+      "bytes": 8413,
+      "sha256": "a40c14a7a71d5b4fa21f8485d7ad3975d3a37b9cd8b9f72cd0fa032af8105614"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/inc/bearssl_kdf.h",
+      "bytes": 10049,
+      "sha256": "e4cf36cab1c4692e4bba034c9e257c630e8e370c8e40d38b8fa106c7b4dbf8d5"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/inc/bearssl_pem.h",
+      "bytes": 10442,
+      "sha256": "ef36260e8568e5927178e92c2aab849be71bc07414c01baeb1d12a3a51a82c3e"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/inc/bearssl_prf.h",
+      "bytes": 5465,
+      "sha256": "0162e674d6c49425bfa0e8e9c79b3d850530e7928288930284fb7ac940a12b17"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/inc/bearssl_rand.h",
+      "bytes": 14023,
+      "sha256": "968335e8a2957e5bf64cb0b6b1f916e53bc330e8c66d5f2d2f658f415a56dd44"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/inc/bearssl_rsa.h",
+      "bytes": 58923,
+      "sha256": "2d4ee476ce67c6361c0e3792e192a12297dd29c039272c03dd0ab4225ed534c1"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/inc/bearssl_ssl.h",
+      "bytes": 151450,
+      "sha256": "1d11c6ca7563f974d6f6d847ed435900c66e4e9d7b8b88ce88be402db5727414"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/inc/bearssl_x509.h",
+      "bytes": 49422,
+      "sha256": "a0680ddf9d1ba6d3bbf3e9436ed295c208d022a1a2d73cd51c520a4f93c11699"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/src/codec/dec32be.c",
+      "bytes": 1358,
+      "sha256": "ebd7bf469655a9e4de4b3d1d01d4c54f19117def3e3b918242629c150979bd9c"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/src/codec/dec32le.c",
+      "bytes": 1358,
+      "sha256": "fb45ce9e370d72c495dfbb08267e2fd32dcf5215c28df5d2db24f842b2d2d43a"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/src/codec/dec64be.c",
+      "bytes": 1358,
+      "sha256": "7197b141800ed2748550c274d2539147a1fd0ce50f25b848dd7bf41c5a9d826e"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/src/codec/enc32be.c",
+      "bytes": 1351,
+      "sha256": "8090b5bd6959586e769814e9d3698ac1c454e31ee4dfd5a2b2eb95a805063ae4"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/src/codec/enc32le.c",
+      "bytes": 1351,
+      "sha256": "7faa71643fc74570fd4c550974a075ec05485a0b3805cbdc826d662cb347e79b"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/src/codec/enc64be.c",
+      "bytes": 1351,
+      "sha256": "a80ad043abcdee0f156c04add94819a1b25a27d58d71d5bcc19ebb5cc24143a3"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/src/config.h",
+      "bytes": 8953,
+      "sha256": "7fcf78414405f4f747758dd9c4aaa2c4993dfd123bb2e5240e943b3b9e1eae56"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/src/hash/md5.c",
+      "bytes": 5974,
+      "sha256": "f5000426ffef7d696027f7ddc558822fef2d280bedf8bce73b8295a1d0fdd39e"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/src/hash/sha1.c",
+      "bytes": 5534,
+      "sha256": "42393b67d65319ba384120b49e1ad102aa5cc59cd9fdbaf2ed69b33d6f96826a"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/src/hash/sha2big.c",
+      "bytes": 8057,
+      "sha256": "96c2210689e0fa3725ceb6eb562feee81d5658d1371bf65d184d71b257c90329"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/src/inner.h",
+      "bytes": 80994,
+      "sha256": "fa5732672f151970e69e9b451f2fa250b635b0ef2f97e4547847621171364230"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/src/symcipher/aes_ct.c",
+      "bytes": 7076,
+      "sha256": "673c1c82e9a62ba349b806674249b62ed3116482f06f433f6ce71decd9413f0c"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/src/symcipher/aes_ct_cbcdec.c",
+      "bytes": 3204,
+      "sha256": "dd0d74cfc3db5adce1fec4e089816f0fdea7692ee87e07cb4c984614ea7d17cc"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/src/symcipher/aes_ct_cbcenc.c",
+      "bytes": 2742,
+      "sha256": "04dbba4141bbc380ff183e5d80192ef9a30987968434b620c1c7c5176581dcef"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/src/symcipher/aes_ct_dec.c",
+      "bytes": 4742,
+      "sha256": "1b1f6c3aa363f119d88c7d5c2dab583a01d55dc3ee2226f08af9a0451cb7291b"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_bearssl/src/symcipher/aes_ct_enc.c",
+      "bytes": 2955,
+      "sha256": "71c32d29383af46ef103359210773f4f76c3529f8abc38c0d35b074dc10130bd"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_dec32be.c",
+      "bytes": 175,
+      "sha256": "6c35431e8b94c1675c75bb7c4c67f6b65e98ab73b6322ae05a01b07de70457a7"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_dec32le.c",
+      "bytes": 175,
+      "sha256": "4d28fb75f67398851c77606b2244ae0f528909e3a817593b63a55d7127bac296"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_enc32be.c",
+      "bytes": 175,
+      "sha256": "ad29741557303171267d861b57e16b437886e5d88d3bf18bd0610b542266a0d7"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_enc32le.c",
+      "bytes": 175,
+      "sha256": "1fc487920c01b1d0432ab412eb074635058edcd47ab036746ca79bfcc952fd90"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_md5.c",
+      "bytes": 170,
+      "sha256": "5c97fd69eb925071d74e3bedaa989cbff005e11a85e65d8eb37c53d8859fa0f5"
+    },
+    {
+      "path": "legacy-xnu/overlay/libkern/crypto/marble_sha1.c",
+      "bytes": 171,
+      "sha256": "9a77925736a3935ca3bea435e88b866e2c4f28cbb768718834176a9c38cd03c7"
+    },
+    {
+      "path": "legacy-xnu/overlay/osfmk/arm64/amcc_rorgn_common.c",
+      "bytes": 406,
+      "sha256": "9da02d145b3ae6069acce552b47573354262184a2f30b4de6461e03c56c493a1"
+    },
+    {
+      "path": "legacy-xnu/overlay/osfmk/arm64/amcc_rorgn_ppl.c",
+      "bytes": 406,
+      "sha256": "9da02d145b3ae6069acce552b47573354262184a2f30b4de6461e03c56c493a1"
+    },
+    {
+      "path": "legacy-xnu/overlay/osfmk/arm64/kpc.c",
+      "bytes": 2179,
+      "sha256": "78a2632e933f45efc06ad522344912e11a3439ba7b6ad503bf8e97e3b55fc8b3"
+    },
+    {
+      "path": "legacy-xnu/overlay/osfmk/arm64/marble_early.c",
+      "bytes": 453,
+      "sha256": "ca627be43563df1f8196ab842bac40e20932ed6891a7e71c22d4762dcc5646a1"
+    },
+    {
+      "path": "legacy-xnu/overlay/osfmk/arm64/marble_early.h",
+      "bytes": 647,
+      "sha256": "e225e9ef52bf51cc1d38750d1a5d00e6d6f932268b00f4cdd52365460a0bff6d"
+    },
+    {
+      "path": "legacy-xnu/overlay/osfmk/arm64/ppl/sart.h",
+      "bytes": 287,
+      "sha256": "a4e8b887217b69efc17b4d2e2ad2a4555a494095bd9b9b23f836c315fd35dfd8"
+    },
+    {
+      "path": "legacy-xnu/overlay/osfmk/arm64/ppl/uat.h",
+      "bytes": 284,
+      "sha256": "23b276a08798a6a9f726abf886a37c76821447b0746fc2e66f80a6946eaf2ec0"
+    },
+    {
+      "path": "legacy-xnu/overlay/osfmk/arm64/tunables/tunables.s",
+      "bytes": 276,
+      "sha256": "7b86a7eb9f6e622575d1d2b88090c06e9aee1b7e8f3a909fb0bf8ad005e8b23c"
+    },
+    {
+      "path": "legacy-xnu/overlay/pexpert/pexpert/arm64/MARBLE.h",
+      "bytes": 2597,
+      "sha256": "b0f8c4feed6d8a51bb8d92d245b4ffb2a623e535920edbda4556a22df6026500"
+    },
+    {
+      "path": "legacy-xnu/patches/xnu-changes.review.patch",
+      "bytes": 136157,
+      "sha256": "42099d780d732609cac327646a2e9f77ce8ab66251673aae0cc67d1b506c34a5"
+    },
+    {
+      "path": "mac-build/_patch-fbcon.py",
+      "bytes": 4593,
+      "sha256": "ed3b96f0717b260d2aace6812e6955f9ccd85e5d0701ba49ac7c80e95d46d66a"
+    },
+    {
+      "path": "mac-build/_patch-sandbox.py",
+      "bytes": 3013,
+      "sha256": "d6248167f84e1fd18b7f22da08d2085c456bcdb893fe23ba19f73342f5bdc6a9"
+    },
+    {
+      "path": "mac-build/_remote-build.sh",
+      "bytes": 989,
+      "sha256": "ab3aade835de71592bdc398e2a19df4de461346c698e495f32c1aed96bd44d91"
+    },
+    {
+      "path": "mac-build/_remote/MarbleFramebuffer.cpp",
+      "bytes": 16451,
+      "sha256": "924679e490a8e91797d3679a76aa9eb150b77e12d2b5f19ad3bdceefcdf0c022"
+    },
+    {
+      "path": "mac-build/_remote/MarbleFramebuffer.persist.cpp",
+      "bytes": 27425,
+      "sha256": "f48efec1c7a0c118583df6a84fea8b4143ffe7a7fa486c9766fbfde4b7e187f6"
+    },
+    {
+      "path": "mac-build/_remote/MarbleFramebuffer.remote.cpp",
+      "bytes": 26676,
+      "sha256": "99a19aa72e90f0667e7c73e92612625ddc789baa6c3ab3567c7550dd629c38d1"
+    },
+    {
+      "path": "mac-build/_run-backboardd-stderr-v3-long.sh",
+      "bytes": 1115,
+      "sha256": "c837fed9b69765280e308a2a5b2d819ec77aa880ca86364b72ff698c4f10a689"
+    },
+    {
+      "path": "mac-build/_run-backboardd-stderr-v3.sh",
+      "bytes": 1089,
+      "sha256": "2a7f3871a3048972e160c1ca37327acf12c5ccbcf684e2d0205271eb6b972b8c"
+    },
+    {
+      "path": "mac-build/_run-backboardd-stderr-v4.sh",
+      "bytes": 1115,
+      "sha256": "11cdc4260d5397a2d623ef3faee2211edb1e7179fd4b04aec2ed19db65b09871"
+    },
+    {
+      "path": "mac-build/_run-boot-writable-clean-long.sh",
+      "bytes": 1064,
+      "sha256": "716510f4caab7b015ee2ddf8acd4d29c03dbad09cea2ff5271b79bc9adda1831"
+    },
+    {
+      "path": "mac-build/_run-boot-writable-console-switch.sh",
+      "bytes": 1113,
+      "sha256": "a9c1f9673b948608174b9fd7dd43521579fd28127eeac5b82ea4ddfc679f9283"
+    },
+    {
+      "path": "mac-build/_run-boot-writable-long.sh",
+      "bytes": 1023,
+      "sha256": "35719eb622a69b1bebb76b56ccfae0fa7c77b5ca1009fbc5698279e0280961c1"
+    },
+    {
+      "path": "mac-build/_run-boot-writable-noconsole-v2.sh",
+      "bytes": 1109,
+      "sha256": "38bd08cc407d5a8b006ddc510141e183a4b45ffb8259f00a2ce1576903dc6dc5"
+    },
+    {
+      "path": "mac-build/_run-boot-writable-noconsole.sh",
+      "bytes": 1088,
+      "sha256": "2f5aea4d20bf75c764bfbaeec659f5efe93a5db7a13af79c86287c439b625a17"
+    },
+    {
+      "path": "mac-build/_run-boot-writable-swaptrace-fresh.sh",
+      "bytes": 1104,
+      "sha256": "78da7eb096bd30b7844b2b089aaf3c00cb888333f6c0831a48ccdc37a8a58413"
+    },
+    {
+      "path": "mac-build/_run-boot-writable-swaptrace.sh",
+      "bytes": 1073,
+      "sha256": "b36f3ab9c05ec7cd1474be9d286834d0e03e64119de732d335f55e0972c08eba"
+    },
+    {
+      "path": "mac-build/_run-boot-writable.sh",
+      "bytes": 1099,
+      "sha256": "9ef496afd891e8f58c1b3b316f9dac74a91b7cf215be0d71d2a948180457ccb6"
+    },
+    {
+      "path": "mac-build/_run-display-match-persist.sh",
+      "bytes": 1050,
+      "sha256": "1ec07173386c241a388cdd00c1f78d2bb0c6aab628c9ef16591c0ea6bc455f7f"
+    },
+    {
+      "path": "mac-build/_run-display-match.sh",
+      "bytes": 1043,
+      "sha256": "b688476d89f7020bc1cd3a8dea492a8599f102f97a4e3ec18067f70ce0e2957e"
+    },
+    {
+      "path": "mac-build/_run-objc-exception-trace.sh",
+      "bytes": 1090,
+      "sha256": "8d9553a576d0dba249d25cbb7cd0e41500eb4bdce9a6f7b3fc71f43bb45a35ea"
+    },
+    {
+      "path": "mac-build/add-marble-fb-swap-trace.py",
+      "bytes": 1521,
+      "sha256": "27a8a3b8210936a38ff191e342ca248091de3d2344ff0f362c4d6c24e3fd6000"
+    },
+    {
+      "path": "mac-build/add-marble-pmu-primary.py",
+      "bytes": 1088,
+      "sha256": "ee77632dbd8d9c655b67fa83bc1b11643a66b94a8f08758d958c4beeafa3d547"
+    },
+    {
+      "path": "mac-build/add-qemu-display-scale.py",
+      "bytes": 1331,
+      "sha256": "7f77bd0c283d00ab06db79323764885beca711b24ec760148c3a3bae56a52b7c"
+    },
+    {
+      "path": "mac-build/add-qemu-ios-runtime-properties.py",
+      "bytes": 2424,
+      "sha256": "07d7cb8b167e735c4e3765ef68683fd509e1796d5fc8ab34caa3194590abce85"
+    },
+    {
+      "path": "mac-build/allow-marble-test-console-switch.py",
+      "bytes": 1144,
+      "sha256": "819ce73497045994523c88a124e8ca80ffc63352ec509396113b5228f2252e57"
+    },
+    {
+      "path": "mac-build/allow-marble8796-unsealed-hfs-test.py",
+      "bytes": 1670,
+      "sha256": "6e70c8795a88ea26e645c7ec2207f50e02f78b600769977801cb5a0b726c2690"
+    },
+    {
+      "path": "mac-build/allow-marble8796-writable-runtime.py",
+      "bytes": 2270,
+      "sha256": "61709032a468eeef89f698aa4ed3ce7a474faf24d98fe02e664cd56098582152"
+    },
+    {
+      "path": "mac-build/apply-marble-guarded-delta.py",
+      "bytes": 5201,
+      "sha256": "7183b7945659e648beff00a408166336a46cf40ad810d2c4ba75ff171a78febd"
+    },
+    {
+      "path": "mac-build/apply-marble-ios-root-delta-inplace.py",
+      "bytes": 3090,
+      "sha256": "a852e91d76309315a3b60eb77d0524f487b0ffd8c0b6195395dd6bc84ae17e3c"
+    },
+    {
+      "path": "mac-build/apply-marble-ios-root-delta.py",
+      "bytes": 3425,
+      "sha256": "ab6d6bead9f0be5009ce778f6a2ba46c247e4e40d4e8e94d0107da41a389e885"
+    },
+    {
+      "path": "mac-build/apply-marble-ios16-rootrw-swap.py",
+      "bytes": 5835,
+      "sha256": "00ae8da07a4c0c0c2bdd322ff21d47f30ea2861dbb50eb8a8c819c0ba0eeb1b9"
+    },
+    {
+      "path": "mac-build/apply-marble8796-display-canvas.py",
+      "bytes": 2392,
+      "sha256": "6ceb75d6388662724b7d205845ee7367a71162cb453be47c6db6c1b5133f560c"
+    },
+    {
+      "path": "mac-build/audit-ios16-hfs-root.py",
+      "bytes": 2606,
+      "sha256": "470215f3c656ebb6cc067a0fc2d35c2d9cf8d175ff90c081d06b0c6657f88eee"
+    },
+    {
+      "path": "mac-build/audit-iphone-kernel.py",
+      "bytes": 4338,
+      "sha256": "27d2b0f85c8b09544be5bff6188a1f8d1ca8359fb14f5bd74a1c95cd30b4877b"
+    },
+    {
+      "path": "mac-build/audit-marble-ios-var.sh",
+      "bytes": 1191,
+      "sha256": "cef58bd2c636958f7d8fb5ef28a86e43e33ccde89730b2f4a88ade288ad4d251"
+    },
+    {
+      "path": "mac-build/audit-mount-layout.py",
+      "bytes": 1504,
+      "sha256": "149f47022cd9bbbd899c78864580d321cd5e645fe2533102713839f7cb79d37a"
+    },
+    {
+      "path": "mac-build/build-marble8796-support.py",
+      "bytes": 2652,
+      "sha256": "6b8e392c919f86d32b410133d58684762f90187ebb012ab50d3fd7ba350467ca"
+    },
+    {
+      "path": "mac-build/capture-marble-hfs-root.py",
+      "bytes": 3246,
+      "sha256": "38bd2b0d02f7c4e81d8d94e852449a29c4f33ec3a9fbbf412f642c9fa3bea227"
+    },
+    {
+      "path": "mac-build/check-marble8796-allowlist.py",
+      "bytes": 1926,
+      "sha256": "477e40c945a665b5e1530066b4f3d44f4b690bb60298eae9e47755334bb5ac9d"
+    },
+    {
+      "path": "mac-build/check-marble8796-sha1.py",
+      "bytes": 2332,
+      "sha256": "7cadca10d404a1c9e8169d37fe6794603d710299ccbc8c2c9caa1103f8ede07c"
+    },
+    {
+      "path": "mac-build/compile-hfs-mount.py",
+      "bytes": 5838,
+      "sha256": "3b4b6c3790d93bb417379676008c6351be4d1accc9ab4fa45a3f491d2087edac"
+    },
+    {
+      "path": "mac-build/compile-iphone16-aes.py",
+      "bytes": 2570,
+      "sha256": "8d98a1db6ff7025b1844f20f4f5edf767f22cd447ad81efcebaab813f8bb49d8"
+    },
+    {
+      "path": "mac-build/device/scripts/build-marble-arm-driver.py",
+      "bytes": 5779,
+      "sha256": "1482bf4c5805386227b1218db9fdf5efe655794d1e94505b1584eeef6a403fa3"
+    },
+    {
+      "path": "mac-build/disable-marble8796-default-cores.py",
+      "bytes": 746,
+      "sha256": "173f5a143ae5b5eb5392aa94fcda46472261ec970f26db5050bf65b1deaa1ad5"
+    },
+    {
+      "path": "mac-build/disable-marble8796-external-resolver.py",
+      "bytes": 1383,
+      "sha256": "b99de5daf4257d89e649c18dd0cf6db9e2a54b6cf414c861f205dc9465ef422f"
+    },
+    {
+      "path": "mac-build/dsc-extract.c",
+      "bytes": 843,
+      "sha256": "34afe6b8a6a9a127db60e7273434d8c0acbcc76a9eb6cf129d87f1c935cf390b"
+    },
+    {
+      "path": "mac-build/dump-ios-symbol-matches.py",
+      "bytes": 1035,
+      "sha256": "2f6dd060eeffe1d7e96ed01285397659ed45f13b16f15e50cf7a431575768dfe"
+    },
+    {
+      "path": "mac-build/emit-iphone16-candidate.py",
+      "bytes": 5571,
+      "sha256": "0989bde6007386b71112d12479236e251d40ec1f74629b3871951a72719f2deb"
+    },
+    {
+      "path": "mac-build/emit-iphone16-native-candidate.py",
+      "bytes": 2853,
+      "sha256": "ac7dcebfcaca0a4881ceaf43be64a7c24014b2bf9dbe62378277be03951e8daf"
+    },
+    {
+      "path": "mac-build/enable-marble8796-bindfs.py",
+      "bytes": 652,
+      "sha256": "8eaf69e18d214fc814247cda3e1db270bb6aecb1230b9fc384d95452db30f51b"
+    },
+    {
+      "path": "mac-build/enable-marble8796-ufs-partition-write.py",
+      "bytes": 21429,
+      "sha256": "9d653d5a27cf7588bb7e57b70f51d724a18dd3e8bd2002dd93a705c61815d8d6"
+    },
+    {
+      "path": "mac-build/extend-marble-crash-scan.py",
+      "bytes": 1147,
+      "sha256": "dcafa81f937f1d9a43a47956e4c2f666c7ba438f0ed00b0b0e756ddb02f6430d"
+    },
+    {
+      "path": "mac-build/fix-marble-fb-swap-trace.py",
+      "bytes": 1342,
+      "sha256": "c6cb8d2c60b9ed82f8759fecf4209c5b2732b4e56a7e80008bd37ef7c9d346f0"
+    },
+    {
+      "path": "mac-build/fix-marble8796-crash-strings.py",
+      "bytes": 526,
+      "sha256": "842ce7bfdedb4acb7fd2184ef1c5b3e8a466d9b5d303319db4130ef140d1aeb3"
+    },
+    {
+      "path": "mac-build/fix-marble8796-cryptex-amfi.py",
+      "bytes": 2493,
+      "sha256": "d984f7d9f03268f2c21839cd16edfe9caa959012f2d5be89cd9b40dcd1f8b7ea"
+    },
+    {
+      "path": "mac-build/fix-marble8796-fbcon-console.py",
+      "bytes": 1865,
+      "sha256": "b911e921f1847e370d5170bf0ab83961aeb9ab2264c0dce8c0ba2137dfb5177b"
+    },
+    {
+      "path": "mac-build/fix-marble8796-gui-console.py",
+      "bytes": 2501,
+      "sha256": "0b5e600664291f29e84c87a359fbb999ff1fc0c02615fe708af2aab5100730ef"
+    },
+    {
+      "path": "mac-build/fix-marble8796-memdev-size.py",
+      "bytes": 1100,
+      "sha256": "6cbc52aaa23683c9fe641beb27a1a782719b9d38409dae390bdfcb609f735d64"
+    },
+    {
+      "path": "mac-build/fix-marble8796-mg-cache-timing.py",
+      "bytes": 2463,
+      "sha256": "779373208279e1fa2adb02eb85fc18ac1726f2ef9462300544a7b10c74d8af2f"
+    },
+    {
+      "path": "mac-build/fix-marble8796-ufs-solid-state.py",
+      "bytes": 1187,
+      "sha256": "cd7210f4d8fcfcfea7c15f9a8ff8c1dd050012e93b22a070a0f6392a70979548"
+    },
+    {
+      "path": "mac-build/fix-marble8796-ui-identity.py",
+      "bytes": 1473,
+      "sha256": "7abfcf7653b9670b400ac36092d8979459dfceb95d63064cba0c6a5f9e98546e"
+    },
+    {
+      "path": "mac-build/infer-marble-cache-slide.py",
+      "bytes": 2899,
+      "sha256": "96bbe20ad1d693763d06388213858bf5a18c06e897126a5560ee6ddb64883f0f"
+    },
+    {
+      "path": "mac-build/instrument-marble8796-display.py",
+      "bytes": 983,
+      "sha256": "1a13ea5cfdf9f064ec49297c90c323fe475f72d648533737e45ed0996f2b283e"
+    },
+    {
+      "path": "mac-build/integrate-marble-iowatchdog.py",
+      "bytes": 3792,
+      "sha256": "de9c2ff5542139d5f0d51c900c3e93d276466321ecb5c88c111b0c3b77fef65f"
+    },
+    {
+      "path": "mac-build/integrate-marble8796-amfi.py",
+      "bytes": 1642,
+      "sha256": "a0f88043ab4058a33e5196fda0121faba84848d26f613160877b723c606a48c4"
+    },
+    {
+      "path": "mac-build/integrate-marble8796-crash-strings.py",
+      "bytes": 3845,
+      "sha256": "16b1b7fa210a5c929505d7c7b2e2c76ccf9c53baa2fff0828c906a7291244281"
+    },
+    {
+      "path": "mac-build/integrate-marble8796-crash.py",
+      "bytes": 1020,
+      "sha256": "6c668e6cbade1161b532bf0b0359cc1db1b7edc89720de690ff1d1cf3b9d9fa2"
+    },
+    {
+      "path": "mac-build/integrate-marble8796-graphics.py",
+      "bytes": 3904,
+      "sha256": "384c77d44d4ba14e0c45e8e8081a2c2de8be4ace2f0eda6d0fda47ce7f1a3647"
+    },
+    {
+      "path": "mac-build/integrate-marble8796-hid.py",
+      "bytes": 4041,
+      "sha256": "ec67dd63a58e32905409caea740131f314b8fedbe04d655d7f2632099a460a26"
+    },
+    {
+      "path": "mac-build/integrate-marble8796-keystore.py",
+      "bytes": 4273,
+      "sha256": "a6ea46a5e954b8bdce32c9929503105d4390fe1ee76d79331578d65aedb28178"
+    },
+    {
+      "path": "mac-build/integrate-marble8796-ufs.py",
+      "bytes": 2890,
+      "sha256": "d3bb80f853ffdebc29f413ec6dc62e60dc6ebfe502783811d1b765d1acd6f5a6"
+    },
+    {
+      "path": "mac-build/iphone16-bootcrypto.c",
+      "bytes": 4936,
+      "sha256": "001083b793a462564ec908248815da874564d52ef8b4addeddb8d61e65820fbd"
+    },
+    {
+      "path": "mac-build/legacy-iig8796.py",
+      "bytes": 1217,
+      "sha256": "658e73f041cc74d166b980b66c90d2fc42543b1753bbe8047f2055ec50758ef4"
+    },
+    {
+      "path": "mac-build/make-hfs-mount-fixture.py",
+      "bytes": 2000,
+      "sha256": "c66cc0b0749e3e12255591ba59f8310c0740474e4f04fcbf518bb826d5ba7d41"
+    },
+    {
+      "path": "mac-build/make-marble-guarded-delta.py",
+      "bytes": 1934,
+      "sha256": "31e31cfe1146a1986f320231930d0b47f5c27e8897362b16134ce93bd3060f8e"
+    },
+    {
+      "path": "mac-build/make-marble-ios-root-delta.py",
+      "bytes": 2171,
+      "sha256": "56a1e3779532bf13c98be64a99735d58de4beab4a7a4b86b4b6a9a8dc7c3cc0e"
+    },
+    {
+      "path": "mac-build/patches/marble-iphone16-bootcrypto.patch",
+      "bytes": 5970,
+      "sha256": "8e1b53369ad1339998cfe1e7bddfc307538ec758b2a45aad02cc5b757c531492"
+    },
+    {
+      "path": "mac-build/patches/marble-iphone16-entropy-abi.patch",
+      "bytes": 5638,
+      "sha256": "835d1cdc1428d9cfc2934f71f47c84ef1440906c4483c2341b4082cd0eb80bf7"
+    },
+    {
+      "path": "mac-build/patches/marble-iphone16-prng-order.patch",
+      "bytes": 2533,
+      "sha256": "30f4d74cda7f9b8ca46ca23b10725d5a1539fba5170b1ece842654c57efc52f7"
+    },
+    {
+      "path": "mac-build/patches/marble-iphone16-rpc.patch",
+      "bytes": 1502,
+      "sha256": "43fd0a65a10df46fe89be3f28510e97a9908a27ad172b994495fa6f450986614"
+    },
+    {
+      "path": "mac-build/patches/marble-iphone16-signed-exec.patch",
+      "bytes": 500,
+      "sha256": "b868dc50380b24730093d08997d7cb2dc87ab4991f9bd03acd5a4283efcd7473"
+    },
+    {
+      "path": "mac-build/patches/marble-virtual-timer-only.patch",
+      "bytes": 897,
+      "sha256": "43cf4b7604172f85d89c7943eebabe256379eb29834168c28a94770b2f3051ce"
+    },
+    {
+      "path": "mac-build/patches/zzzz-marble-iphone16-bootcrypto.patch",
+      "bytes": 6084,
+      "sha256": "022f9b76c161bf6385e6cc8fbee34ae0917c85474d95304437cec68e0311e2d0"
+    },
+    {
+      "path": "mac-build/patches/zzzz-marble-ufs-readonly-probe.patch",
+      "bytes": 25891,
+      "sha256": "981a5d124fee520cd4674e1d59435b7ce5888ddbae00f84a927c6e7bd6115674"
+    },
+    {
+      "path": "mac-build/patches/zzzzz-marble-hfs-mount-fixture.patch",
+      "bytes": 1977,
+      "sha256": "3655af4cd68406736279826bf75a0b64a1686b8686b9824efa8c9e971de8a6c0"
+    },
+    {
+      "path": "mac-build/prepare-marble-backboardd-stderr-v4.sh",
+      "bytes": 2225,
+      "sha256": "1377bbb9810f1abcf89a90210d7ca62e340cf94c6a390942facd23d29bb13a5c"
+    },
+    {
+      "path": "mac-build/prepare-marble-ios16-container-delta.sh",
+      "bytes": 1611,
+      "sha256": "9fb228147a14bde5ddae39374077c971534f3607aecf36cad454dff98cc134cb"
+    },
+    {
+      "path": "mac-build/prepare-marble-ios16-setup-skip.py",
+      "bytes": 5835,
+      "sha256": "27d961691092e81144c11fbd66eb9e67a18f54e67e07a906088cb14bf33865f4"
+    },
+    {
+      "path": "mac-build/prepare-marble-objc-exception-trace.sh",
+      "bytes": 2181,
+      "sha256": "e1e093757a0890caa9006b717da9d7e248ebdc5ebffc1018aa116650e9ea301e"
+    },
+    {
+      "path": "mac-build/prepare-marble8796-mg-cache-test.py",
+      "bytes": 7130,
+      "sha256": "981cab1e77baf4ac8d7615192dcb0a5674389dbdc7ba4e2539053d909be83716"
+    },
+    {
+      "path": "mac-build/prepare-marble8796.py",
+      "bytes": 3842,
+      "sha256": "6505cbd1742c3732f0a2c0ce1720f624eb8f85f5c0f31ee9f22d7d2508a7ee88"
+    },
+    {
+      "path": "mac-build/publish-marble8796-ufs-devfs.py",
+      "bytes": 4701,
+      "sha256": "4387bba8aec2f802e89abf0992827f0bb5fb897b5a1156491b5c3ad278dd79af"
+    },
+    {
+      "path": "mac-build/qualify-marble8796-headers.py",
+      "bytes": 1617,
+      "sha256": "8df8841323d4556d9c2e7c4f237d0c0469b1c7e608ed50e7e512685196c00c03"
+    },
+    {
+      "path": "mac-build/repack-iomfb-qemu-payload.py",
+      "bytes": 884,
+      "sha256": "7cd576186902ca8d20388b1dc8d5af30c9486b400f86fc3a4af9438732bc5a41"
+    },
+    {
+      "path": "mac-build/repair-marble8796-iomfb-trace.py",
+      "bytes": 1423,
+      "sha256": "f945f5f1d8cc1566f093f3f9dfc871351092030cfd352d0dfad502b35e88fdb1"
+    },
+    {
+      "path": "mac-build/restore-marble-ios-root-from-delta.py",
+      "bytes": 2849,
+      "sha256": "5dbb4d9145efb9fba9d5af2c07db19d19cf2ca25ea14394a2d0574f7937eab1c"
+    },
+    {
+      "path": "mac-build/retire-marble8796-reference-fb.py",
+      "bytes": 2468,
+      "sha256": "7d13f9e81c542e3f938523737ec690316f4f6e37de01c054eb12aa3809d620ff"
+    },
+    {
+      "path": "mac-build/run-mac.py",
+      "bytes": 21480,
+      "sha256": "028558506bfce2313b066642130365ab58dc40f679fe5fe0e7fc95e738a48983"
+    },
+    {
+      "path": "mac-build/run-marble8796-kernel.py",
+      "bytes": 4317,
+      "sha256": "54ce5e5a91134990de1e1ada3e83cd4ea1e82503e4f1b6cd9ffb8899333cc5b4"
+    },
+    {
+      "path": "mac-build/stage-marble-setup-skip.py",
+      "bytes": 2357,
+      "sha256": "2519ed16463b0a25080b9a21d620c3ae2b55f262c390780821ac2c11e9fa35b6"
+    },
+    {
+      "path": "mac-build/symbolicate-marble-cache-pcs.py",
+      "bytes": 2018,
+      "sha256": "6de09c9f3ebd64d9a2cd1f74cbaa3d52bcaea2706281a64779edec5820a96300"
+    },
+    {
+      "path": "mac-build/symbolicate-marble8796-crashes.py",
+      "bytes": 2111,
+      "sha256": "1024f973c4f5007782212fc51b3bc822e49da07443edc93d4d1f31b2216ee32c"
+    },
+    {
+      "path": "mac-build/symbolicate-marble8796-display-abort.py",
+      "bytes": 3433,
+      "sha256": "4c2deaea71e757d0e0f8f38505441639ea6cee0fef6ba733da4f10dfe0dfbe18"
+    },
+    {
+      "path": "mac-build/test-marble-guarded-delta.py",
+      "bytes": 7422,
+      "sha256": "f9e6dd2fb6558eda13f38cc0f5094c79f9a8ec09d0fb9993e26165041bbbb766"
+    },
+    {
+      "path": "mac-build/test-marble-ios-root-delta.py",
+      "bytes": 1212,
+      "sha256": "db0e091561a8d6f81e6e165f50ac42b0f0b6386380bb5073d8fedb661811d622"
+    },
+    {
+      "path": "mac-build/test-marble-setup-preferences.py",
+      "bytes": 1554,
+      "sha256": "dce33332628c0b1a5d8dd8d6b2e83a0ccb194a54114e85dcf7d044e1362e6233"
+    },
+    {
+      "path": "mac-build/test-update-marble-touch-probe-stage3.py",
+      "bytes": 7236,
+      "sha256": "a6dd7ba0330f46b629c3bade0595592ac6f5d14e50e1802fda985c1a572bb91a"
+    },
+    {
+      "path": "mac-build/trace-marble8796-arm-stages.py",
+      "bytes": 1251,
+      "sha256": "34cf5f8d3c951780af76042b9a8210bb9b459229104236004d4508bcfa962080"
+    },
+    {
+      "path": "mac-build/trace-marble8796-assets.py",
+      "bytes": 6955,
+      "sha256": "eb1efb4e711d493552aeb025369dafe5edf2bd6f22d73d02e0a51aedc0269533"
+    },
+    {
+      "path": "mac-build/trace-marble8796-display-match.py",
+      "bytes": 23509,
+      "sha256": "9de379d9822c13d2ddcbc54c1bfd36d7f38c0b9b45e144d0782eec680e01dd58"
+    },
+    {
+      "path": "mac-build/trace-marble8796-graphics-null.py",
+      "bytes": 5364,
+      "sha256": "e676df76527f3de20ba284a0db739821705cb777f8b09718edd6990f4eaf8a4a"
+    },
+    {
+      "path": "mac-build/trace-marble8796-graphics-services.py",
+      "bytes": 5910,
+      "sha256": "aaffc23996b4ed8ca2166462e63005e7ccc70a7909ad0f0414e4dda31868cbf3"
+    },
+    {
+      "path": "mac-build/trace-marble8796-hardware-startup.py",
+      "bytes": 1968,
+      "sha256": "10acb1c7a5c0aca50869937a9edaf28db3977848eba2bd3463d2688cba09119f"
+    },
+    {
+      "path": "mac-build/trace-marble8796-hfs-errors.py",
+      "bytes": 7137,
+      "sha256": "24675c78eabd346f5caf5f769eae3d10d2e358192ed06ef12b98004ea626f4cd"
+    },
+    {
+      "path": "mac-build/trace-marble8796-iomfb-open.py",
+      "bytes": 1789,
+      "sha256": "e72f80025b9b583f990951eccda7b15999ce9010b39ab99dfcbb2225d6a36f68"
+    },
+    {
+      "path": "mac-build/trace-marble8796-ui-stacks.py",
+      "bytes": 6871,
+      "sha256": "85c8a891a5306015c318efec175a55f6574d3e989fb06867f1b2794eb02aff89"
+    },
+    {
+      "path": "mac-build/update-aes-diagnostic-manifest.py",
+      "bytes": 1241,
+      "sha256": "8af0e82457b1600adf0b313adf4f3ee1de864eb0396ef2763ae3eaed6e3d9ceb"
+    },
+    {
+      "path": "mac-build/update-marble-touch-probe-stage2.py",
+      "bytes": 6966,
+      "sha256": "3ded3a137c7f62e54ed3b6905198bce5698bba0839e5fbad86f69815a1771df3"
+    },
+    {
+      "path": "mac-build/update-marble-touch-probe-stage3.py",
+      "bytes": 9713,
+      "sha256": "c64c437f2378c8543defb6111ec04d27ce098d74f7732499e30a20a8ba8adb97"
+    },
+    {
+      "path": "mac-build/verify-touch-prereq-stage3.py",
+      "bytes": 14141,
+      "sha256": "c58b7c672f3793269818da4adbd5bd4768e38c78a2463a6c3ad5411fca52e38f"
+    },
+    {
+      "path": "make-marble-adt.py",
+      "bytes": 14671,
+      "sha256": "4cf2ef4bdb3db271c89fc9d82eb7a0219652268dd94e72b0604609d14754a259"
+    },
+    {
+      "path": "pack-8796-hfs-mount.py",
+      "bytes": 24309,
+      "sha256": "e284339b662208deb831cb7b26b8f332027a5adc4c1f755459c8a7546a5e3fe4"
+    },
+    {
+      "path": "pack-early-image.py",
+      "bytes": 6458,
+      "sha256": "991477e44d69c87cc0bcfffa0ae910a0accd0676f27928fb04b895a76ed71590"
+    },
+    {
+      "path": "pack-ufs-probe.py",
+      "bytes": 9561,
+      "sha256": "a6e2a42d2bda96927d91acf91a75df153e278db6f56e5886681b1534095d9aab"
+    },
+    {
+      "path": "place-prelink-info.py",
+      "bytes": 2918,
+      "sha256": "37e0d4cea6ba05ac77c647cb9b08a223cc429fee98311a9ddb023bc154561dd1"
+    },
+    {
+      "path": "prepare-early-payload.py",
+      "bytes": 7403,
+      "sha256": "86caf376783daedb9400b5ba317441fd3a12618bb049fbaadbce99e5c829152f"
+    },
+    {
+      "path": "prepare-iphone16-qemu-adt.py",
+      "bytes": 5536,
+      "sha256": "291b37fd931168cb7b0dc3ccbc6b897cf028d44151ab7cf549a4a7fbb0244d5d"
+    },
+    {
+      "path": "qualify-iphone-ipsw.py",
+      "bytes": 8473,
+      "sha256": "1f352e092cd68c8c24a24063e13b6a0a066979b94588ff5369cbf658f99e46a7"
+    },
+    {
+      "path": "qualify-iphone16-aes-bindings.py",
+      "bytes": 5813,
+      "sha256": "85960a19cdb2eeffe22cedbffac19af6abf2a5528939784d0b355f7b42d494c2"
+    },
+    {
+      "path": "run-baseline.py",
+      "bytes": 6546,
+      "sha256": "d029c24b53347a6d9fa2f9c4e08f6f6c8e19032f2e3416685025be1a20a0f242"
+    },
+    {
+      "path": "sources.lock.json",
+      "bytes": 4631,
+      "sha256": "76d37cfd291d5614929864b449c4b4c7a8749073edb503a02c53424ece0f7ee5"
+    },
+    {
+      "path": "test-compact-panic.py",
+      "bytes": 6425,
+      "sha256": "f30a6cbfcde3e90f17d46ba920998251fe6fd5781900360e2a9e9931e65168c2"
+    },
+    {
+      "path": "test-darwinboot-stage.py",
+      "bytes": 4585,
+      "sha256": "24307a0e56f67fcc3620e15dff5c87d180807420883e2494a80c899b0ac8f114"
+    },
+    {
+      "path": "test-early-shim.py",
+      "bytes": 6500,
+      "sha256": "1fb91cc30cbbc1baa88dcb0cf189e0c96ba719ac5657f60fa4a3ff019b93933f"
+    },
+    {
+      "path": "test-early-xnu.py",
+      "bytes": 5245,
+      "sha256": "1e5b0d913efdc43d7025899fa35ee72e2d5daf197df067bff4d659d38bd7a6e0"
+    },
+    {
+      "path": "test-hfs-mount.py",
+      "bytes": 4656,
+      "sha256": "4cca69e144f3bfcb7f5ef2e873355725be701559ce140cfaca9f12e2650d634b"
+    },
+    {
+      "path": "test-iphone-qualification.py",
+      "bytes": 3365,
+      "sha256": "264be1f6513ff9d95ff06cdb71687ade39b14a2dd831a8cfa2f49ad2dde41215"
+    },
+    {
+      "path": "test-iphone16-components.py",
+      "bytes": 17149,
+      "sha256": "07cbbdfca300e36052f6c773dbf1468c094053e31781156b97fc96a2564559c6"
+    },
+    {
+      "path": "test-payload-transport.py",
+      "bytes": 5967,
+      "sha256": "1bafbc4030b2cd7afefdc65cc458efb111dc7eab11b2f7bc8b244bb62fad292e"
+    },
+    {
+      "path": "test-post-mmu.py",
+      "bytes": 7083,
+      "sha256": "cb3fbabbe10da45db56a8d039cdad2ff9eaf6dae9ea8ae187b241a50463cc894"
+    },
+    {
+      "path": "test-ram-root-user.py",
+      "bytes": 3939,
+      "sha256": "df7a24e55fb50b672953a234be37bdb45201db7a89e2ecd2ff9d526f3130d820"
+    },
+    {
+      "path": "test-ram-root.py",
+      "bytes": 6661,
+      "sha256": "1488e2cad7a30020d38fcc367fa834b98577c24393856deee59d9bb5b8f8b726"
+    },
+    {
+      "path": "test-root-wait.py",
+      "bytes": 3469,
+      "sha256": "7bb056984e1dad6770dfe5bc9cff2b6938b3838a899b450bfe14503328d498d0"
+    },
+    {
+      "path": "tools/check_source_tree.py",
+      "bytes": 1522,
+      "sha256": "52cc886323b53a06801aab2d14f300d1be1c560d96db505c5d1c0e5e569d35d7"
+    },
+    {
+      "path": "tools/export-legacy-iig.py",
+      "bytes": 2134,
+      "sha256": "d09d322b380b12b307654040d99c6793c1ff1a400d06564cc4125f44d90fe949"
+    },
+    {
+      "path": "tools/export-marble8796-cryptex-amfi.py",
+      "bytes": 12110,
+      "sha256": "e31d3c072bb2dde949fd1c1367a0948b1b0cfc29b607860796cbbc111eacf077"
+    },
+    {
+      "path": "tools/lab/README.md",
+      "bytes": 641,
+      "sha256": "28baaca38ddef531b6ac3c4b3bacd776ad1897388848e69e03e6580accf8092c"
+    },
+    {
+      "path": "tools/run_host_c_fixtures.py",
+      "bytes": 965,
+      "sha256": "a74d996bcd9d74ecea7605158b98c30c3751967e574f851eb942d4dd99406fbd"
+    },
+    {
+      "path": "touch/GENI-SPI-PROBE-PLAN.md",
+      "bytes": 6930,
+      "sha256": "f47bb640b1d7882b63e3a0410b30ec8e51397cb6fff5246f5f42d13f122a432e"
+    },
+    {
+      "path": "touch/MARBLE-GPI-DMA-PATH.md",
+      "bytes": 5445,
+      "sha256": "e45594eaa79728050fb7a1f99223ed1486008e5bab49dc51df080213ffb06975"
+    },
+    {
+      "path": "touch/MARBLE-SMMU-SNAPSHOT-DECODER.md",
+      "bytes": 3083,
+      "sha256": "4db623db5f41ae55d7e374410c9ea39d12dcd0d92fe62a1a909bd3265974446e"
+    },
+    {
+      "path": "touch/MARBLE-SPI-BOARD-EVIDENCE.md",
+      "bytes": 7977,
+      "sha256": "df79eafb1f92633f32cbb48a10f68fde2e0965caf0cffdd519f409a457cf9c73"
+    },
+    {
+      "path": "touch/MARBLE-TOUCH-PREREQ-SNAPSHOT.md",
+      "bytes": 5997,
+      "sha256": "b100e32656bcb5b82155acd0da8792f60482d1cdeae8cfc29250f0d07e9e1af2"
+    },
+    {
+      "path": "touch/MarbleTouchPrereq.cpp",
+      "bytes": 11136,
+      "sha256": "e6f45dd7a6a110d0a638c7f1dc9ab6e073296ab03c08c1f08aa2101886da713a"
+    },
+    {
+      "path": "touch/MarbleTouchPrereq.h",
+      "bytes": 313,
+      "sha256": "27047da03be51e2bb176faeae3564a218dc3bbd4792a206a2d336c8b14f0c7de"
+    },
+    {
+      "path": "touch/MarbleTouchPrereqLayout.h",
+      "bytes": 2449,
+      "sha256": "4072a0ceeb5209a676180e30e237e7ae1d3703203aeeb8ba82b5afd445bca5c0"
+    },
+    {
+      "path": "touch/MarbleTouchProbe.cpp",
+      "bytes": 8489,
+      "sha256": "8ea55e500b1c9f81856e6be1d691f583276dda11eb1d98f9cb0454561c9f88be"
+    },
+    {
+      "path": "touch/MarbleTouchProbeClock.c",
+      "bytes": 4589,
+      "sha256": "4e2c70e4930cacd0891833e6b18d9969a75327c8a5c6bf63b644f7dea3fc0b8a"
+    },
+    {
+      "path": "touch/MarbleTouchProbeClock.h",
+      "bytes": 2236,
+      "sha256": "a513daabebbebf8d485e6e2d396c2836f6ef2d6fa27b87724080741030b01a3f"
+    },
+    {
+      "path": "touch/README.md",
+      "bytes": 13323,
+      "sha256": "aaf3e54f3e3e8f2db5ac8676874d2341afd44715317d7c67a32cf80b329b04c3"
+    },
+    {
+      "path": "touch/collect_marble_goodix_recovery.py",
+      "bytes": 8855,
+      "sha256": "e8faec0b79a445a53fe6bb840de80b35413816c18e83456cfb31ae2db8e938aa"
+    },
+    {
+      "path": "touch/collect_marble_spi_state.py",
+      "bytes": 11457,
+      "sha256": "0ded47162b3f0888ac909ea6b5bd4aae60974fd890f6167a76e8f25c739c4cda"
+    },
+    {
+      "path": "touch/goodix9916r_report_decoder.c",
+      "bytes": 2657,
+      "sha256": "1d87fb2da5634900cc6a412134f3f8a811700e40d1a786fc3833b4e5f436d520"
+    },
+    {
+      "path": "touch/goodix9916r_report_decoder.h",
+      "bytes": 1919,
+      "sha256": "4be76e57685abd03f0d2c063e4e7acd94b97773003eeaff67f8310fd0a562c53"
+    },
+    {
+      "path": "touch/goodix9916r_spi_read.c",
+      "bytes": 2597,
+      "sha256": "ee97bc1d662e379aa5f3f91d1e90a4e9d032a7f64dc588b6b23ca7e02f91ba14"
+    },
+    {
+      "path": "touch/goodix9916r_spi_read.h",
+      "bytes": 2074,
+      "sha256": "85404bc6c56007a4899441ab8b1e06db9fabe7ba4b1cfed4a6f357d021a07c90"
+    },
+    {
+      "path": "touch/install_marble_touch_probe.py",
+      "bytes": 6376,
+      "sha256": "f3b2605a28be2082f5f1c6c2545905ad7339eb1af0bd45aee20ae84fffa4edbf"
+    },
+    {
+      "path": "touch/marble_gpi_spi_tre.c",
+      "bytes": 4765,
+      "sha256": "5b36846e928625e7cfbcfa4439a0749b0e8d85169c45a8c7d228fa3144f1a49c"
+    },
+    {
+      "path": "touch/marble_gpi_spi_tre.h",
+      "bytes": 2930,
+      "sha256": "a636f7afa6f2f36735da8225b8cf79a805ea5d49248f21c4ea03a90eadd39041"
+    },
+    {
+      "path": "touch/marble_smmu_stream.c",
+      "bytes": 3116,
+      "sha256": "65b47974ea7421d6b32d1d657b74ff19a69e0f328209ecc556d2b5b132cedbc4"
+    },
+    {
+      "path": "touch/marble_smmu_stream.h",
+      "bytes": 1694,
+      "sha256": "3781b8c865f7d16bce512c6bc52796f4a658980de9f752d27f5dff0dc36cbf6c"
+    },
+    {
+      "path": "touch/prepare_marble_goodix9916r_inventory.py",
+      "bytes": 5157,
+      "sha256": "9393519f5150521f2bdb196a454315e38c61b7b9a35dd9604c910fee50f4eaac"
+    },
+    {
+      "path": "touch/test_collect_marble_spi_state.py",
+      "bytes": 7128,
+      "sha256": "aa808775aeffbe70b0b878dd477b1f2206a69f6c9841548edd550052e8a94529"
+    },
+    {
+      "path": "touch/test_goodix9916r_report_decoder.c",
+      "bytes": 2263,
+      "sha256": "620a7275a02dcbe5432222d147a0f20b2cfbbcd1fa5adb46d46afb9c109f2a0e"
+    },
+    {
+      "path": "touch/test_goodix9916r_spi_read.c",
+      "bytes": 7921,
+      "sha256": "4f16c0a86ab991e276159916bc2a3d21db506040e46f472e15e418b7b8844a85"
+    },
+    {
+      "path": "touch/test_install_marble_touch_probe.py",
+      "bytes": 3932,
+      "sha256": "133bc7c9f539ca76d8a1a1fc349a9e9810b1279a3452b6a67bd35f873f87bc24"
+    },
+    {
+      "path": "touch/test_marble_gpi_spi_tre.c",
+      "bytes": 5635,
+      "sha256": "0b1f1b24acd9de449455b9a6297ca9e2568c7d71bf09c641b6c4b4960607524f"
+    },
+    {
+      "path": "touch/test_marble_smmu_stream.c",
+      "bytes": 4553,
+      "sha256": "65ac09fcc809745e909cc5a770f6da31ef1572b0d4fe13bd3b5d585d5e177570"
+    },
+    {
+      "path": "touch/test_marble_touch_prereq_layout.c",
+      "bytes": 2423,
+      "sha256": "5424e9db9ad41042929fc9ffca9176693b419bcd63d059904eb55ae353709c4d"
+    },
+    {
+      "path": "touch/test_marble_touch_probe_clock.c",
+      "bytes": 6472,
+      "sha256": "0017857cee4e5ce07fe72238235af0db6db35f03f992d195458431101d5e10aa"
+    },
+    {
+      "path": "touch/test_update_marble_touch_probe_stage2.py",
+      "bytes": 3630,
+      "sha256": "39a96ff5510f934b6e3cb98c1cb26dda0befba90866ed76fe6e6351d426bdbb7"
+    },
+    {
+      "path": "validate-baseline.py",
+      "bytes": 6604,
+      "sha256": "c1972b98a880836760e1b15858e308526926ea3275935ba51b3a505f425fe61a"
+    }
+  ]
+}

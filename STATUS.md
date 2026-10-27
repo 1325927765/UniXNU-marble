@@ -1,26 +1,13 @@
-# Device status
+# Status — 2026-10-27
 
-Last updated: 2026-10-25.
+Source publication now includes the v4 XNU snapshot, touch prototypes, lab tools, metadata exporters and installer source. It is not a complete/reproducible ROM release; see BUILDING.md and legacy-xnu/SOURCE-REVIEW.md.
 
-These are maintainer observations from the existing experimental port. No reproducible public source build or independent verification is claimed by this documentation-only repository.
+- Original experimental XNU 8796 kernel: real iOS 16.7.16 Hello observed again in the 2026-10-26 rollback recording; clean display, no physical touch, setup incomplete.
+- New prerequisite module: the read-only snapshot completed and returned. Mode 3 stayed at Logo for six minutes; the same kernel in mode 0 stayed at Logo for five minutes.
+- These runs do not prove a bad kernel or that S4 is required: the successful old kernel used a temporary S4 clock probe, while the new tests omitted that path. A same-old-kernel mode-0 control is prepared but not yet sent.
+- The new kernel adds no new prerequisite class constructor; its clock-probe function body matches the old kernel. Most other byte changes fit link-address immediate changes, which is an inference rather than replayed relocation proof.
+- The console quiet latch hides ordinary output after the first GUI swap. Late userspace stalls/restarts cannot be diagnosed from a Logo alone.
+- Physical Goodix transport, GPI event/completion handling, verified payload/ring DMA mappings and HID input remain incomplete. A zero snapshot error mask does not establish DMA safety.
+- Private classmates candidate uses a clean restore-derived root; this exact root/kernel pair is not hardware-qualified. It is not a GitHub binary release.
 
-| Area | Observed result | Remaining work |
-| --- | --- | --- |
-| Target | POCO F5, marble, SM7475-AB; iPhone iOS 16.7.16 / 20H392 | Publish reviewed, pinned device and OS inputs |
-| Kernel and boot | Experimental XNU 8796 temporary boots reached iPhone userspace | Reproduce from publishable source and document the boot chain |
-| Storage | Experimental UFS/root access supported progression to Hello | Publish reviewed implementation and define supported filesystem behavior |
-| Display | iPhone Hello interface visible on the physical display | Confirm console handoff behavior, rendering stability and supported display path |
-| Input | Goodix touch works in Android recovery | Implement and verify XNU controller integration, touch reports and IOHID events |
-| Setup | Hello interface observed | Verify physical interaction, setup completion and activation behavior |
-| Current UniXNU format | Migration being prepared locally | Resolve matching SM7475 and iOS 16 profiles, source pins, configuration, build and porting-record checks |
-| Other hardware | No support claim | GPU acceleration, networking, audio, modem, cameras, sensors and power management need separate implementation/verification |
-
-## Publication milestones
-
-1. Establish this community repository with accurate scope and contribution guidance.
-2. Publish reviewed source dependencies, licenses and reproducible device configuration.
-3. Verify physical touchscreen input and a stable graphical session on the F5.
-4. Publish supported build/test instructions and structured porting records.
-5. Request upstream device-catalog registration when its requirements are met.
-
-There is no release schedule yet. A visible Hello screen is a bring-up milestone, not evidence of a usable phone.
+Wi-Fi, cellular, audio, cameras, sensors, GPU acceleration, activation and usable daily operation are not claimed.

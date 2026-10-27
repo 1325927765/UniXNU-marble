@@ -1,0 +1,24 @@
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+# Compiled for QEMU only, never included in the phone firmware volume.
+[Defines]
+  INF_VERSION = 0x00010019
+  BASE_NAME = MarblePayloadFixture
+  FILE_GUID = 7A602AE2-456A-49FC-BFF3-705B2E47CCF1
+  MODULE_TYPE = UEFI_APPLICATION
+  VERSION_STRING = 0.1
+  ENTRY_POINT = FixtureEntry
+[Sources]
+  PayloadFixture.c
+[Packages]
+  MdePkg/MdePkg.dec
+[LibraryClasses]
+  BaseLib
+  BaseMemoryLib
+  DevicePathLib
+  MemoryAllocationLib
+  UefiApplicationEntryPoint
+  UefiBootServicesTableLib
+  UefiLib
+[Protocols]
+  gEfiLoadedImageProtocolGuid
+  gEfiSimpleFileSystemProtocolGuid

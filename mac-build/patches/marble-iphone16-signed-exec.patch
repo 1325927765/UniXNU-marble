@@ -1,0 +1,17 @@
+--- a/bsd/kern/kern_exec.c
++++ b/bsd/kern/kern_exec.c
+@@ -8519,6 +8519,14 @@
+ 	 * loaded
+ 	 */
++	/*
++	 * The native iPhone16 port explicitly enables the global signed-exec
++	 * policy. Apply it to the process/map as well as the validation runtime,
++	 * independently of legacy AMFI's additional flag requests.
++	 */
++	if (cs_process_global_enforcement()) {
++		imgp->ip_csflags |= CS_ENFORCEMENT | CS_HARD | CS_KILL;
++	}
+ 	proc_lock(p);
+ 	proc_csflags_update(p, imgp->ip_csflags);
+ 	proc_unlock(p);
+ 

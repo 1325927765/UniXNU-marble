@@ -1,0 +1,24 @@
+name: Source checks
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python tools/check_source_tree.py
+      - run: python -m unittest discover -s touch -p 'test_collect_marble_spi_state.py'
+      - run: python touch/test_install_marble_touch_probe.py
+      - name: Host C fixtures with sanitizers
+        run: python tools/run_host_c_fixtures.py
+  windows-installer-mocks:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fake fastboot only; no device or image download
+        shell: powershell
+        run: ./device/classmates/Test-Install-MarbleTest.ps1
