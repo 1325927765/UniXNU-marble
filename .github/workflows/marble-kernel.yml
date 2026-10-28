@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-15-arm64
+    runs-on: macos-15
     timeout-minutes: 180
     env:
       MACHINE_CONFIG: MARBLE
