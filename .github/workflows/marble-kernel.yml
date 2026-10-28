@@ -1,0 +1,196 @@
+name: marble-kernel
+
+on:
+  workflow_dispatch:
+    inputs:
+      xcode:
+        description: Xcode version on the macOS runner
+        required: false
+        default: "15.4"
+
+jobs:
+  build:
+    runs-on: macos-14
+    timeout-minutes: 180
+    env:
+      MACHINE_CONFIG: MARBLE
+      MACOS_VERSION: "13.5"
+    steps:
+      - name: Checkout device repository
+        uses: actions/checkout@v4
+        with:
+          path: device
+
+      - name: Checkout XNU 8796 baseline
+        uses: actions/checkout@v4
+        with:
+          repository: apple-oss-distributions/xnu
+          ref: 1b191cb58250d0705d8a51287127505aa4bc0789
+          path: xnu
+          fetch-depth: 1
+
+      - name: Select Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: ${{ inputs.xcode }}
+
+      - name: Apply Marble patch and overlay
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd xnu
+          git apply ../device/legacy-xnu/patches/xnu-changes.review.patch
+          cp -a ../device/legacy-xnu/overlay/. .
+          test -f pexpert/pexpert/arm64/MARBLE.h
+          test ! -e bsd/dev/marble_ufs.c
+          grep -q 'GICR_PE_SIZE' pexpert/pexpert/arm64/MARBLE.h
+
+      - name: Verify pinned IIG inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, pathlib
+          root = pathlib.Path('.')
+          manifest = json.loads((root / 'device/legacy-xnu/iig/manifest.json').read_text())
+          bad = []
+          for name, expected in manifest['inputs'].items():
+              path = root / 'xnu' / name
+              actual = hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
+              if actual != expected:
+                  bad.append((name, actual))
+          if bad:
+              raise SystemExit(f'IIG input mismatch: {bad[:5]}')
+          print(f'IIG inputs matched: {len(manifest["inputs"])}')
+          PY
+
+      - name: Install kernel headers into fakeroot
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$RUNNER_TEMP/marble-build"
+          mkdir -p "$ROOT/fakeroot"
+          cd xnu
+          make installhdrs -j4 SDKROOT=macosx \
+            TARGET_CONFIGS="DEVELOPMENT ARM64 MARBLE" \
+            ARCH_CONFIGS=ARM64 \
+            SRCROOT="$PWD" \
+            OBJROOT="$ROOT/headers.obj" \
+            SYMROOT="$ROOT/headers.sym" \
+            DSTROOT="$ROOT/fakeroot" \
+            FAKEROOT_DIR="$ROOT/fakeroot" \
+            BUILD_WERROR=0 RC_DARWIN_KERNEL_VERSION=22.6.0 \
+            KERNEL_BUILDS_IN_PARALLEL=1 \
+            2>&1 | tee "$ROOT/headers-build.log"
+          test -d "$ROOT/fakeroot/System/Library/Frameworks/Kernel.framework/PrivateHeaders"
+
+      - name: Build libplatform and libfirehose_kernel
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$RUNNER_TEMP/marble-build"
+          git clone --depth 1 --branch libplatform-292.120.1.0.1 \
+            https://github.com/apple-oss-distributions/libplatform "$ROOT/libplatform"
+          git -C "$ROOT/libplatform" describe --tags --exact-match | grep -qx 'libplatform-292.120.1.0.1'
+          mkdir -p "$ROOT/fakeroot/usr/local/include"
+          cp -a "$ROOT/libplatform/include/." "$ROOT/fakeroot/usr/local/include/"
+          cp -a "$ROOT/libplatform/private/." "$ROOT/fakeroot/usr/local/include/"
+
+          git clone --depth 1 --branch libdispatch-1415.140.2 \
+            https://github.com/apple-oss-distributions/libdispatch "$ROOT/libdispatch"
+          git -C "$ROOT/libdispatch" describe --tags --exact-match | grep -qx 'libdispatch-1415.140.2'
+          python3 - "$ROOT" <<'PY'
+          import pathlib, sys
+          root = pathlib.Path(sys.argv[1])
+          cfg = root / 'libdispatch/xcodeconfig/libfirehose_kernel.xcconfig'
+          text = cfg.read_text()
+          text = text.replace(
+              '$(SDKROOT)/System/Library/Frameworks/Kernel.framework/PrivateHeaders',
+              '$(FAKEROOT_DIR)/System/Library/Frameworks/Kernel.framework/PrivateHeaders')
+          text = text.replace('$(SDKROOT)/usr/local/include',
+                              '$(FAKEROOT_DIR)/usr/local/include')
+          cfg.write_text(text)
+          PY
+          cd "$ROOT/libdispatch"
+          xcodebuild install -target libfirehose_kernel -sdk macosx \
+            ARCHS=arm64 VALID_ARCHS=arm64 ONLY_ACTIVE_ARCH=NO \
+            OBJROOT="$ROOT/firehose.obj" SYMROOT="$ROOT/firehose.sym" \
+            DSTROOT="$ROOT/fakeroot" FAKEROOT_DIR="$ROOT/fakeroot" \
+            CODE_SIGNING_ALLOWED=NO GCC_TREAT_WARNINGS_AS_ERRORS=NO \
+            2>&1 | tee "$ROOT/support-build.log"
+          ls -l "$ROOT/fakeroot/usr/local/lib/kernel"
+          test -f "$ROOT/fakeroot/usr/local/lib/kernel/liblibfirehose_kernel.a"
+          cp "$ROOT/fakeroot/usr/local/lib/kernel/liblibfirehose_kernel.a" \
+             "$ROOT/fakeroot/usr/local/lib/kernel/libfirehose_kernel.a"
+
+      - name: Patch XNU SDK paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$RUNNER_TEMP/marble-build"
+          python3 - "$ROOT" <<'PY'
+          import pathlib, re, sys
+          root = pathlib.Path(sys.argv[1])
+          path = root / 'xnu/makedefs/MakeInc.def'
+          text = path.read_text()
+          text, n1 = re.subn(r'^LDFLAGS_KERNEL_SDK\s*=.*$',
+                             'LDFLAGS_KERNEL_SDK = -L$(FAKEROOT_DIR)/usr/local/lib/kernel',
+                             text, flags=re.M)
+          text, n2 = re.subn(r'^INCFLAGS_SDK\s*=.*$',
+                             'INCFLAGS_SDK = -I$(FAKEROOT_DIR)/usr/local/include/kernel',
+                             text, flags=re.M)
+          if (n1, n2) != (1, 1):
+              raise SystemExit(f'MakeInc.def patch failed: {n1=} {n2=}')
+          path.write_text(text)
+          checker = root / 'xnu/tools/lldbmacros/core/syntax_checker.py'
+          text = checker.read_text()
+          if text.startswith('#!/usr/bin/env python\n'):
+              text = text.replace('#!/usr/bin/env python\n', '#!/usr/bin/env python3\n', 1)
+          if 'sys.path.pop(0)' not in text:
+              if text.count('import sys\n') != 1:
+                  raise SystemExit('syntax_checker.py import layout changed')
+              text = text.replace('import sys\n', 'import sys\nsys.path.pop(0)\n', 1)
+          checker.write_text(text)
+          PY
+
+      - name: Build kernel
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$RUNNER_TEMP/marble-build"
+          chmod +x "$GITHUB_WORKSPACE/device/mac-build/legacy-iig8796.py"
+          cd xnu
+          make install -j4 SDKROOT=macosx \
+            TARGET_CONFIGS="DEVELOPMENT ARM64 MARBLE" \
+            ARCH_CONFIGS=ARM64 \
+            SRCROOT="$PWD" \
+            OBJROOT="$ROOT/kernel.obj" \
+            SYMROOT="$ROOT/kernel.sym" \
+            DSTROOT="$ROOT/fakeroot" \
+            FAKEROOT_DIR="$ROOT/fakeroot" \
+            BUILD_WERROR=0 RC_DARWIN_KERNEL_VERSION=22.6.0 \
+            KERNEL_BUILDS_IN_PARALLEL=1 BUILD_LTO=0 CONCISE=0 \
+            BUILD_JSON_COMPILATION_DATABASE=0 BUILD_DSYM=0 \
+            IIG="$GITHUB_WORKSPACE/device/mac-build/legacy-iig8796.py" \
+            MARBLE_BUILD_ROOT="$GITHUB_WORKSPACE" \
+            MARBLE_IIG_CACHE="$GITHUB_WORKSPACE/device/legacy-xnu/iig" \
+            RC_NONARCH_CFLAGS="-Wno-reserved-identifier -Wno-pre-c11-compat -Wno-pre-c23-compat" \
+            2>&1 | tee "$ROOT/kernel-build.log"
+          ls -l "$ROOT/fakeroot/System/Library/Kernels"
+          test -f "$ROOT/fakeroot/System/Library/Kernels/kernel.development.marble"
+          OUT="$GITHUB_WORKSPACE"
+          cp "$ROOT/fakeroot/System/Library/Kernels/kernel.development.marble" "$OUT/"
+          cp "$ROOT/kernel-build.log" "$ROOT/headers-build.log" "$ROOT/support-build.log" "$OUT/"
+          sha256sum "$OUT/kernel.development.marble" | tee "$OUT/kernel.sha256"
+
+      - name: Upload kernel
+        uses: actions/upload-artifact@v4
+        with:
+          name: marble-kernel
+          path: |
+            kernel.development.marble
+            kernel.sha256
+            kernel-build.log
+            headers-build.log
+            support-build.log
+          if-no-files-found: error
