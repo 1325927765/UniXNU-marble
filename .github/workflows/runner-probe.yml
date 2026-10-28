@@ -1,0 +1,7 @@
+name: runner-probe
+on: workflow_dispatch
+jobs:
+  probe:
+    runs-on: macos-26
+    steps:
+      - run: uname -a; xcodebuild -version
