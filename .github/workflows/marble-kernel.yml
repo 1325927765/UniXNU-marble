@@ -6,11 +6,11 @@ on:
       xcode:
         description: Xcode version on the macOS runner
         required: false
-        default: "15.4"
+        default: "16.4"
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-15-arm64
     timeout-minutes: 180
     env:
       MACHINE_CONFIG: MARBLE
